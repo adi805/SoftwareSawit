@@ -352,6 +352,7 @@ const COAListPage: React.FC<COAListPageProps> = ({ onNavigateToCOAForm, onBack, 
               <>
                 <button
                   onClick={handleOpenImportModal}
+                  data-testid="import-excel"
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium flex items-center gap-2"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

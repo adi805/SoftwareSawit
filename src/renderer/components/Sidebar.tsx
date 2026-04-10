@@ -262,6 +262,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             isCollapsed={isCollapsed}
             hasSubMenu
             isExpanded={expandedMenu === 'masterData'}
+            data-testid="nav-master"
           />
 
           {/* Sub-menu */}
@@ -273,7 +274,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   label={subItem.label}
                   onClick={subItem.onClick}
                   isActive={isActive(subItem.id)}
-                  data-testid={subItem.id === 'coa' ? 'nav-coa' : undefined}
+                  data-testid={subItem.id === 'coa' ? 'nav-coa' : subItem.id === 'aspekKerja' ? 'nav-aspek-kerja' : subItem.id === 'blok' ? 'nav-blok' : undefined}
                 />
               ))}
             </div>
