@@ -19,9 +19,6 @@ on:
 env:
   NODE_VERSION: '20'
   TEST_TIMEOUT: 1800000
-  ELECTRON_ENABLE_LOGGING: true
-  ELECTRON_ENABLE_STACK_DUMPING: true
-  DEBUG: 'electron:*'
 
 jobs:
   user-tests:
