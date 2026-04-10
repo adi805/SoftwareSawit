@@ -35,3 +35,4 @@ pids/
 coverage/
 .nyc_output/
 Key Github.txt
+.factory/monitor/.token

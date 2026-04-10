@@ -177,6 +177,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
+      data-testid="sidebar-collapse"
       className={`bg-primary-700 text-white flex flex-col transition-all duration-300 ease-in-out ${
         isCollapsed ? 'w-16 mr-2' : 'w-64'
       }`}
@@ -195,6 +196,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* Collapse Toggle Button - in header */}
         <button
           onClick={onToggleCollapse}
+          data-testid="sidebar-toggle"
           className="w-6 h-6 bg-primary-600 hover:bg-primary-500 rounded-full flex items-center justify-center shadow-sm flex-shrink-0"
           title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
@@ -271,6 +273,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   label={subItem.label}
                   onClick={subItem.onClick}
                   isActive={isActive(subItem.id)}
+                  data-testid={subItem.id === 'coa' ? 'nav-coa' : undefined}
                 />
               ))}
             </div>
@@ -285,6 +288,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           onClick={onNavigateToKas || (() => {})}
           isActive={isActive('kas')}
           isCollapsed={isCollapsed}
+          data-testid="nav-kas"
         />
 
         {/* Bank Module */}
@@ -295,6 +299,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           onClick={onNavigateToBank || (() => {})}
           isActive={isActive('bank')}
           isCollapsed={isCollapsed}
+          data-testid="nav-bank"
         />
 
         {/* Gudang Module */}
@@ -305,6 +310,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           onClick={onNavigateToGudang || (() => {})}
           isActive={isActive('gudang')}
           isCollapsed={isCollapsed}
+          data-testid="nav-gudang"
         />
 
         {/* Sync - Admin Only */}
@@ -316,6 +322,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             onClick={onNavigateToSync || (() => {})}
             isActive={isActive('syncSettings')}
             isCollapsed={isCollapsed}
+            data-testid="nav-sync"
           />
         )}
 
@@ -328,6 +335,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             onClick={onNavigateToUserManagement || (() => {})}
             isActive={isActive('userManagement')}
             isCollapsed={isCollapsed}
+            data-testid="nav-users"
           />
         )}
       </nav>
@@ -464,6 +472,7 @@ interface MenuItemProps {
   isCollapsed?: boolean;
   hasSubMenu?: boolean;
   isExpanded?: boolean;
+  'data-testid'?: string;
 }
 
 const MenuItem: React.FC<MenuItemProps> = ({
@@ -474,10 +483,12 @@ const MenuItem: React.FC<MenuItemProps> = ({
   isCollapsed = false,
   hasSubMenu = false,
   isExpanded = false,
+  'data-testid': dataTestId,
 }) => {
   return (
     <button
       onClick={onClick}
+      data-testid={dataTestId}
       className={`w-full flex items-center gap-3 px-3 py-2 mx-1 text-sm font-medium rounded transition-colors ${
         isActive
           ? 'bg-white text-primary-700'
@@ -510,12 +521,14 @@ interface SubMenuItemProps {
   label: string;
   onClick: () => void;
   isActive?: boolean;
+  'data-testid'?: string;
 }
 
-const SubMenuItem: React.FC<SubMenuItemProps> = ({ label, onClick, isActive = false }) => {
+const SubMenuItem: React.FC<SubMenuItemProps> = ({ label, onClick, isActive = false, 'data-testid': dataTestId }) => {
   return (
     <button
       onClick={onClick}
+      data-testid={dataTestId}
       className={`w-full flex items-center px-3 py-2 text-sm rounded transition-colors ${
         isActive
           ? 'bg-white text-primary-700'

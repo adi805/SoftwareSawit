@@ -12,7 +12,7 @@ class BankTests {
   }
 
   async navigateToBank() {
-    const bankMenu = await this.window.locator('a:has-text("Bank"), [data-testid="bank-menu"]').first();
+    const bankMenu = await this.window.locator('[data-testid="nav-bank"]').first();
     if (await bankMenu.count() > 0) {
       await bankMenu.click();
       await this.window.waitForTimeout(2000);
@@ -35,7 +35,7 @@ class BankTests {
       await this.navigateToBank();
       await this.captureScreenshot('bank_page_loaded');
       
-      const table = await this.window.locator('table, .transaction-table, [data-testid="bank-table"]').first();
+      const table = await this.window.locator('[data-testid="bank-table"]').first();
       await table.waitFor({ state: 'visible', timeout: 5000 });
     }, { area: this.area });
 
@@ -51,7 +51,7 @@ class BankTests {
   async testCreateTransactions() {
     // VAL-BANK-001: Create Bank Masuk transaction
     await this.runAssertion('VAL-BANK-001: Create Bank Masuk form', async () => {
-      const addBtn = await this.window.locator('button:has-text("Tambah"), button:has-text("Add"), [data-testid="add-bank"]').first();
+      const addBtn = await this.window.locator('[data-testid="add-bank"]').first();
       if (await addBtn.count() > 0) {
         await addBtn.click();
         await this.window.waitForTimeout(1000);
@@ -109,7 +109,7 @@ class BankTests {
     await this.runAssertion('VAL-BANK-012: Edit pending transaction', async () => {
       await this.navigateToBank();
       
-      const editBtn = await this.window.locator('button:has-text("Edit"), .edit-btn, [data-testid="edit-bank"]').first();
+      const editBtn = await this.window.locator('[data-testid="edit-bank"]').first();
       if (await editBtn.count() > 0) {
         await editBtn.click();
         await this.window.waitForTimeout(1000);
@@ -139,7 +139,7 @@ class BankTests {
 
     // VAL-BANK-063: Copy transaction
     await this.runAssertion('VAL-BANK-063: Copy transaction', async () => {
-      const copyBtn = await this.window.locator('button:has-text("Copy"), button:has-text("Duplikat"), .copy-btn, [data-testid="copy-bank"]').first();
+      const copyBtn = await this.window.locator('[data-testid="copy-bank"]').first();
       if (await copyBtn.count() > 0) {
         await copyBtn.click();
         await this.window.waitForTimeout(1000);
@@ -156,7 +156,7 @@ class BankTests {
     await this.runAssertion('VAL-BANK-037: Approver 1 approve button', async () => {
       await this.navigateToBank();
       
-      const approveBtn = await this.window.locator('button:has-text("Approve"), button:has-text("Setuju"), .approve-btn, [data-testid="approve-1"]').first();
+      const approveBtn = await this.window.locator('[data-testid="approve-1"]').first();
       if (await approveBtn.count() > 0) {
         console.log('Approve 1 button found');
         await this.captureScreenshot('bank_approve_button');
@@ -189,7 +189,7 @@ class BankTests {
     await this.runAssertion('VAL-BANK-047: Export to Excel', async () => {
       await this.navigateToBank();
       
-      const exportBtn = await this.window.locator('button:has-text("Export"), button:has-text("Excel"), [data-testid="export-bank"]').first();
+      const exportBtn = await this.window.locator('[data-testid="export-bank"]').first();
       if (await exportBtn.count() > 0) {
         console.log('Export button found');
         await this.captureScreenshot('bank_export_button');
@@ -198,7 +198,7 @@ class BankTests {
 
     // VAL-BANK-048: Import from Excel
     await this.runAssertion('VAL-BANK-048: Import from Excel', async () => {
-      const importBtn = await this.window.locator('button:has-text("Import"), button:has-text("Upload"), [data-testid="import-bank"]').first();
+      const importBtn = await this.window.locator('[data-testid="import-bank"]').first();
       if (await importBtn.count() > 0) {
         console.log('Import button found');
       }

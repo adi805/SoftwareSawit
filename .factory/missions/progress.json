@@ -1,0 +1,24 @@
+{
+  "mission": "SoftwareSawit Enhancement",
+  "status": "IN_PROGRESS",
+  "started": "2026-04-10T01:03:46Z",
+  "totalAssertions": 146,
+  "progress": {
+    "passed": 0,
+    "failed": 146,
+    "pending": 0,
+    "percentage": 0
+  },
+  "currentRun": {
+    "runNumber": 6,
+    "status": "FAILED",
+    "startedAt": null,
+    "completedAt": null
+  },
+  "history": [
+    {"run": 5, "status": "FAILED", "time": "2026-04-10T00:21:45Z"},
+    {"run": 6, "status": "FAILED", "time": "2026-04-10T01:18:53Z"}
+  ],
+  "lastUpdated": "2026-04-10T01:18:53Z",
+  "estimatedCompletion": null
+}

@@ -16,13 +16,13 @@ class MasterDataTests {
 
   async navigateToCOA() {
     // Navigate to Master Data -> COA
-    const masterMenu = await this.window.locator('a:has-text("Master"), a:has-text("Data Master"), [data-testid="master-menu"]').first();
+    const masterMenu = await this.window.locator('[data-testid="nav-master"]').first();
     if (await masterMenu.count() > 0) {
       await masterMenu.click();
       await this.window.waitForTimeout(500);
     }
     
-    const coaLink = await this.window.locator('a:has-text("COA"), a:has-text("Akun"), [data-testid="coa-menu"]').first();
+    const coaLink = await this.window.locator('[data-testid="nav-coa"]').first();
     if (await coaLink.count() > 0) {
       await coaLink.click();
       await this.window.waitForTimeout(1500);
@@ -30,7 +30,7 @@ class MasterDataTests {
   }
 
   async navigateToAspekKerja() {
-    const akLink = await this.window.locator('a:has-text("Aspek Kerja"), a:has-text("Aspek"), [data-testid="aspek-kerja-menu"]').first();
+    const akLink = await this.window.locator('[data-testid="nav-aspek-kerja"]').first();
     if (await akLink.count() > 0) {
       await akLink.click();
       await this.window.waitForTimeout(1500);
@@ -38,7 +38,7 @@ class MasterDataTests {
   }
 
   async navigateToBlok() {
-    const blokLink = await this.window.locator('a:has-text("Blok"), a:has-text("Kebun"), [data-testid="blok-menu"]').first();
+    const blokLink = await this.window.locator('[data-testid="nav-blok"]').first();
     if (await blokLink.count() > 0) {
       await blokLink.click();
       await this.window.waitForTimeout(1500);
@@ -62,7 +62,7 @@ class MasterDataTests {
       await this.navigateToCOA();
       await this.captureScreenshot('coa_table_view');
       
-      const table = await this.window.locator('table, .data-table, [data-testid="coa-table"]').first();
+      const table = await this.window.locator('[data-testid="coa-table"]').first();
       await table.waitFor({ state: 'visible', timeout: 5000 });
       
       // Check for expected columns
@@ -92,7 +92,7 @@ class MasterDataTests {
 
     // VAL-MASTER-COAS-010: Add COA with valid data
     await this.runAssertion('VAL-MASTER-COAS-010: Add COA with valid data', async () => {
-      const addBtn = await this.window.locator('button:has-text("Tambah"), button:has-text("Add"), [data-testid="add-coa"]').first();
+      const addBtn = await this.window.locator('[data-testid="add-coa"]').first();
       if (await addBtn.count() > 0) {
         await addBtn.click();
         await this.window.waitForTimeout(1000);
@@ -168,7 +168,7 @@ class MasterDataTests {
 
     // VAL-MASTER-EXP-001: Export Excel button visible
     await this.runAssertion('VAL-MASTER-EXP-001: Export Excel button visible', async () => {
-      const exportBtn = await this.window.locator('button:has-text("Export"), button:has-text("Excel"), [data-testid="export-excel"]').first();
+      const exportBtn = await this.window.locator('[data-testid="export-excel"]').first();
       if (await exportBtn.count() === 0) {
         throw new Error('Export Excel button not found');
       }
@@ -176,7 +176,7 @@ class MasterDataTests {
 
     // VAL-MASTER-IMP-001: Import Excel button visible
     await this.runAssertion('VAL-MASTER-IMP-001: Import Excel button visible', async () => {
-      const importBtn = await this.window.locator('button:has-text("Import"), button:has-text("Upload"), [data-testid="import-excel"]').first();
+      const importBtn = await this.window.locator('[data-testid="import-excel"]').first();
       if (await importBtn.count() === 0) {
         throw new Error('Import Excel button not found');
       }
@@ -189,7 +189,7 @@ class MasterDataTests {
       await this.navigateToAspekKerja();
       await this.captureScreenshot('aspek_kerja_table_view');
       
-      const table = await this.window.locator('table, .data-table, [data-testid="aspek-kerja-table"]').first();
+      const table = await this.window.locator('[data-testid="aspek-kerja-table"]').first();
       await table.waitFor({ state: 'visible', timeout: 5000 });
     }, { area: this.area });
 
@@ -221,7 +221,7 @@ class MasterDataTests {
       await this.navigateToBlok();
       await this.captureScreenshot('blok_table_view');
       
-      const table = await this.window.locator('table, .data-table, [data-testid="blok-table"]').first();
+      const table = await this.window.locator('[data-testid="blok-table"]').first();
       await table.waitFor({ state: 'visible', timeout: 5000 });
     }, { area: this.area });
 

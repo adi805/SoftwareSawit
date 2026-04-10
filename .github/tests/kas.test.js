@@ -12,7 +12,7 @@ class KasTests {
   }
 
   async navigateToKas() {
-    const kasMenu = await this.window.locator('a:has-text("Kas"), [data-testid="kas-menu"]').first();
+    const kasMenu = await this.window.locator('[data-testid="nav-kas"]').first();
     if (await kasMenu.count() > 0) {
       await kasMenu.click();
       await this.window.waitForTimeout(2000);
@@ -35,7 +35,7 @@ class KasTests {
       await this.navigateToKas();
       await this.captureScreenshot('kas_page_loaded');
       
-      const table = await this.window.locator('table, .transaction-table, [data-testid="kas-table"]').first();
+      const table = await this.window.locator('[data-testid="kas-table"]').first();
       await table.waitFor({ state: 'visible', timeout: 5000 });
     }, { area: this.area });
 
@@ -73,7 +73,7 @@ class KasTests {
   async testCreateTransactions() {
     // VAL-KAS-001: Create Kas Masuk transaction
     await this.runAssertion('VAL-KAS-001: Create Kas Masuk form', async () => {
-      const addBtn = await this.window.locator('button:has-text("Tambah"), button:has-text("Add"), [data-testid="add-kas"]').first();
+      const addBtn = await this.window.locator('[data-testid="add-kas"]').first();
       if (await addBtn.count() > 0) {
         await addBtn.click();
         await this.window.waitForTimeout(1000);
@@ -151,7 +151,7 @@ class KasTests {
     await this.runAssertion('VAL-KAS-011: Edit pending transaction', async () => {
       await this.navigateToKas();
       
-      const editBtn = await this.window.locator('button:has-text("Edit"), .edit-btn, [data-testid="edit-kas"]').first();
+      const editBtn = await this.window.locator('[data-testid="edit-kas"]').first();
       if (await editBtn.count() > 0) {
         await editBtn.click();
         await this.window.waitForTimeout(1000);
@@ -200,7 +200,7 @@ class KasTests {
 
     // VAL-KAS-060: Copy transaction
     await this.runAssertion('VAL-KAS-060: Copy transaction', async () => {
-      const copyBtn = await this.window.locator('button:has-text("Copy"), button:has-text("Duplikat"), .copy-btn, [data-testid="copy-kas"]').first();
+      const copyBtn = await this.window.locator('[data-testid="copy-kas"]').first();
       if (await copyBtn.count() > 0) {
         await copyBtn.click();
         await this.window.waitForTimeout(1000);
@@ -218,7 +218,7 @@ class KasTests {
     await this.runAssertion('VAL-KAS-037: Approver 1 approve button', async () => {
       await this.navigateToKas();
       
-      const approveBtn = await this.window.locator('button:has-text("Approve"), button:has-text("Setuju"), .approve-btn, [data-testid="approve-1"]').first();
+      const approveBtn = await this.window.locator('[data-testid="approve-1"]').first();
       if (await approveBtn.count() > 0) {
         console.log('Approve 1 button found');
         await this.captureScreenshot('kas_approve_button');
@@ -273,7 +273,7 @@ class KasTests {
   async testImportExport() {
     // VAL-KAS-047: Export to Excel
     await this.runAssertion('VAL-KAS-047: Export to Excel button', async () => {
-      const exportBtn = await this.window.locator('button:has-text("Export"), button:has-text("Excel"), [data-testid="export-kas"]').first();
+      const exportBtn = await this.window.locator('[data-testid="export-kas"]').first();
       if (await exportBtn.count() > 0) {
         console.log('Export button found');
         await this.captureScreenshot('kas_export_button');
@@ -282,7 +282,7 @@ class KasTests {
 
     // VAL-KAS-048: Import from Excel
     await this.runAssertion('VAL-KAS-048: Import from Excel button', async () => {
-      const importBtn = await this.window.locator('button:has-text("Import"), button:has-text("Upload"), [data-testid="import-kas"]').first();
+      const importBtn = await this.window.locator('[data-testid="import-kas"]').first();
       if (await importBtn.count() > 0) {
         console.log('Import button found');
       }

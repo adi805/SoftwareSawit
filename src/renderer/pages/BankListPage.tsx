@@ -529,6 +529,7 @@ const BankListPage: React.FC<BankListPageProps> = ({ onNavigateToBankForm, onNav
                 {onNavigateToBankForm && (
                   <button
                     onClick={() => onNavigateToBankForm()}
+                    data-testid="add-bank"
                     className="px-4 py-2 bg-primary-700 hover:bg-primary-800 text-white rounded-lg text-sm font-medium flex items-center gap-2"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -706,7 +707,7 @@ const BankListPage: React.FC<BankListPageProps> = ({ onNavigateToBankForm, onNav
       {/* Table */}
       <div className="flex-1 overflow-auto p-6">
         <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="w-full">
+          <table data-testid="bank-table" className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
@@ -816,6 +817,7 @@ const BankListPage: React.FC<BankListPageProps> = ({ onNavigateToBankForm, onNav
                             {canApprove(tx) && (
                               <button
                                 onClick={() => setShowApproveModal(tx.id)}
+                                data-testid={`approve-${tx.id}`}
                                 className="p-1.5 text-green-600 hover:bg-green-50 rounded"
                                 title="Setujui"
                               >
@@ -827,6 +829,7 @@ const BankListPage: React.FC<BankListPageProps> = ({ onNavigateToBankForm, onNav
                             {(tx.status === 'Pending Approval 1' || tx.status === 'Pending Approval 2') && (
                               <button
                                 onClick={() => setShowRejectModal(tx.id)}
+                                data-testid={`reject-${tx.id}`}
                                 className="p-1.5 text-red-600 hover:bg-red-50 rounded"
                                 title="Tolak"
                               >
@@ -838,6 +841,7 @@ const BankListPage: React.FC<BankListPageProps> = ({ onNavigateToBankForm, onNav
                             {onNavigateToBankForm && canEdit(tx) && (
                               <button
                                 onClick={() => onNavigateToBankForm(tx)}
+                                data-testid={`edit-${tx.id}`}
                                 className="p-1.5 text-primary-600 hover:bg-primary-50 rounded"
                                 title="Edit"
                               >
@@ -850,6 +854,7 @@ const BankListPage: React.FC<BankListPageProps> = ({ onNavigateToBankForm, onNav
                               <div className="flex items-center gap-1 ml-1">
                                 <button
                                   onClick={() => handleDelete(tx.id)}
+                                  data-testid={`delete-${tx.id}`}
                                   className="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded font-medium"
                                 >
                                   Ya
@@ -865,6 +870,7 @@ const BankListPage: React.FC<BankListPageProps> = ({ onNavigateToBankForm, onNav
                               canDelete(tx) && (
                                 <button
                                   onClick={() => setShowDeleteConfirm(tx.id)}
+                                  data-testid={`delete-${tx.id}`}
                                   className="p-1.5 text-red-600 hover:bg-red-50 rounded"
                                   title="Hapus"
                                 >

@@ -12,7 +12,7 @@ class GudangTests {
   }
 
   async navigateToGudang() {
-    const gudangMenu = await this.window.locator('a:has-text("Gudang"), [data-testid="gudang-menu"]').first();
+    const gudangMenu = await this.window.locator('[data-testid="nav-gudang"]').first();
     if (await gudangMenu.count() > 0) {
       await gudangMenu.click();
       await this.window.waitForTimeout(2000);
@@ -35,7 +35,7 @@ class GudangTests {
       await this.navigateToGudang();
       await this.captureScreenshot('gudang_page_loaded');
       
-      const table = await this.window.locator('table, .transaction-table, .inventory-table, [data-testid="gudang-table"]').first();
+      const table = await this.window.locator('[data-testid="gudang-table"]').first();
       await table.waitFor({ state: 'visible', timeout: 5000 });
     }, { area: this.area });
 
@@ -51,7 +51,7 @@ class GudangTests {
   async testCreateTransactions() {
     // VAL-GUDANG-001: Create Gudang Masuk transaction
     await this.runAssertion('VAL-GUDANG-001: Create Gudang Masuk form', async () => {
-      const addBtn = await this.window.locator('button:has-text("Tambah"), button:has-text("Add"), [data-testid="add-gudang"]').first();
+      const addBtn = await this.window.locator('[data-testid="add-gudang"]').first();
       if (await addBtn.count() > 0) {
         await addBtn.click();
         await this.window.waitForTimeout(1000);
@@ -106,7 +106,7 @@ class GudangTests {
     await this.runAssertion('VAL-GUDANG-012: Edit pending transaction', async () => {
       await this.navigateToGudang();
       
-      const editBtn = await this.window.locator('button:has-text("Edit"), .edit-btn, [data-testid="edit-gudang"]').first();
+      const editBtn = await this.window.locator('[data-testid="edit-gudang"]').first();
       if (await editBtn.count() > 0) {
         await editBtn.click();
         await this.window.waitForTimeout(1000);
@@ -136,7 +136,7 @@ class GudangTests {
 
     // VAL-GUDANG-064: Copy transaction
     await this.runAssertion('VAL-GUDANG-064: Copy transaction', async () => {
-      const copyBtn = await this.window.locator('button:has-text("Copy"), button:has-text("Duplikat"), .copy-btn, [data-testid="copy-gudang"]').first();
+      const copyBtn = await this.window.locator('[data-testid="copy-gudang"]').first();
       if (await copyBtn.count() > 0) {
         await copyBtn.click();
         await this.window.waitForTimeout(1000);
@@ -153,7 +153,7 @@ class GudangTests {
     await this.runAssertion('VAL-GUDANG-038: Approver 1 approve button', async () => {
       await this.navigateToGudang();
       
-      const approveBtn = await this.window.locator('button:has-text("Approve"), button:has-text("Setuju"), .approve-btn, [data-testid="approve-1"]').first();
+      const approveBtn = await this.window.locator('[data-testid="approve-1"]').first();
       if (await approveBtn.count() > 0) {
         console.log('Approve 1 button found');
         await this.captureScreenshot('gudang_approve_button');
@@ -196,7 +196,7 @@ class GudangTests {
     await this.runAssertion('VAL-GUDANG-048: Export to Excel', async () => {
       await this.navigateToGudang();
       
-      const exportBtn = await this.window.locator('button:has-text("Export"), button:has-text("Excel"), [data-testid="export-gudang"]').first();
+      const exportBtn = await this.window.locator('[data-testid="export-gudang"]').first();
       if (await exportBtn.count() > 0) {
         console.log('Export button found');
         await this.captureScreenshot('gudang_export_button');
@@ -205,7 +205,7 @@ class GudangTests {
 
     // VAL-GUDANG-049: Import from Excel
     await this.runAssertion('VAL-GUDANG-049: Import from Excel', async () => {
-      const importBtn = await this.window.locator('button:has-text("Import"), button:has-text("Upload"), [data-testid="import-gudang"]').first();
+      const importBtn = await this.window.locator('[data-testid="import-gudang"]').first();
       if (await importBtn.count() > 0) {
         console.log('Import button found');
       }

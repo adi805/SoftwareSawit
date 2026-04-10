@@ -34,9 +34,9 @@ class AuthTests {
 
     // VAL-USER-003: Empty required fields rejection (form validation)
     await this.runAssertion('VAL-USER-003: Login form has required fields', async () => {
-      const usernameInput = await this.window.locator('input[name="username"], input#username, input[placeholder*="username" i]').first();
-      const passwordInput = await this.window.locator('input[type="password"], input#password').first();
-      const submitBtn = await this.window.locator('button[type="submit"], button:has-text("Login"), button:has-text("Masuk")').first();
+      const usernameInput = await this.window.locator('[data-testid="login-username"]').first();
+      const passwordInput = await this.window.locator('[data-testid="login-password"]').first();
+      const submitBtn = await this.window.locator('[data-testid="login-submit"]').first();
       
       if (await usernameInput.count() === 0) throw new Error('Username input not found');
       if (await passwordInput.count() === 0) throw new Error('Password input not found');
@@ -47,9 +47,9 @@ class AuthTests {
   async testLoginFunctionality() {
     // VAL-USER-051: Login with invalid username
     await this.runAssertion('VAL-USER-051: Invalid credentials show error', async () => {
-      await this.window.fill('input[name="username"], input#username', 'invalid_user_xyz');
-      await this.window.fill('input[type="password"], input#password', 'wrong_password');
-      await this.window.click('button[type="submit"]');
+      await this.window.fill('[data-testid="login-username"]', 'invalid_user_xyz');
+      await this.window.fill('[data-testid="login-password"]', 'wrong_password');
+      await this.window.click('[data-testid="login-submit"]');
       await this.window.waitForTimeout(1500);
       
       await this.captureScreenshot('invalid_login_error');
@@ -65,9 +65,9 @@ class AuthTests {
 
     // VAL-USER-050: Login with valid credentials
     await this.runAssertion('VAL-USER-050: Valid login redirects to dashboard', async () => {
-      await this.window.fill('input[name="username"], input#username', 'admin');
-      await this.window.fill('input[type="password"], input#password', 'admin123');
-      await this.window.click('button[type="submit"]');
+      await this.window.fill('[data-testid="login-username"]', 'admin');
+      await this.window.fill('[data-testid="login-password"]', 'admin123');
+      await this.window.click('[data-testid="login-submit"]');
       
       await this.window.waitForTimeout(2000);
       await this.captureScreenshot('after_valid_login');
@@ -225,11 +225,11 @@ class AuthTests {
     // VAL-USER-071: Invalid token redirects to login
     await this.runAssertion('VAL-USER-071: Session validation', async () => {
       // Re-login for subsequent tests
-      const usernameInput = await this.window.locator('input[name="username"], input#username').first();
+      const usernameInput = await this.window.locator('[data-testid="login-username"]').first();
       if (await usernameInput.count() > 0) {
-        await this.window.fill('input[name="username"], input#username', 'admin');
-        await this.window.fill('input[type="password"], input#password', 'admin123');
-        await this.window.click('button[type="submit"]');
+        await this.window.fill('[data-testid="login-username"]', 'admin');
+        await this.window.fill('[data-testid="login-password"]', 'admin123');
+        await this.window.click('[data-testid="login-submit"]');
         await this.window.waitForTimeout(2000);
       }
     }, { area: this.area, optional: true });

@@ -21,13 +21,13 @@ if "%GITHUB_PAT%"=="" (
     echo [INFO] GITHUB_PAT not set in environment.
     echo [INFO] Checking for token file...
     
-    if exist "%~dp0..\..\..\Key Github.txt" (
-        set /p GITHUB_PAT=<"%~dp0..\..\..\Key Github.txt"
-        echo [SUCCESS] Token loaded from Key Github.txt
+    if exist "%~dp0.token" (
+        set /p GITHUB_PAT=<"%~dp0.token"
+        echo [SUCCESS] Token loaded from .token file
     ) else (
         echo [ERROR] GITHUB_PAT not found!
         echo [INFO] Please set GITHUB_PAT environment variable
-        echo [INFO] Or create Key Github.txt in repository root
+        echo [INFO] Or create .token file in monitor directory
         pause
         exit /b 1
     )
