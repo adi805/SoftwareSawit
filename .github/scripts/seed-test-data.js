@@ -3,10 +3,12 @@
 /**
  * Seed Test Data for GitHub Actions Tests
  * Run this before tests to populate database
+ * 
+ * NOTE: Users are NOT seeded - the app auto-creates default admin user
+ * if no users exist (see createDefaultAdmin in userDatabase.ts)
  */
 
 const Database = require('better-sqlite3');
-const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
 
@@ -14,8 +16,7 @@ const fs = require('fs');
 const BASE_DIR = path.join(process.env.APPDATA || process.env.HOME, 'SoftwareSawit');
 const DATA_DIR = path.join(BASE_DIR, 'data');
 
-// User database
-const USERS_DB = path.join(DATA_DIR, 'users.db');
+// NOTE: Users database NOT seeded - app auto-creates default admin
 
 // Master databases
 const MASTER_DIR = path.join(DATA_DIR, 'master');
@@ -56,11 +57,6 @@ function seedCOA(db) {
     );
   `);
 
-  const insert = db.prepare(`
-    INSERT OR IGNORE INTO coa (id, kode, nama, tipe, parent_id, status_aktif)
-    VALUES (?, ?, ?, ?, ?, 1)
-  `);
-
   const coaData = [
     ['1', '1-1000', 'Kas', 'Aktiva Lancar', null],
     ['2', '1-1100', 'Bank', 'Aktiva Lancar', '1'],
@@ -71,13 +67,14 @@ function seedCOA(db) {
     ['7', '5-1000', 'Beban Gaji', 'Beban', null],
   ];
 
+  const stmt = db.prepare('INSERT OR IGNORE INTO coa VALUES (?, ?, ?, ?, ?, 1, datetime("now"), datetime("now"))');
   const insertMany = db.transaction((data) => {
     for (const row of data) {
-      insert.run(...row);
+      stmt.run(...row);
     }
   });
   insertMany(coaData);
-  console.log(`Seeded ${coaData.length} COA records`);
+  console.log('Seeded ' + coaData.length + ' COA records');
 }
 
 function seedAspekKerja(db) {
@@ -85,7 +82,7 @@ function seedAspekKerja(db) {
   db.exec(`
     CREATE TABLE IF NOT EXISTS aspek_kerja (
       id TEXT PRIMARY KEY,
-      kode TEXT UNUNIQUE NOT NULL,
+      kode TEXT UNIQUE NOT NULL,
       nama TEXT NOT NULL,
       coa_id TEXT,
       jenis TEXT,
@@ -95,24 +92,20 @@ function seedAspekKerja(db) {
     );
   `);
 
-  const insert = db.prepare(`
-    INSERT OR IGNORE INTO aspek_kerja (id, kode, nama, coa_id, jenis, status_aktif)
-    VALUES (?, ?, ?, ?, ?, 1)
-  `);
-
   const akData = [
     ['1', 'AK01', 'Panen', '1', 'Operasional'],
     ['2', 'AK02', 'Pemeliharaan', '1', 'Operasional'],
     ['3', 'AK03', 'Transport', '1', 'Operasional'],
   ];
 
+  const stmt = db.prepare('INSERT OR IGNORE INTO aspek_kerja VALUES (?, ?, ?, ?, ?, 1, datetime("now"), datetime("now"))');
   const insertMany = db.transaction((data) => {
     for (const row of data) {
-      insert.run(...row);
+      stmt.run(...row);
     }
   });
   insertMany(akData);
-  console.log(`Seeded ${akData.length} Aspek Kerja records`);
+  console.log('Seeded ' + akData.length + ' Aspek Kerja records');
 }
 
 function seedBlok(db) {
@@ -135,28 +128,24 @@ function seedBlok(db) {
     );
   `);
 
-  const insert = db.prepare(`
-    INSERT OR IGNORE INTO blok (id, kode, nama, tahun_tanam, luas, pokok, sph, bulan_tanam)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-
   const blokData = [
     ['1', 'B01', 'Blok A', 2025, 10.5, 1050, 100, 'Januari'],
     ['2', 'B02', 'Blok B', 2025, 8.2, 820, 100, 'Februari'],
     ['3', 'B03', 'Blok C', 2024, 12.0, 1200, 100, 'Maret'],
   ];
 
+  const stmt = db.prepare('INSERT OR IGNORE INTO blok VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, datetime("now"), datetime("now"))');
   const insertMany = db.transaction((data) => {
     for (const row of data) {
-      insert.run(...row);
+      stmt.run(...row);
     }
   });
   insertMany(blokData);
-  console.log(`Seeded ${blokData.length} Blok records`);
+  console.log('Seeded ' + blokData.length + ' Blok records');
 }
 
 function seedTransactions(db, name) {
-  console.log(`Seeding ${name} transactions...`);
+  console.log('Seeding ' + name + ' transactions...');
   db.exec(`
     CREATE TABLE IF NOT EXISTS transactions (
       id TEXT PRIMARY KEY,
@@ -175,90 +164,28 @@ function seedTransactions(db, name) {
     );
   `);
 
-  const insert = db.prepare(`
-    INSERT OR IGNORE INTO transactions (id, transaction_number, transaction_date, transaction_type, amount, description, coa_id, status, created_by)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-
   const txData = [
-    ['1', `${name}-001`, '2026-01-15', `${name} Masuk`, 500000, 'Test transaction 1', '1', 'Pending Approval 1', 'admin'],
-    ['2', `${name}-002`, '2026-01-20', `${name} Keluar`, 300000, 'Test transaction 2', '2', 'Fully Approved', 'admin'],
+    ['1', name + '-001', '2026-01-15', name + ' Masuk', 500000, 'Test ' + name + ' 1', '1', 'Pending Approval 1', 'admin'],
+    ['2', name + '-002', '2026-01-20', name + ' Keluar', 300000, 'Test ' + name + ' 2', '2', 'Fully Approved', 'admin'],
   ];
 
+  const stmt = db.prepare('INSERT OR IGNORE INTO transactions VALUES (?, ?, ?, ?, ?, ?, ?, NULL, NULL, ?, ?, datetime("now"), datetime("now"))');
   const insertMany = db.transaction((data) => {
     for (const row of data) {
-      insert.run(...row);
+      stmt.run(...row);
     }
   });
   insertMany(txData);
-  console.log(`Seeded ${txData.length} ${name} transactions`);
+  console.log('Seeded ' + txData.length + ' ' + name + ' transactions');
 }
 
-async function seedUsers(db) {
-  console.log('Seeding Users (admin)...');
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
-      id TEXT PRIMARY KEY,
-      username TEXT UNIQUE NOT NULL,
-      password_hash TEXT NOT NULL,
-      full_name TEXT,
-      role TEXT NOT NULL,
-      status TEXT DEFAULT 'active',
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
-    CREATE TABLE IF NOT EXISTS sessions (
-      id TEXT PRIMARY KEY,
-      user_id TEXT NOT NULL,
-      token TEXT UNIQUE NOT NULL,
-      ip_address TEXT,
-      user_agent TEXT,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      expires_at TEXT DEFAULT (datetime('now', '+7 days')),
-      last_activity TEXT DEFAULT CURRENT_TIMESTAMP
-    );
-    CREATE TABLE IF NOT EXISTS login_attempts (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT NOT NULL,
-      attempt_time TEXT DEFAULT CURRENT_TIMESTAMP,
-      success INTEGER DEFAULT 0
-    );
-  `);
-
-  // Hash password using bcrypt (matching the app's hashPassword function)
-  const passwordHash = await bcrypt.hash('Admin123!', 10);
-  
-  const insert = db.prepare(`
-    INSERT OR IGNORE INTO users (id, username, password_hash, full_name, role, status)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `);
-
-  const userData = [
-    ['admin-001', 'admin', passwordHash, 'Administrator', 'Administrator', 'active'],
-  ];
-
-  const insertMany = db.transaction((data) => {
-    for (const row of data) {
-      insert.run(...row);
-    }
-  });
-  insertMany(userData);
-  console.log(`Seeded ${userData.length} users with bcrypt hash`);
-}
-
-async function main() {
+function main() {
   console.log('Starting test data seeding...');
-  console.log(`Base Dir: ${BASE_DIR}`);
-  console.log(`Data Dir: ${DATA_DIR}`);
+  console.log('Base Dir: ' + BASE_DIR);
+  console.log('Data Dir: ' + DATA_DIR);
 
   try {
-    // Seed Users (MUST be first - app checks user count to create default admin)
-    ensureDir(DATA_DIR);
-    const usersDb = new Database(USERS_DB);
-    await seedUsers(usersDb);
-    usersDb.close();
-
-    // Seed COA
+    // Seed COA (includes Aspek Kerja and Blok)
     ensureDir(MASTER_DIR);
     const coaDb = new Database(COA_DB);
     seedCOA(coaDb);
@@ -284,15 +211,16 @@ async function main() {
     seedTransactions(gudangDb, 'Gudang');
     gudangDb.close();
 
-    console.log('✅ Test data seeded successfully!');
-    console.log('  USERS DB:', USERS_DB);
-    console.log('  COA DB:', COA_DB);
-    console.log('  KAS DB:', KAS_DB);
-    console.log('  BANK DB:', BANK_DB);
-    console.log('  GUDANG DB:', GUDANG_DB);
+    console.log('Test data seeded successfully!');
+    console.log('  COA DB: ' + COA_DB);
+    console.log('  KAS DB: ' + KAS_DB);
+    console.log('  BANK DB: ' + BANK_DB);
+    console.log('  GUDANG DB: ' + GUDANG_DB);
+    console.log('NOTE: Users DB NOT seeded - app auto-creates default admin');
     process.exit(0);
   } catch (err) {
-    console.error('❌ Seeding failed:', err.message);
+    console.error('Seeding failed: ' + err.message);
+    console.error(err.stack);
     process.exit(1);
   }
 }
