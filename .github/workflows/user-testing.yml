@@ -138,43 +138,75 @@ jobs:
           New-Item -ItemType Directory -Force -Path $dbBank
           New-Item -ItemType Directory -Force -Path $dbGudang
           
-          if (Test-Path ".github/scripts/seed-test-data.js") {
-            node .github/scripts/seed-test-data.js
-          } else {
-            Write-Host "Seed script not found, creating minimal seed data..."
-            # Create minimal SQLite databases with test data
-            npm install --save-dev better-sqlite3 --legacy-peer-deps
-            node -e "
-              const Database = require('better-sqlite3');
-              const fs = require('fs');
-              const path = require('path');
-              const base = process.env.APPDATA + '\\\\SoftwareSawit\\\\data';
-              const master = base + '\\\\master';
-              fs.mkdirSync(master, {recursive:true});
-              
-              // Seed COA
-              const coaDb = new Database(master + '\\\\coa.db');
-              coaDb.exec('CREATE TABLE IF NOT EXISTS coa (id TEXT, kode TEXT, nama TEXT, tipe TEXT, parent_id TEXT, status_aktif INTEGER DEFAULT 1, created_at TEXT, updated_at TEXT)');
-              coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('1','1-1000','Kas','Aktiva Lancar',NULL,1,datetime('now'),datetime('now'))\");
-              coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('2','1-1100','Bank','Aktiva Lancar','1',1,datetime('now'),datetime('now'))\");
-              coaDb.exec('CREATE TABLE IF NOT EXISTS aspek_kerja (id TEXT, kode TEXT, nama TEXT, coa_id TEXT, jenis TEXT, status_aktif INTEGER DEFAULT 1)');
-              coaDb.exec(\"INSERT OR IGNORE INTO aspek_kerja VALUES ('1','AK01','Panen','1','Operasional',1)\");
-              coaDb.exec('CREATE TABLE IF NOT EXISTS blok (id TEXT, kode TEXT, nama TEXT, tahun_tanam INTEGER, luas REAL, pokok INTEGER, sph REAL, bulan_tanam TEXT)');
-              coaDb.exec(\"INSERT OR IGNORE INTO blok VALUES ('1','B01','Blok A',2025,10.5,1050,100,'Januari')\");
-              coaDb.close();
-              
-              // Seed Kas
-              const year = new Date().getFullYear().toString();
-              const month = String(new Date().getMonth() + 1).padStart(2, '0');
-              const kasDir = base + '\\\\kas\\\\' + year;
-              fs.mkdirSync(kasDir, {recursive:true});
-              const kasDb = new Database(kasDir + '\\\\' + month + '.db');
-              kasDb.exec('CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, status TEXT, created_by TEXT)');
-              kasDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('1','KAS-001','2026-01-15','Kas Masuk',500000,'Test','1','Pending Approval 1','admin')\");
-              kasDb.close();
-              
-              console.log('Test data seeded successfully');
+          # Install better-sqlite3 for seeding
+          npm install --save-dev better-sqlite3 --legacy-peer-deps
+          
+          # Seed all databases using inline script
+          node -e "
+            const Database = require('better-sqlite3');
+            const fs = require('fs');
+            const path = require('path');
+            const base = process.env.APPDATA + '\\\\SoftwareSawit\\\\data';
+            
+            function ensureDir(dir) {
+              if (!fs.existsSync(dir)) fs.mkdirSync(dir, {recursive:true});
             }
+            
+            // Seed COA (includes Aspek Kerja and Blok)
+            ensureDir(base + '\\\\master');
+            const coaDb = new Database(base + '\\\\master\\\\coa.db');
+            coaDb.exec('CREATE TABLE IF NOT EXISTS coa (id TEXT, kode TEXT, nama TEXT, tipe TEXT, parent_id TEXT, status_aktif INTEGER DEFAULT 1, created_at TEXT, updated_at TEXT)');
+            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('1','1-1000','Kas','Aktiva Lancar',NULL,1,datetime('now'),datetime('now'))\");
+            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('2','1-1100','Bank','Aktiva Lancar','1',1,datetime('now'),datetime('now'))\");
+            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('3','1-1200','Piutang','Aktiva Lancar','1',1,datetime('now'),datetime('now'))\");
+            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('4','2-1000','Utang Usaha','Utang Lancar',NULL,1,datetime('now'),datetime('now'))\");
+            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('5','3-1000','Modal','Ekuitas',NULL,1,datetime('now'),datetime('now'))\");
+            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('6','4-1000','Pendapatan','Pendapatan',NULL,1,datetime('now'),datetime('now'))\");
+            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('7','5-1000','Beban Gaji','Beban',NULL,1,datetime('now'),datetime('now'))\");
+            
+            coaDb.exec('CREATE TABLE IF NOT EXISTS aspek_kerja (id TEXT, kode TEXT, nama TEXT, coa_id TEXT, jenis TEXT, status_aktif INTEGER DEFAULT 1)');
+            coaDb.exec(\"INSERT OR IGNORE INTO aspek_kerja VALUES ('1','AK01','Panen','1','Operasional',1)\");
+            coaDb.exec(\"INSERT OR IGNORE INTO aspek_kerja VALUES ('2','AK02','Pemeliharaan','1','Operasional',1)\");
+            coaDb.exec(\"INSERT OR IGNORE INTO aspek_kerja VALUES ('3','AK03','Transport','1','Operasional',1)\");
+            
+            coaDb.exec('CREATE TABLE IF NOT EXISTS blok (id TEXT, kode TEXT, nama TEXT, tahun_tanam INTEGER, luas REAL, pokok INTEGER, sph REAL, bulan_tanam TEXT)');
+            coaDb.exec(\"INSERT OR IGNORE INTO blok VALUES ('1','B01','Blok A',2025,10.5,1050,100,'Januari')\");
+            coaDb.exec(\"INSERT OR IGNORE INTO blok VALUES ('2','B02','Blok B',2025,8.2,820,100,'Februari')\");
+            coaDb.exec(\"INSERT OR IGNORE INTO blok VALUES ('3','B03','Blok C',2024,12.0,1200,100,'Maret')\");
+            coaDb.close();
+            console.log('Seeded COA, Aspek Kerja, Blok');
+            
+            // Seed Kas
+            const year = new Date().getFullYear().toString();
+            const month = String(new Date().getMonth() + 1).padStart(2, '0');
+            ensureDir(base + '\\\\kas\\\\' + year);
+            const kasDb = new Database(base + '\\\\kas\\\\' + year + '\\\\' + month + '.db');
+            kasDb.exec('CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, aspek_kerja_id TEXT, blok_id TEXT, status TEXT, created_by TEXT)');
+            kasDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('1','KAS-001','2026-01-15','Kas Masuk',500000,'Test Kas 1','1',NULL,NULL,'Pending Approval 1','admin')\");
+            kasDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('2','KAS-002','2026-01-20','Kas Keluar',300000,'Test Kas 2','2',NULL,NULL,'Fully Approved','admin')\");
+            kasDb.close();
+            console.log('Seeded Kas');
+            
+            // Seed Bank
+            ensureDir(base + '\\\\bank\\\\' + year);
+            const bankDb = new Database(base + '\\\\bank\\\\' + year + '\\\\' + month + '.db');
+            bankDb.exec('CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, aspek_kerja_id TEXT, blok_id TEXT, status TEXT, created_by TEXT)');
+            bankDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('1','BANK-001','2026-01-15','Bank Masuk',500000,'Test Bank 1','1',NULL,NULL,'Pending Approval 1','admin')\");
+            bankDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('2','BANK-002','2026-01-20','Bank Keluar',300000,'Test Bank 2','2',NULL,NULL,'Fully Approved','admin')\");
+            bankDb.close();
+            console.log('Seeded Bank');
+            
+            // Seed Gudang
+            ensureDir(base + '\\\\gudang\\\\' + year);
+            const gudangDb = new Database(base + '\\\\gudang\\\\' + year + '\\\\' + month + '.db');
+            gudangDb.exec('CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, aspek_kerja_id TEXT, blok_id TEXT, status TEXT, created_by TEXT)');
+            gudangDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('1','GUDANG-001','2026-01-15','Gudang Masuk',500000,'Test Gudang 1','1',NULL,NULL,'Pending Approval 1','admin')\");
+            gudangDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('2','GUDANG-002','2026-01-20','Gudang Keluar',300000,'Test Gudang 2','2',NULL,NULL,'Fully Approved','admin')\");
+            gudangDb.close();
+            console.log('Seeded Gudang');
+            
+            console.log('Test data seeded successfully!');
+          "
         shell: pwsh
 
       - name: Run user tests
