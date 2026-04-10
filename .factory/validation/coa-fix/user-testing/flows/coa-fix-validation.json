@@ -1,0 +1,28 @@
+{
+  "milestone": "coa-fix",
+  "groupId": "coa-fix-validation",
+  "assertions": ["VAL-COA-001"],
+  "status": "blocked",
+  "blocker": {
+    "id": "VAL-COA-001",
+    "reason": "Cannot connect to Electron app via CDP to perform UI testing",
+    "details": "The Electron app starts successfully with DevTools listening on ws://127.0.0.1:9222, but agent-browser cannot connect via CDP. This blocks UI validation of the COA form validation fix."
+  },
+  "codeFixVerified": {
+    "assertionId": "VAL-COA-001",
+    "fixVerified": true,
+    "evidence": [
+      "Source file COAFormPage.tsx contains regex /^[0-9]+(-[0-9]+)*$/ which correctly accepts GL Account codes like '11-11-001'",
+      "Built dist file dist/renderer/assets/index-CUpoIoxE.js contains the same correct regex",
+      "However, the packaged app.asar in release/win-unpacked/resources/ was not automatically updated by 'npm run build'"
+    ],
+    "note": "The code fix itself is correct and verified. UI testing requires either rebuilding the asar or running in dev mode."
+  },
+  "toolsUsed": ["agent-browser"],
+  "environmentIssues": [
+    "Electron app starts and logs show 'DevTools listening on ws://127.0.0.1:9222'",
+    "agent-browser --auto-connect returns 'No running Chrome instance with remote debugging found'",
+    "agent-browser --cdp 9222 returns 'Failed to connect via CDP'",
+    "netstat shows no process listening on port 9222 after app appears to start"
+  ]
+}

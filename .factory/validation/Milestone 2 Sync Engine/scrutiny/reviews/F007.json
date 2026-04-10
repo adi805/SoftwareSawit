@@ -1,0 +1,108 @@
+{
+  "featureId": "F007",
+  "milestone": "Milestone 2: Sync Engine",
+  "reviewedAt": "2026-04-08T00:00:00.000Z",
+  "commitId": "7b6a229",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The conflict resolution implementation for F007 is comprehensive and well-structured. It provides multiple resolution strategies (last_write_wins, local_wins, remote_wins, merge, manual), field-level conflict detection, robust audit logging to the sync_conflicts table, and a manual resolution callback hook. The syncDatabase.ts enhancements support full conflict metadata persistence including local_data, remote_data, resolution_strategy, field_conflicts, and merged_data. Data integrity is preserved through explicit strategy application and merge markers. There are no blocking issues, though a few non-blocking gaps exist: the manual callback mechanism lacks IPC exposure, resolveRemoteWins returns undefined instead of marking deletion explicitly, and the legacy detectConflict in syncDatabase.ts is shadowed by the new module.",
+    "issues": [
+      {
+        "file": "src/main/conflictResolution.ts",
+        "line": 50,
+        "severity": "non_blocking",
+        "description": "detectConflict uses a hardcoded 1-second threshold (CONFLICT_THRESHOLD_MS = 1000) to determine whether timestamp differences constitute a conflict. Clock skew or rapid sequential edits on different devices could produce false negatives if both edits occur within the same second. Consider using clock-sweep tolerance or vector clocks in future iterations."
+      },
+      {
+        "file": "src/main/conflictResolution.ts",
+        "line": 288,
+        "severity": "non_blocking",
+        "description": "resolveRemoteWins returns resolvedData: undefined when remoteVersion.deleted is true. Consumers must check for undefined to infer deletion. An explicit deletion sentinel (e.g., { _deleted: true }) would be clearer and less error-prone."
+      },
+      {
+        "file": "src/main/conflictResolution.ts",
+        "line": 365,
+        "severity": "non_blocking",
+        "description": "The manual resolution callback is exposed only as a TypeScript function parameter (ManualResolutionCallback). There are no IPC handlers in main.ts that allow the renderer to register or respond to manual resolution requests. A UI integration in a future milestone will need to add IPC wiring (e.g., 'conflict:requestManualResolution' and 'conflict:resolveManually')."
+      },
+      {
+        "file": "src/main/conflictResolution.ts",
+        "line": 430,
+        "severity": "non_blocking",
+        "description": "getConflictStats computes total as recent.length with a hardcoded limit of 1000. If conflict volume exceeds 1000, the total count will be underreported. A dedicated COUNT(*) query (already available in syncDatabase.getConflictStats) should be used instead."
+      },
+      {
+        "file": "src/main/syncDatabase.ts",
+        "line": 1201,
+        "severity": "non_blocking",
+        "description": "The legacy detectConflict function in syncDatabase.ts still exists but is effectively shadowed by the new conflictResolution.ts module. It only logs resolution timestamps without storing local_data or remote_data, and does not support the new strategies. Consider marking it deprecated or removing it to prevent accidental usage."
+      },
+      {
+        "file": "src/main/conflictResolution.ts",
+        "line": 775,
+        "severity": "non_blocking",
+        "description": "processQueueItemForConflict constructs remoteVersion with empty data ({}). In practice the remote data should be fetched from the server before conflict detection. This is acceptable as a hook/integration point for later features (F009-F012), but the comment should be more explicit that callers must hydrate remoteVersion."
+      }
+    ]
+  },
+  "blockingIssues": [],
+  "nonBlockingIssues": [
+    {
+      "file": "src/main/conflictResolution.ts",
+      "line": 50,
+      "severity": "non_blocking",
+      "description": "detectConflict uses a hardcoded 1-second threshold (CONFLICT_THRESHOLD_MS = 1000) to determine whether timestamp differences constitute a conflict. Clock skew or rapid sequential edits on different devices could produce false negatives if both edits occur within the same second. Consider using clock-sweep tolerance or vector clocks in future iterations."
+    },
+    {
+      "file": "src/main/conflictResolution.ts",
+      "line": 288,
+      "severity": "non_blocking",
+      "description": "resolveRemoteWins returns resolvedData: undefined when remoteVersion.deleted is true. Consumers must check for undefined to infer deletion. An explicit deletion sentinel (e.g., { _deleted: true }) would be clearer and less error-prone."
+    },
+    {
+      "file": "src/main/conflictResolution.ts",
+      "line": 365,
+      "severity": "non_blocking",
+      "description": "The manual resolution callback is exposed only as a TypeScript function parameter (ManualResolutionCallback). There are no IPC handlers in main.ts that allow the renderer to register or respond to manual resolution requests. A UI integration in a future milestone will need to add IPC wiring (e.g., 'conflict:requestManualResolution' and 'conflict:resolveManually')."
+    },
+    {
+      "file": "src/main/conflictResolution.ts",
+      "line": 430,
+      "severity": "non_blocking",
+      "description": "getConflictStats computes total as recent.length with a hardcoded limit of 1000. If conflict volume exceeds 1000, the total count will be underreported. A dedicated COUNT(*) query (already available in syncDatabase.getConflictStats) should be used instead."
+    },
+    {
+      "file": "src/main/syncDatabase.ts",
+      "line": 1201,
+      "severity": "non_blocking",
+      "description": "The legacy detectConflict function in syncDatabase.ts still exists but is effectively shadowed by the new conflictResolution.ts module. It only logs resolution timestamps without storing local_data or remote_data, and does not support the new strategies. Consider marking it deprecated or removing it to prevent accidental usage."
+    },
+    {
+      "file": "src/main/conflictResolution.ts",
+      "line": 775,
+      "severity": "non_blocking",
+      "description": "processQueueItemForConflict constructs remoteVersion with empty data ({}). In practice the remote data should be fetched from the server before conflict detection. This is acceptable as a hook/integration point for later features (F009-F012), but the comment should be more explicit that callers must hydrate remoteVersion."
+    }
+  ],
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "Features consistently add grouped IPC handler blocks in src/main/main.ts per subsystem (Sync Detection, Batch Sync, Local-First Operations). AGENTS.md documents IPC usage but does not explicitly mention this grouped-block convention. F007 does not add conflict-resolution IPC handlers, so no new block was added, which is appropriate for a backend-only feature at this stage.",
+      "evidence": "src/main/main.ts shows grouped handler blocks for syncDetection (~1593), batchSync (~1432), and localFirst (~1483)."
+    },
+    {
+      "area": "skills",
+      "observation": "The worker followed the backend-worker skill procedure: invoked mission-worker-base, read mission.md/AGENTS.md, created conflictResolution.ts with explicit types and interfaces, enhanced syncDatabase.ts with conflict management functions, ran typecheck and lint, and committed cleanly.",
+      "evidence": "Handoff shows validatorsPassed=true, commandsRun includes typecheck (exit 0), lint (exit 0), build (exit 0), and git commit. skillFeedback.followedProcedure=true with no deviations."
+    },
+    {
+      "area": "knowledge",
+      "observation": "The conflict resolution module correctly builds on the syncDatabase.ts infrastructure from F004/F006, reusing the sql.js-backed database and sync_queue concepts. No undocumented patterns were introduced.",
+      "evidence": "src/main/conflictResolution.ts imports from './syncDatabase' and stores conflicts in sync_conflicts table with full JSON metadata."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "F007 (Create conflict resolution logic) passes review. The implementation correctly detects edit-edit and delete-edit conflicts, applies five resolution strategies (last_write_wins, local_wins, remote_wins, merge, manual), logs comprehensive conflict metadata to the sync_conflicts table, and preserves data integrity during resolution. The manual resolution hook is available as a callback for future UI integration. TypeScript compiles cleanly and lint passes. No blocking issues."
+}

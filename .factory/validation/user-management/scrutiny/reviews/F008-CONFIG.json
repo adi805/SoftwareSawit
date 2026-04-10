@@ -1,0 +1,33 @@
+{
+  "featureId": "F008-CONFIG",
+  "reviewedAt": "2026-04-09T00:00:00.000Z",
+  "commitId": "920ef52",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The build configuration for the User Management App is correctly implemented. The dedicated Vite config (vite.user-mgmt.config.ts) uses the proper entry point, output directory, asset naming, and dev server port. package.json scripts are updated appropriately. Build, typecheck, lint, and tests all pass. No blocking issues were introduced by this change.",
+    "issues": [
+      {
+        "file": "src/main/main.ts",
+        "line": 196,
+        "severity": "non_blocking",
+        "description": "In --dev mode, Electron hardcodes localhost:5173 for the user-management app, but vite.user-mgmt.config.ts now serves on port 5174. The dev:user-mgmt script does not start a Vite dev server (it builds then launches Electron), so the localhost:5173 URL is unreachable. This is a pre-existing integration drift that should be fixed in main.ts when running the user-mgmt app under --dev, but it is not caused by F008-CONFIG."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "When creating a separate Vite build config with a different dev server port, AGENTS.md should remind workers to also update main.ts dev-mode URL loading logic. Currently main.ts still hardcodes localhost:5173 for user-mgmt in --dev mode, while vite.user-mgmt.config.ts uses port 5174.",
+      "evidence": "main.ts:196 loads 'http://localhost:5173/?app=user-mgmt' in dev mode, but dev:user-mgmt sets PORT=5174 and vite.user-mgmt.config.ts sets server.port to 5174."
+    },
+    {
+      "area": "skills",
+      "observation": "backend-worker SKILL.md does not cover build-configuration changes (Vite configs, package.json scripts, etc.). F008-CONFIG was assigned to backend-worker despite being a pure build/Vite task. The skill should either explicitly include a build-config procedure or such features should be routed to a different skill.",
+      "evidence": "Feature F008-CONFIG skillName is 'backend-worker' but it only created vite.user-mgmt.config.ts and updated package.json scripts."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "F008-CONFIG passes review. The separate Vite build configuration is correct and complete: proper entry point, output directory, asset naming, parallel dev port, and updated package.json scripts. A pre-existing integration gap in main.ts dev-mode URL loading was noted but was not introduced by this feature."
+}

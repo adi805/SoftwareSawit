@@ -1,0 +1,40 @@
+{
+  "groupId": "batal-button-validation",
+  "assertions": [
+    "VAL-COA-003",
+    "VAL-ASPEK-003",
+    "VAL-BLOK-003",
+    "VAL-KAS-003",
+    "VAL-BANK-003",
+    "VAL-GUDANG-003"
+  ],
+  "status": "blocked",
+  "blocker": {
+    "reason": "Cannot connect to Electron app via CDP for user testing",
+    "details": "Electron app is running (multiple processes observed with PIDs 36968, 37008, 37016, 35752) and port 9222 shows as LISTENING, but CDP connections timeout. Agent-browser connect times out, curl to CDP endpoint times out.",
+    "attemptedCommands": [
+      "agent-browser connect 9222",
+      "agent-browser --cdp 9222 snapshot -i",
+      "curl http://localhost:9222/json"
+    ],
+    "errorObserved": "All CDP connection attempts timeout or fail"
+  },
+  "codeInspection": {
+    "finding": "The Batal button fix appears to be correctly implemented in all form pages. Each Batal button calls resetForm() and onCancel() in sequence.",
+    "filesReviewed": [
+      "src/renderer/pages/COAFormPage.tsx",
+      "src/renderer/pages/AspekKerjaFormPage.tsx",
+      "src/renderer/pages/BlokFormPage.tsx",
+      "src/renderer/pages/KasFormPage.tsx",
+      "src/renderer/pages/BankFormPage.tsx",
+      "src/renderer/pages/GudangFormPage.tsx"
+    ],
+    "pattern": "onClick={() => { resetForm(); onCancel(); }}"
+  },
+  "environment": {
+    "electronRunning": true,
+    "cdpPortListening": true,
+    "connectionAccessible": false
+  },
+  "appliedUpdates": []
+}

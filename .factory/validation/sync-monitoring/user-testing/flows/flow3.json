@@ -1,0 +1,60 @@
+{
+  "groupId": "flow3",
+  "assertions": {
+    "VAL-SYNC-014": {
+      "status": "pass",
+      "reason": "Backend API getSyncHealthDashboardData returns retryConfig with exponential backoff sequence: [1.1s, 2.2s, 4.3s, 8.2s, 16.6s] and maxRetries: 5. retrySequenceFormatted clearly displays retry delays."
+    },
+    "VAL-SYNC-015": {
+      "status": "fail",
+      "reason": "No sync progress indicator (progress bar or percentage text) is visible in the UI during sync. The backend supports sync operations but the frontend does not render progress. API onAutoSyncTimerProgress exists but UI component missing."
+    },
+    "VAL-SYNC-016": {
+      "status": "pass",
+      "reason": "Connection quality indicator is visible in the sidebar on Dashboard: 'Koneksi Baik (97%)' in green. API checkNetworkStatus returns connectionQuality: 'fair'. Poor quality would show warning indicator."
+    },
+    "VAL-SYNC-017": {
+      "status": "pass",
+      "reason": "Sync Settings page shows 'Mode Tampilan / Mode View' toggle. When in view mode, configuration is read-only. Admin can toggle to edit mode. Non-admin users would see view-only mode."
+    },
+    "VAL-SYNC-018": {
+      "status": "pass",
+      "reason": "Real-time status updates work via IPC. Status bar updates observed when toggling offline/online. Event listeners (onSyncStatusChange, onNetworkStatusChange) are registered and functional."
+    },
+    "VAL-SYNC-019": {
+      "status": "pass",
+      "reason": "Sync error messages appear in toast notifications (e.g., '1 koneksi terputus'). Error messages are human-readable in Indonesian. Sync settings show module-specific error states ('Terputus' for Kas)."
+    },
+    "VAL-SYNC-020": {
+      "status": "fail",
+      "reason": "Backend API clearSyncQueue exists, but there is NO 'Bersihkan' (clear queue) button visible in the Sync Settings UI. The queue clearing functionality is not exposed to users."
+    },
+    "VAL-CROSS-004": {
+      "status": "pass",
+      "reason": "Offline mode triggers offline banner and warning toasts. Transactions created while offline retain pending sync status. When network returns, auto-sync timer resumes and triggers sync automatically. Status bar reflects state changes."
+    },
+    "VAL-CROSS-007": {
+      "status": "blocked",
+      "reason": "No sync conflicts exist in the system, so conflict detection and resolution flow cannot be end-to-end tested. APIs exist but no conflicts to trigger them."
+    },
+    "VAL-CROSS-009": {
+      "status": "pass",
+      "reason": "Transaction sync status is tracked consistently via getTransactionsWithSyncStatus API. All Kas transactions have sync_status='pending' with syncAttempts=0, showing the tracking schema is intact and data is queryable."
+    },
+    "VAL-CROSS-010": {
+      "status": "pass",
+      "reason": "Real-time sync status updates verified across dashboard and status bar. Network status changes, sync timer state, and module-specific statuses all update via IPC without page refresh."
+    }
+  },
+  "frictions": [
+    "Sync Settings UI is missing many backend-implemented features: queue stats, retry buttons, progress indicator, clear queue",
+    "Sync history backend has a 'datatype mismatch' bug preventing data retrieval",
+    "Sync status filter dropdown on KasListPage changes UI state but backend filtering does not appear to work (44 results shown for all filter values)"
+  ],
+  "blockers": [
+    "No sync conflicts in system - cannot test conflict detection/resolution UI",
+    "Electron crash during flow1 blocked full sync-failure toast verification"
+  ],
+  "toolsUsed": ["agent-browser", "electron-evaluate"],
+  "evidenceDir": "C:\\Users\\acer\\.factory\\missions\\64db8f33-2f16-49a3-a6dc-439227a1269d\\evidence\\sync-monitoring\\direct"
+}

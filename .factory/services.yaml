@@ -1,0 +1,29 @@
+commands:
+  install: npm install
+  typecheck: npm run typecheck
+  build: npm run build
+  build:user-mgmt: npm run build:user-mgmt
+  test: npm test
+  test:coverage: npx jest --coverage
+  lint: npm run lint
+  dev: npm run dev
+  dev:main: npm run dev:main
+  dev:renderer: npm run dev:renderer
+  dev:user-mgmt: npm run dev:user-mgmt
+  start: npm run start
+  start:user-mgmt: npm run start:user-mgmt
+
+services:
+  vite-dev-server:
+    start: npm run dev:renderer
+    stop: taskkill /F /IM node.exe 2>nul || true
+    healthcheck: curl -sf http://localhost:5173 || exit 1
+    port: 5173
+    depends_on: []
+
+  electron-main:
+    start: npm run dev:main
+    stop: taskkill /F /IM electron.exe 2>nul || true
+    healthcheck: echo "Electron health check not available"
+    port: null
+    depends_on: [vite-dev-server]

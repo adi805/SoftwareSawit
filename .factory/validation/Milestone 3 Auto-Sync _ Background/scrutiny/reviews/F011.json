@@ -1,0 +1,62 @@
+{
+  "featureId": "F011",
+  "reviewedAt": "2026-04-08T08:15:00.000Z",
+  "commitId": "3515843",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "F011 adds pause/resume sync logic with persistent state across app restarts. The implementation modifies autoSyncTimer.ts: saveTimerState() now serializes the isManuallyPaused flag into the _autoSyncTimer sync config entry, loadTimerState() restores it on startup, startTimer() respects the restored pause state by not starting the interval until resume, and pauseTimer()/resumeTimer() call saveTimerState() to persist the flag. IPC handlers and preload APIs for pause/resume already existed (added in prior features), so no new IPC surface was introduced. TypeScript compilation and lint pass cleanly.",
+    "issues": [
+      {
+        "file": "src/main/autoSyncTimer.ts",
+        "line": 240,
+        "severity": "non_blocking",
+        "description": "saveTimerState() stores isManuallyPaused alongside config inside remotePath as a JSON blob. This is pragmatic but overloads the remotePath column with state data rather than a URL/path. If downstream code or migrations assume remotePath is always a URL, this could cause subtle bugs."
+      },
+      {
+        "file": "src/main/autoSyncTimer.ts",
+        "line": 101,
+        "severity": "non_blocking",
+        "description": "loadTimerState() checks storedState.lastSyncAt as the JSON payload location. The column name 'lastSyncAt' is semantically confusing because the sync_config table uses lastSyncAt to store arbitrary timer state JSON, not an actual last-sync timestamp. This is a pre-existing design choice from earlier features but worth noting."
+      },
+      {
+        "file": "src/main/autoSyncTimer.ts",
+        "line": 348,
+        "severity": "non_blocking",
+        "description": "pauseTimer() does not prevent pause if currently in the middle of an active sync (timerState.isSyncing). It clears the interval and sets the paused flag, which means an in-flight sync will finish (because it runs asynchronously), but the next tick is blocked. This is acceptable behavior, but it could be made more explicit with a log line when pausing during an active sync."
+      },
+      {
+        "file": "src/main/autoSyncTimer.ts",
+        "line": 370,
+        "severity": "non_blocking",
+        "description": "resumeTimer() only resumes if timerState.isRunning && !timerInterval && timerState.config.enabled. If the timer was never started (isRunning = false), resume does nothing. This means a user cannot resume from a fully stopped timer—only from a paused one. This matches the expected behavior but is a constraint that should be documented."
+      },
+      {
+        "file": "src/main/autoSyncTimer.ts",
+        "line": 210,
+        "severity": "non_blocking",
+        "description": "initAutoSyncTimer() starts the timer when enabled and not already running, even if isManuallyPaused is true. startTimer() then detects the paused state and returns without creating the interval. This works, but it means the init flow always enters startTimer() and logs 'Timer started but paused - awaiting manual resume'. A small duplication of intent that could be simplified by checking isManuallyPaused earlier in init."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md documents that remotePath in sync_config stores API URLs, but the auto-sync timer features (F009-F011) overload remotePath to store JSON-serialized state objects. This pattern works locally but diverges from the documented column semantics. A dedicated 'settingsJson' or 'stateJson' column in sync_config would make the persistence contract clearer.",
+      "evidence": "AGENTS.md describes offline-first sync using remotePath for API URLs. autoSyncTimer.ts uses remotePath to persist { intervalMs, enabled, modules, minIntervalMs, isManuallyPaused } as JSON."
+    },
+    {
+      "area": "skills",
+      "observation": "The backend-worker SKILL.md is narrowly focused on Blok/COA schema changes and does not cover sync timer logic, IPC, or state persistence. The F011 worker correctly followed the general procedure (read codebase, implement, verify) but had to deviate from the skill's concrete work steps because the skill does not address timer/services work. This is consistent with observations from F009 and F012 reviews.",
+      "evidence": "SKILL.md work procedure sections are all about Blok/COA schema changes. Transcript shows the worker exploring autoSyncTimer.ts and syncDatabase.ts to understand existing patterns before making changes."
+    },
+    {
+      "area": "services",
+      "observation": "There is still no service definition in .factory/services.yaml for the Cloudflare API (softwaresawit-api), which all sync-related features depend on. Noted in F012 review already.",
+      "evidence": ".factory/services.yaml lists electron, mcp-server, app, and user-mgmt but no softwaresawit-api or wrangler dev service."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "F011 delivers exactly what was requested: pause/resume sync with persistent state across app restarts. The changes are minimal, focused, and fit cleanly into the existing autoSyncTimer.ts architecture. Existing IPC and preload infrastructure meant no new crossing-layer API had to be introduced. All validations pass. The implementation is production-ready with only minor non-blocking observations around column semantics and flow clarity. Recommend pass."
+}

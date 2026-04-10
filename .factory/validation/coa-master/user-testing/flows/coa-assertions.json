@@ -1,0 +1,32 @@
+{
+  "groupId": "coa-assertions",
+  "assertions": ["VAL-COA-001", "VAL-COA-002"],
+  "tool": "agent-browser",
+  "isolation": {
+    "appUrl": "ws://127.0.0.1:9222",
+    "dataDir": "C:\\Users\\acer\\AppData\\Roaming\\software-sawit",
+    "notes": "Electron app running with remote debugging on port 9222"
+  },
+  "results": [
+    {
+      "assertionId": "VAL-COA-001",
+      "status": "fail",
+      "evidence": "Attempted to create COA with kode '11-11-001' (Excel GL Account format). Form validation rejected with 'Kode harus berupa angka' (Kode must be a number). Successfully created COA with numeric kode '9999' but Excel-format codes are rejected.",
+      "friction": "UI form validation only accepts numeric values for Kode field"
+    },
+    {
+      "assertionId": "VAL-COA-002",
+      "status": "pass",
+      "evidence": "COA list page displays columns: No, Kode, Nama, Tipe, Parent COA, Status, Aksi. Data rows show correct information including parent hierarchy (e.g., '110 - Kas' with parent '100 - AKTIVA LANCAR'). Pagination works correctly (31 records across 2 pages)."
+    }
+  ],
+  "frictions": [
+    {
+      "description": "COA Kode field only accepts numeric values, rejects Excel-format GL Account codes like '11-11-001'",
+      "impact": "Cannot import COA data from Excel files that use hyphenated GL Account codes"
+    }
+  ],
+  "blockers": [],
+  "toolsUsed": ["agent-browser"],
+  "completedAt": "2026-04-06T20:59:00Z"
+}

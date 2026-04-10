@@ -1,0 +1,27 @@
+{
+  "milestone": "dashboard-approval",
+  "round": 6,
+  "status": "fail",
+  "assertionsSummary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "blocked": 0
+  },
+  "passedAssertions": [],
+  "failedAssertions": [
+    {
+      "id": "VAL-DASH-019",
+      "reason": "Dashboard Approval page has critical accessibility gaps: (1) one button has no accessible name (empty text, no aria-label/title). (2) zero buttons carry aria-label attributes. (3) all 4 filter select/comboboxes are unlabeled (no aria-label, id, name, or associated label). (4) no live-region elements (aria-live, role=alert, role=status) exist, so screen readers cannot announce status changes. Keyboard navigation passes because interactive elements are native focusable controls."
+    }
+  ],
+  "blockedAssertions": [],
+  "appliedUpdates": [
+    {
+      "target": "validation-state.json",
+      "description": "Updated VAL-DASH-019 issue text with fresh findings from round 6 flow validator",
+      "source": "flow-report"
+    }
+  ],
+  "previousRound": ".factory/validation/dashboard-approval/user-testing/synthesis-round5.json"
+}

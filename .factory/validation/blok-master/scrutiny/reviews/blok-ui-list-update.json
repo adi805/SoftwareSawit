@@ -1,0 +1,28 @@
+{
+  "featureId": "blok-ui-list-update",
+  "reviewedAt": "2026-04-06T12:30:00.000Z",
+  "commitId": "ce75575",
+  "transcriptSkeletonReviewed": false,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Feature implementation is correct. All 8 data columns added to table, filter dropdown uses status_tanaman with TM/TBM/TTM/TLS options, and export Excel includes all 8 columns. One non-blocking visual bug found in getStatusBadgeColor function.",
+    "issues": [
+      {
+        "file": "src/renderer/pages/BlokListPage.tsx",
+        "line": 263,
+        "severity": "non_blocking",
+        "description": "getStatusBadgeColor function still uses old status values ('aktif', 'tidak_aktif', 'dalam_perawatan') but is now called with status_tanaman values ('TM', 'TBM', 'TTM', 'TLS'). All status badges will fall through to the default gray styling (bg-gray-100 text-gray-800) instead of appropriate colors. This is a visual bug but does not block functionality."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "getStatusBadgeColor function was not updated when status options changed from ['aktif', 'tidak_aktif', 'dalam_perawatan'] to ['TM', 'TBM', 'TTM', 'TLS']. AGENTS.md documents the new status options but does not specify that badge color functions must also be updated.",
+      "evidence": "BlokListPage.tsx:263-273 - getStatusBadgeColor switch cases unchanged despite STATUS_OPTIONS update at line 35-38"
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Feature blok-ui-list-update correctly implements 8-column table display (VAL-BLOK-003), status_tanaman filter with TM/TBM/TTM/TLS options (VAL-BLOK-004), and 8-column Excel export (VAL-BLOK-006). Implementation includes BlokFormPage updates with new form fields. One non-blocking bug: getStatusBadgeColor uses outdated status values causing all status badges to render with gray color instead of appropriate semantic colors."
+}

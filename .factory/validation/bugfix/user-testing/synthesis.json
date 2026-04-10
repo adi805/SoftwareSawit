@@ -1,0 +1,52 @@
+{
+  "milestone": "bugfix",
+  "round": 2,
+  "status": "fail",
+  "assertionsSummary": {
+    "total": 6,
+    "passed": 0,
+    "failed": 0,
+    "blocked": 6
+  },
+  "passedAssertions": [],
+  "failedAssertions": [],
+  "blockedAssertions": [
+    {
+      "id": "VAL-COA-003",
+      "blockedBy": "Cannot connect to Electron app via CDP for user testing - Electron app is running but CDP endpoint not accessible"
+    },
+    {
+      "id": "VAL-ASPEK-003",
+      "blockedBy": "Cannot connect to Electron app via CDP for user testing - Electron app is running but CDP endpoint not accessible"
+    },
+    {
+      "id": "VAL-BLOK-003",
+      "blockedBy": "Cannot connect to Electron app via CDP for user testing - Electron app is running but CDP endpoint not accessible"
+    },
+    {
+      "id": "VAL-KAS-003",
+      "blockedBy": "Cannot connect to Electron app via CDP for user testing - Electron app is running but CDP endpoint not accessible"
+    },
+    {
+      "id": "VAL-BANK-003",
+      "blockedBy": "Cannot connect to Electron app via CDP for user testing - Electron app is running but CDP endpoint not accessible"
+    },
+    {
+      "id": "VAL-GUDANG-003",
+      "blockedBy": "Cannot connect to Electron app via CDP for user testing - Electron app is running but CDP endpoint not accessible"
+    }
+  ],
+  "appliedUpdates": [],
+  "previousRound": ".factory/validation/bugfix/user-testing/synthesis.json",
+  "setupFailure": {
+    "reason": "Electron app is running (processes observed) and port 9222 shows LISTENING, but CDP connections timeout. This suggests the Electron app may not have been started with --remote-debugging-port flag, or the CDP endpoint is blocked.",
+    "attemptedCommands": [
+      "agent-browser connect 9222",
+      "agent-browser --cdp 9222 snapshot -i",
+      "curl http://localhost:9222/json"
+    ],
+    "errorObserved": "All CDP connection attempts timeout or fail - Electron processes running but CDP endpoint not accessible",
+    "electronProcesses": "PIDs 36968, 37008, 37016, 35752 observed running",
+    "codeInspectionFinding": "Batal button fix appears correctly implemented in code - all form pages call resetForm() followed by onCancel()"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "groupId": "round5",
+  "testedAt": "2026-04-09T06:15:00.000Z",
+  "isolation": {
+    "appUrl": "electron://127.0.0.1:9222",
+    "credentials": { "username": "admin", "password": "Admin123!" },
+    "dataDirectory": "C:/Users/acer/AppData/Roaming/software-sawit/data"
+  },
+  "toolsUsed": ["agent-browser"],
+  "assertions": [
+    {
+      "id": "VAL-DASH-019",
+      "title": "Accessibility",
+      "status": "fail",
+      "steps": [
+        { "action": "Test Tab key navigation through dashboard interactive elements", "expected": "All interactive elements reachable via keyboard", "observed": "Tab navigation successfully cycles through 85 focusable elements including sidebar buttons, search input, filters (module, status, date range, sort), pagination controls, and action buttons (Setujui/Tolak/Riwayat)." },
+        { "action": "Check button accessible names (aria-label, title, innerText)", "expected": "ARIA labels on buttons", "observed": "Out of 80 buttons: 18 have visible text, 63 have title attributes, 0 have explicit aria-label. 1 button (back arrow in page header) lacks any accessible name (no text, no title, no aria-label). Action buttons (Setujui/Tolak/Riwayat) rely on title attributes, not aria-label." },
+        { "action": "Check table accessibility markup", "expected": "Proper semantic table structure", "observed": "Table has <thead>, 14 <th> elements, and scope attributes on all headers. No <caption> present." },
+        { "action": "Check heading structure", "expected": "Logical heading hierarchy", "observed": "One <h1> 'Dashboard Approval' present. No sub-headings found." },
+        { "action": "Check HTML lang attribute", "expected": "Language declared", "observed": "<html lang='id'> is correctly set." },
+        { "action": "Check ARIA live regions for status announcements", "expected": "Screen reader announces status changes", "observed": "No aria-live regions found. No role='alert', role='status', or aria-atomic elements present. Status changes (approvals, rejections) are not programmatically announced to screen readers." },
+        { "action": "Check form input labeling", "expected": "Inputs clearly labeled", "observed": "All 3 text inputs have placeholder text serving as labels. 4 select dropdowns have no explicit labels (no <label>, no aria-label, no aria-labelledby)." },
+        { "action": "Check color contrast with computed styles", "expected": "WCAG AA compliant contrast ratios", "observed": "Basic colors sampled: green-700 (#166534) on green-100 (#dcfce7) for Kas badges, gray-700 (#374151) on white for text, gray-700 on gray-100 for pagination buttons. Without Lighthouse or axe-core, exact WCAG AA contrast ratios cannot be verified." }
+      ],
+      "evidence": {
+        "screenshots": [
+          "dashboard-approval/user-testing/flows/round5-focus1.png",
+          "dashboard-approval/user-testing/flows/round5-dashboard.png",
+          "dashboard-approval/user-testing/flows/round5-action-buttons.png",
+          "dashboard-approval/user-testing/flows/round5-keyboard-nav.png"
+        ]
+      },
+      "issues": "Multiple accessibility issues found: (1) One icon button lacks any accessible name, (2) No aria-label attributes used on any buttons (only title attributes), (3) No ARIA live regions for status announcements, (4) Select dropdowns lack labels, (5) Comprehensive color contrast WCAG AA audit cannot be performed without Lighthouse/axe-core."
+    }
+  ],
+  "frictions": [
+    {
+      "description": "agent-browser click command with @refs failed when chained with && on PowerShell",
+      "resolved": true,
+      "resolution": "Used JavaScript eval with base64 encoding or direct element selection instead",
+      "affectedAssertions": []
+    },
+    {
+      "description": "Electron CDP endpoint binds to 127.0.0.1 not localhost",
+      "resolved": true,
+      "resolution": "Used --cdp http://127.0.0.1:9222 for agent-browser connection",
+      "affectedAssertions": []
+    }
+  ],
+  "blockers": [],
+  "summary": "Round 5 focused accessibility testing on VAL-DASH-019. Found that keyboard navigation works, but several ARIA and screen-reader accessibility issues exist: missing accessible name on one button, no aria-label usage, no ARIA live regions for status announcements, and unlabeled select dropdowns. Color contrast WCAG AA compliance remains unverified due to lack of Lighthouse/axe-core."
+}

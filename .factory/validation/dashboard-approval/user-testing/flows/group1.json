@@ -1,0 +1,78 @@
+{
+  "groupId": "group1",
+  "testedAt": "2026-04-08T14:55:00.000Z",
+  "isolation": {
+    "appUrl": "electron://localhost:9223",
+    "credentials": { "username": "admin", "password": "Admin123!" },
+    "dataDirectory": "C:/Users/acer/AppData/Roaming/software-sawit/data"
+  },
+  "toolsUsed": ["agent-browser"],
+  "assertions": [
+    {
+      "id": "VAL-DASH-001",
+      "title": "Dashboard Loads Successfully",
+      "status": "pass",
+      "steps": [
+        { "action": "Launch Electron app with remote debugging", "expected": "App starts and loads login page", "observed": "Login page visible within 3 seconds" },
+        { "action": "Login as admin", "expected": "Redirect to dashboard", "observed": "Dashboard loads successfully" },
+        { "action": "Navigate to Dashboard Approval", "expected": "Page shows summary cards and table", "observed": "Summary cards (PA1, PA2, Overdue, Total) and table rendered correctly" }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group1/dashboard-with-data.png", "dashboard-approval/group1/dashboard-after-reload.png"],
+        "consoleErrors": "none",
+        "network": "N/A (Electron IPC)"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASH-002",
+      "title": "Summary Cards Display Correct Counts",
+      "status": "pass",
+      "steps": [
+        { "action": "View dashboard summary cards", "expected": "Cards reflect actual pending counts", "observed": "PA1=5, PA2=2, Overdue=0, Total=7 - counts match combined module data" }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group1/dashboard-with-data.png"],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASH-003",
+      "title": "Unified Table Shows All Pending Transactions",
+      "status": "fail",
+      "steps": [
+        { "action": "View table with 'Semua Status' filter", "expected": "All pending transactions visible including PA1 and PA2", "observed": "Only PA1 transactions displayed (5 items). PA2 transactions are missing from 'All' status view" },
+        { "action": "Switch to 'Pending Approval 2' filter", "expected": "PA2 items visible", "observed": "PA2 items DO appear when explicitly filtered" }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group1/dashboard-with-data.png", "dashboard-approval/group2/filter-pa2.png"],
+        "consoleErrors": "none"
+      },
+      "issues": "Bug in DashboardApprovalPage.tsx loadPendingApprovals(): when statusFilter is 'all', it queries PA1 and PA2 separately but the PA2 fetch condition evaluates incorrectly, causing PA2 items to be excluded from the unified table."
+    },
+    {
+      "id": "VAL-DASH-010",
+      "title": "Empty State Displays Correctly",
+      "status": "pass",
+      "steps": [
+        { "action": "Apply search filter with nonexistent term", "expected": "Empty state shown", "observed": "Illustration/icon and '0 data' message displayed. Table headers remain visible." }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group1/empty-state.png"],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "agent-browser keyboard type appends text instead of replacing existing content in search fields",
+      "resolved": true,
+      "resolution": "Used Reset Filter button to clear state between searches",
+      "affectedAssertions": ["VAL-DASH-015"]
+    }
+  ],
+  "blockers": [],
+  "summary": "Tested 4 assertions: 2 passed, 1 failed (VAL-DASH-003: PA2 items missing from All status view), 1 pass with minor note"
+}

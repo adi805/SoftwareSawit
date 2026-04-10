@@ -1,0 +1,51 @@
+{
+  "assertions": {
+    "VAL-SYNC-001": {
+      "status": "fail",
+      "evidence": "createKasTransactionLocalFirst result: {\"success\":false,\"message\":\"Jenis transaksi tidak valid\",\"syncStatus\":\"error\"}",
+      "issue": "Local-first operation failed"
+    },
+    "VAL-SYNC-002": {
+      "status": "fail",
+      "evidence": "detectRemoteChanges returned empty array (mock implementation)",
+      "issue": "Remote change detection is mocked and does not make actual HTTP requests"
+    },
+    "VAL-SYNC-003": {
+      "status": "pass",
+      "evidence": "Batch created with ID 53bddccd-959f-4213-b7d9-5c7d7630a433, contains 3 items. Default batchSize=100"
+    },
+    "VAL-SYNC-004": {
+      "status": "pass",
+      "evidence": "Operations returned in FIFO order: create, update, delete"
+    },
+    "VAL-SYNC-005": {
+      "status": "pass",
+      "evidence": "Conflict detected: type=edit_edit, recordId=conflict-1"
+    },
+    "VAL-SYNC-006": {
+      "status": "pass",
+      "evidence": "Local wins resolution applied successfully: {\"amount\":100}"
+    },
+    "VAL-SYNC-007": {
+      "status": "pass",
+      "evidence": "Remote wins resolution applied successfully: {\"amount\":200}"
+    },
+    "VAL-SYNC-008": {
+      "status": "pass",
+      "evidence": "Merge resolution produced merged data with _conflictResolved=true, fieldConflicts=[\"fieldA\"]"
+    },
+    "VAL-SYNC-009": {
+      "status": "fail",
+      "evidence": "queueStatus={\"pending\":0,\"inProgress\":0,\"failed\":0,\"completed\":0,\"total\":0,\"byModule\":{},\"oldestPendingTimestamp\":null}, items=[]",
+      "issue": "Invalid sync status tracking"
+    },
+    "VAL-SYNC-010": {
+      "status": "pass",
+      "evidence": "Sync log infrastructure exists. sync.db exists=true, inspectQueue available, statistics available"
+    }
+  },
+  "errors": [],
+  "setupIssues": [
+    "localDbMgr.initAllDatabases: Database Manager not initialized"
+  ]
+}

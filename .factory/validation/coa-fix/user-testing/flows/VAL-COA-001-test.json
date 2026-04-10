@@ -1,0 +1,31 @@
+{
+  "assertionId": "VAL-COA-001",
+  "milestone": "coa-fix",
+  "status": "blocked",
+  "reason": "Code fix verified in source and dist files, but running Electron app uses old packaged app.asar that wasn't rebuilt. Test could not complete UI verification.",
+  "toolsUsed": ["agent-browser"],
+  "steps": [
+    "Connected to Electron app via agent-browser --auto-connect",
+    "Navigated to COA list page",
+    "Clicked 'Tambah COA' button to open form",
+    "Filled Kode: '11-11-001', Nama: 'Test GL Account'",
+    "Clicked Simpan (Save)",
+    "Observed error: 'Kode harus berupa angka' (old validation error)",
+    "Verified placeholder text shows 'Contoh: 100, 110, 111' (old format, not new '11-11-001' example)"
+  ],
+  "evidence": {
+    "validationError": "Kode harus berupa angka",
+    "placeholderText": "Contoh: 100, 110, 111",
+    "appLoadingFrom": "file:///D:/Estate/Droid/SoftwareSawit/release/win-unpacked/resources/app.asar/dist/renderer/index.html"
+  },
+  "codeVerification": {
+    "sourceFixVerified": true,
+    "sourceFile": "src/renderer/pages/COAFormPage.tsx",
+    "sourceValidation": "/^[0-9]+(-[0-9]+)*$/",
+    "sourceErrorMessage": "Kode format tidak valid",
+    "distFixVerified": true,
+    "distFile": "dist/renderer/assets/index-CUpoIoxE.js",
+    "distContainsNewErrorMessage": true
+  },
+  "blockingRootCause": "The 'npm run build' command builds the dist folder but does not rebuild the app.asar package in release/win-unpacked/resources/. The running Electron app uses the old packaged code."
+}

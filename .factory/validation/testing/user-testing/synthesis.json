@@ -1,0 +1,49 @@
+{
+  "milestone": "testing",
+  "round": 1,
+  "status": "fail",
+  "assertionsSummary": {
+    "total": 25,
+    "passed": 6,
+    "failed": 0,
+    "blocked": 19,
+    "notTested": 19
+  },
+  "passedAssertions": [
+    "VAL-COA-003",
+    "VAL-ASPEK-003",
+    "VAL-BLOK-003",
+    "VAL-KAS-003",
+    "VAL-BANK-003",
+    "VAL-GUDANG-003"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [
+    { "id": "VAL-COA-001", "blockedBy": "Electron app could not be started persistently - fireAndForget background process mechanism not working in current environment" },
+    { "id": "VAL-COA-002", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-COA-004", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-COA-005", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-ASPEK-001", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-ASPEK-002", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-BLOK-001", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-BLOK-002", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-KAS-001", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-KAS-002", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-KAS-004", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-BANK-001", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-BANK-002", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-BANK-004", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-GUDANG-001", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-GUDANG-002", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-GUDANG-004", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-CROSS-001", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-CROSS-002", "blockedBy": "Electron app could not be started persistently" },
+    { "id": "VAL-CROSS-003", "blockedBy": "Electron app could not be started persistently" }
+  ],
+  "appliedUpdates": [
+    { "target": "user-testing.md", "description": "Added testing milestone assertions and environment issue documentation", "source": "setup" }
+  ],
+  "previousRound": null,
+  "environmentIssue": "The Execute tool's fireAndForget mode does not properly persist background processes on Windows. Electron app starts successfully but exits when the shell terminates. Workaround: Use foreground timeout (120s) to start app - DevTools listening message confirms successful startup.",
+  "recommendation": "Manual testing required or environment needs fix for background process persistence"
+}

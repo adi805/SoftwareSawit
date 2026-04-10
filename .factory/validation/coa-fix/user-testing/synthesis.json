@@ -1,0 +1,43 @@
+{
+  "milestone": "coa-fix",
+  "round": 1,
+  "status": "failure",
+  "assertionsSummary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 0,
+    "blocked": 1,
+    "notTested": 1
+  },
+  "passedAssertions": [],
+  "failedAssertions": [],
+  "blockedAssertions": [
+    {
+      "id": "VAL-COA-001",
+      "blockedBy": "App.asar packaging issue - running app uses stale build. Fix verified in dist files but not reflected in running application.",
+      "evidence": "Source (COAFormPage.tsx) and dist (index-CUpoIoxE.js) contain correct regex /^[0-9]+(-[0-9]+)*$/ that accepts '11-11-001' format. However, the packaged app.asar was not updated after rebuild, so running app loads old validation logic."
+    }
+  ],
+  "notTestedAssertions": [
+    {
+      "id": "VAL-COA-001",
+      "reason": "No assertions could be tested due to Electron CDP connection issues and asar packaging problem"
+    }
+  ],
+  "appliedUpdates": [],
+  "environmentIssues": [
+    {
+      "issue": "Electron CDP connection refused",
+      "description": "agent-browser --auto-connect and --cdp 9222 could not connect to Electron despite DevTools listening on ws://127.0.0.1:9222",
+      "attemptedSolutions": [
+        "Killed all Chrome/Edge processes",
+        "Rebuilt asar package with latest dist files",
+        "Tried npm run dev (uses dist directly)",
+        "Tried npm run start (uses packaged app.asar)",
+        "Tried foreground execution with timeout"
+      ],
+      "status": "unresolved"
+    }
+  ],
+  "previousRound": null
+}

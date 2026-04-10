@@ -1,0 +1,5 @@
+
+    Master Data - Aspek KerjaKelola aspek kerja dan hubungannya dengan COAImport ExcelExport ExcelTambah Aspek KerjaSemua JenisDebitKreditSemua COA100 - AKTIVA LANCAR110 - Kas111 - Kas Besar1111 - tess112 - Kas Kecil120 - Bank121 - Bank BCA122 - Bank Mandiri130 - Piutang140 - Persediaan150 - AKTIVA TETAP151 - Tanah152 - Bangunan153 - Kendaraan154 - Peralatan200 - KEWAJIBAN LANCAR210 - Hutang Usaha220 - Hutang Bank300 - MODAL310 - Modal Saham320 - Laba Ditahan400 - PENDAPATAN410 - Pendapatan K CPO420 - Pendapatan KERNEL500 - BEBAN OPERASIONAL510 - Beban Gaji520 - Beban Listrik530 - Beban Transport540 - Beban Perbaikan999 - Testing COA9999 - Test Numeric Code3 dataNoKodeNamaCOA KodeCOA NamaJenisStatusAksi1AK-001Pengumpulan TBS111Kas BesarDebitAktif2AK-002Pengiriman CPO121Bank BCADebitAktif3AK-003Gaji Karyawan510Beban GajiDebitAktifMenampilkan 1 - 3 dari 310 per halaman20 per halaman50 per halaman100 per halamanAwal<Halaman 1 dari 1>AkhirTekan Ctrl + A lalu Ctrl + C untuk menyalin semua data tabel
+  
+
+

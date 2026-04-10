@@ -1,0 +1,120 @@
+{
+  "milestone": "Milestone 1: Foundation & Cloud Setup",
+  "round": 1,
+  "status": "fail",
+  "assertionsSummary": {
+    "total": 19,
+    "passed": 3,
+    "failed": 2,
+    "blocked": 14
+  },
+  "passedAssertions": [
+    "VAL-LOCAL-001",
+    "VAL-LOCAL-002",
+    "VAL-LOCAL-008"
+  ],
+  "failedAssertions": [
+    {
+      "id": "VAL-CLOUD-009",
+      "reason": "Module-level access control not implemented in API routes. JWT middleware validates tokens but does not check the 'modules' claim against the requested endpoint. A kas-only user token can successfully access bank/gudang endpoints."
+    },
+    {
+      "id": "VAL-LOCAL-007",
+      "reason": "Database schemas for transaction tables (kas, bank, gudang) do not define FOREIGN KEY constraints. Referential integrity is not enforced at the SQLite/D1 layer; only application-layer validation exists in kasDatabase.ts/bankDatabase.ts/gudangDatabase.ts."
+    }
+  ],
+  "blockedAssertions": [
+    {
+      "id": "VAL-CLOUD-001",
+      "blockedBy": "Cannot access real Cloudflare D1 from test environment; remote D1 query returns Cloudflare API error 7403. Local Miniflare simulation incompatible with db.exec() multiline SQL."
+    },
+    {
+      "id": "VAL-CLOUD-002",
+      "blockedBy": "Cannot access real Cloudflare D1 from test environment; remote D1 query returns Cloudflare API error 7403."
+    },
+    {
+      "id": "VAL-CLOUD-003",
+      "blockedBy": "Cannot access real Cloudflare D1 from test environment; local Miniflare simulation incompatible with db.exec() multiline SQL."
+    },
+    {
+      "id": "VAL-CLOUD-004",
+      "blockedBy": "Local Miniflare simulation returns 500 on CREATE TABLE due to db.exec() multiline SQL incompatibility; cannot test real D1 CRUD."
+    },
+    {
+      "id": "VAL-CLOUD-005",
+      "blockedBy": "Local Miniflare simulation returns 500 on CREATE TABLE due to db.exec() multiline SQL incompatibility; cannot test real D1 CRUD."
+    },
+    {
+      "id": "VAL-CLOUD-006",
+      "blockedBy": "Local Miniflare simulation returns 500 on CREATE TABLE due to db.exec() multiline SQL incompatibility; cannot test real D1 CRUD."
+    },
+    {
+      "id": "VAL-CLOUD-007",
+      "blockedBy": "Local Miniflare simulation returns 500 on CREATE TABLE due to db.exec() multiline SQL incompatibility; cannot test real D1 CRUD."
+    },
+    {
+      "id": "VAL-CLOUD-008",
+      "blockedBy": "Local Miniflare simulation returns 500 on CREATE TABLE due to db.exec() multiline SQL incompatibility; cannot test real D1 auth flows."
+    },
+    {
+      "id": "VAL-CLOUD-010",
+      "blockedBy": "Local Miniflare simulation returns 500 on CREATE TABLE due to db.exec() multiline SQL incompatibility; cannot test real D1 auto-table creation."
+    },
+    {
+      "id": "VAL-LOCAL-003",
+      "blockedBy": "Electron BrowserWindow cannot display in headless Windows environment. Cannot test offline login flow via UI."
+    },
+    {
+      "id": "VAL-LOCAL-004",
+      "blockedBy": "Electron BrowserWindow cannot display in headless Windows environment. Cannot test offline transaction creation via UI."
+    },
+    {
+      "id": "VAL-LOCAL-005",
+      "blockedBy": "Electron BrowserWindow cannot display in headless Windows environment. Cannot test offline transaction update via UI."
+    },
+    {
+      "id": "VAL-LOCAL-006",
+      "blockedBy": "Electron BrowserWindow cannot display in headless Windows environment. Cannot test offline transaction delete via UI."
+    },
+    {
+      "id": "VAL-SYNC-001",
+      "blockedBy": "Electron BrowserWindow cannot display in headless Windows environment. Cannot verify sync_status=pending assignment via UI interactions."
+    }
+  ],
+  "appliedUpdates": [
+    {
+      "target": "user-testing.md",
+      "description": "Added Milestone 1 testing notes: headless Windows blocks agent-browser, remote D1 inaccessible (CF API 7403), Miniflare db.exec() multiline SQL incompatibility, Windows cmd workaround for wrangler dev + curl",
+      "source": "setup"
+    }
+  ],
+  "previousRound": null,
+  "notes": {
+    "environmentCheck": {
+      "buildSucceeds": true,
+      "typecheckPasses": true,
+      "lintPasses": true,
+      "electronStarts": true,
+      "electronWindowShows": false,
+      "wranglerDevStarts": true,
+      "remoteD1Accessible": false,
+      "miniflareExecCompatible": false,
+      "reason": "Windows headless environment without graphical display driver; Cloudflare API account authorization missing for remote D1; Miniflare local D1 simulation has db.exec() multiline SQL bug"
+    },
+    "verifiedByDirectInspection": {
+      "localDbFiles": [
+        "master/users.db",
+        "master/coa.db",
+        "master/aspek_kerja.db",
+        "master/blok.db",
+        "sync/sync.db",
+        "kas/2026/kas_2026_04.db",
+        "bank/2026/bank_2026_04.db",
+        "gudang/2026/gudang_2026_04.db"
+      ],
+      "schemaParity": "Verified via sql.js introspection that local schemas match D1 definitions from softwaresawit-api/src/lib/migrations.ts",
+      "dataPersistence": "Verified that database files are saved to disk and reloaded across app restarts"
+    },
+    "partialProgress": "Successfully started wrangler dev and confirmed health endpoint. Discovered Miniflare db.exec() incompatibility causing 500s on all CRUD endpoints. Confirmed Electron starts and initializes local databases but cannot render window."
+  }
+}

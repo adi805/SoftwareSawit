@@ -1,0 +1,68 @@
+{
+  "featureId": "F017",
+  "reviewedAt": "2026-04-08T10:50:00.000Z",
+  "commitId": "dc3e627",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "overallStatus": "fail",
+  "codeReview": {
+    "summary": "F017 implements a comprehensive sync status UI component (SyncStatusBar) and supporting context (SyncContext) that display sync states (idle/syncing/paused/error), last sync time, pending/failed counts, network status, real-time progress, and manual sync trigger. The implementation satisfies the feature's expectedBehavior and the validation contract assertions UI_STATUS_DISPLAY, UI_LAST_SYNC, UI_PENDING_COUNT, and UI_NETWORK_STATUS. TypeScript compilation, lint, and build all pass. However, there is a critical resource leak: the SyncContext useEffect that registers IPC event listeners for auto-sync timer and network status updates does not clean them up. Because pauseReason is in the effect's dependency array, every network offline/online cycle re-registers listeners without removing the old ones, leading to duplicate callbacks and memory leakage over the app's lifetime.",
+    "issues": [
+      {
+        "file": "src/renderer/context/SyncContext.tsx",
+        "line": 470,
+        "severity": "blocking",
+        "description": "IPC event listeners registered via window.electronAPI.onAutoSyncTimerStatus, onAutoSyncTimerProgress, onAutoSyncTimerResult, onNetworkStatusChange, and onNetworkStatusSyncControl are never removed. The effect re-runs whenever pauseReason changes (e.g., on every offline/online transition), causing listener accumulation, duplicate state updates, and a memory leak in a long-running Electron app. The cleanup function only removes window online/offline listeners."
+      },
+      {
+        "file": "src/renderer/components/SyncStatusBar.tsx",
+        "line": 207,
+        "severity": "non_blocking",
+        "description": "The notification toast uses Tailwind class 'animate-slide-in-right', which is not defined in tailwind.config.js. The animation will be ignored, reducing the polish of the toast notification."
+      },
+      {
+        "file": "src/renderer/context/SyncContext.tsx",
+        "line": 595,
+        "severity": "non_blocking",
+        "description": "handleOnline is defined after the useEffect that references it in its closure. While this works due to JS closure semantics, it is fragile and makes the component harder to reason about. Additionally, handleOnline calls window.electronAPI.triggerAutoSync for every enabled module, which overlaps with the auto-sync timer's built-in online resume behavior and may cause redundant sync triggers."
+      }
+    ]
+  },
+  "blockingIssues": [
+    {
+      "severity": "blocking",
+      "description": "IPC event listeners registered via window.electronAPI.onAutoSyncTimerStatus, onAutoSyncTimerProgress, onAutoSyncTimerResult, onNetworkStatusChange, and onNetworkStatusSyncControl are never removed. The effect re-runs whenever pauseReason changes (e.g., on every offline/online transition), causing listener accumulation, duplicate state updates, and a memory leak in a long-running Electron app. The cleanup function only removes window online/offline listeners."
+    }
+  ],
+  "nonBlockingIssues": [
+    {
+      "severity": "non_blocking",
+      "description": "The notification toast uses Tailwind class 'animate-slide-in-right', which is not defined in tailwind.config.js. The animation will be ignored, reducing the polish of the toast notification."
+    },
+    {
+      "severity": "non_blocking",
+      "description": "handleOnline is defined after the useEffect that references it in its closure. While this works due to JS closure semantics, it is fragile and makes the component harder to reason about. Additionally, handleOnline calls window.electronAPI.triggerAutoSync for every enabled module, which overlaps with the auto-sync timer's built-in online resume behavior and may cause redundant sync triggers."
+    }
+  ],
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The backend-worker skill is completely mismatched for F017, which is a frontend React UI component. The skill only describes Blok/COA database schema changes and backend procedures. The worker had to ignore the skill's prescribed work procedure and instead explore frontend code (SyncContext, SyncStatusBar, electron.d.ts) to complete the feature.",
+      "evidence": ".factory/skills/backend-worker/SKILL.md describes only database/backend work; features.json assigns skillName 'backend-worker' to F017 'Create sync status UI component'."
+    },
+    {
+      "area": "knowledge",
+      "observation": "Missing TypeScript type definitions in electron.d.ts for already-implemented auto-sync timer and network status IPC APIs caused extra discovery work. The worker added ~79 lines of types (AutoSyncTimerStatus, SyncProgress, NetworkStatusInfo, and handlers) that were already present in preload.ts and main.ts but untyped.",
+      "evidence": "Worker added types to src/renderer/types/electron.d.ts for APIs that existed in src/preload/preload.ts and src/main/main.ts but were not typed."
+    },
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md mentions IPC for main-renderer communication but does not document the convention that IPC listeners registered in React components must be cleaned up in useEffect to prevent leaks. This gap contributed to the blocking listener leak in SyncContext.",
+      "evidence": "SyncContext.tsx registers 5 ipcRenderer.on listeners without cleanup; AGENTS.md has no guidance on listener cleanup in React lifecycle."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "codeQualityScore": 7,
+  "summary": "F017 fails scrutiny due to a blocking IPC listener leak in SyncContext.tsx. The component itself is feature-complete, well-typed, and visually comprehensive, covering all required sync status displays and real-time updates. However, the missing cleanup for renderer-side IPC event listeners means every network status change will accumulate duplicate listeners, causing duplicate state updates and a memory leak in a long-running Electron app. Fix by exposing unsubscribe/off methods in the preload API and removing listeners in the useEffect cleanup function."
+}

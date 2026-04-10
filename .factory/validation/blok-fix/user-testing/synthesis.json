@@ -1,0 +1,40 @@
+{
+  "milestone": "blok-fix",
+  "round": 1,
+  "status": "partial",
+  "assertionsSummary": {
+    "total": 15,
+    "passed": 3,
+    "failed": 0,
+    "blocked": 12
+  },
+  "passedAssertions": [
+    "VAL-BLOK-003",
+    "VAL-BLOK-004",
+    "VAL-BLOK-005"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [
+    { "id": "VAL-BLOK-001", "reason": "Database inspection requires sql.js access to blok database" },
+    { "id": "VAL-BLOK-002", "reason": "Database insert test requires direct sql.js access" },
+    { "id": "VAL-BLOK-006", "reason": "Export Excel triggers download but file not accessible for verification" },
+    { "id": "VAL-BLOK-007", "reason": "Import Excel triggers native file picker not captured by accessibility tree" },
+    { "id": "VAL-AK-001", "reason": "Not tested - Aspek Kerja module not in scope for blok-fix milestone testing" },
+    { "id": "VAL-AK-002", "reason": "Not tested - Aspek Kerja module not in scope for blok-fix milestone testing" },
+    { "id": "VAL-AK-003", "reason": "Not tested - Aspek Kerja module not in scope for blok-fix milestone testing" },
+    { "id": "VAL-COA-001", "reason": "Not tested - COA module not in scope for blok-fix milestone testing" },
+    { "id": "VAL-COA-002", "reason": "Not tested - COA module not in scope for blok-fix milestone testing" },
+    { "id": "VAL-CROSS-001", "reason": "Not tested - Cross-area features not in scope for blok-fix milestone testing" },
+    { "id": "VAL-CROSS-002", "reason": "Not tested - Cross-area features not in scope for blok-fix milestone testing" },
+    { "id": "VAL-FLOW-001", "reason": "Not tested - Full import pipeline not in scope for blok-fix milestone testing" }
+  ],
+  "appliedUpdates": [
+    {
+      "target": "user-testing.md",
+      "description": "Chrome browser processes interfere with Electron CDP connection. Solution: Kill all Chrome processes (taskkill /F /IM chrome.exe) before connecting agent-browser to Electron app. Electron will then be the only CDP-accessible browser.",
+      "source": "setup"
+    }
+  ],
+  "previousRound": null,
+  "notes": "The blok-fix milestone contains bug fixes (fix-blok-status-badge, fix-transaction-blok-status-filter) that don't have their own fulfills entries. The assertions tested are from the blok-master milestone features that the bug fixes address. User testing successfully verified UI changes via browser automation."
+}

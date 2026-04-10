@@ -1,0 +1,11 @@
+{
+  "model": "Qwen/Qwen3-32B-TEE",
+  "id": "custom:Qwen-Qwen3-32B-TEE-[15]",
+  "index": 15,
+  "baseUrl": "https://llm.chutes.ai/v1",
+  "apiKey": "cpk_ffb55ffb617c4bf58e307fae28ee7a16.d4f9d57a795057c4950cd69d306f6638.5iaEsRF9iZIoQWbqtk36Ek8cWrFP4Muz",
+  "displayName": "Qwen Qwen3-32B [Chutes - Anthropic Provider]",
+  "maxOutputTokens": 4096,
+  "noImageSupport": true,
+  "provider": "anthropic"
+}

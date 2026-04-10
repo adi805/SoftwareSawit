@@ -1,0 +1,18 @@
+{
+  "milestone": "coa-master",
+  "round": 1,
+  "status": "fail",
+  "assertionsSummary": {
+    "total": 2,
+    "passed": 1,
+    "failed": 1,
+    "blocked": 0
+  },
+  "passedAssertions": ["VAL-COA-002"],
+  "failedAssertions": [
+    { "id": "VAL-COA-001", "reason": "Form validation rejects Excel-format GL Account codes like '11-11-001' - validation message 'Kode harus berupa angka' (Kode must be a number) indicates only numeric codes are accepted" }
+  ],
+  "blockedAssertions": [],
+  "appliedUpdates": [],
+  "previousRound": null
+}

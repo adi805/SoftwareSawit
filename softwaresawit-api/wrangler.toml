@@ -1,0 +1,20 @@
+name = "softwaresawit-api"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+account_id = "b966b3f3f86ac6b70886aecc7ef2abd1"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "softwaresawit-db"
+database_id = "5ef246d5-2d14-426b-b76b-2559ca6db7f5"
+
+# KV Namespace for sessions/cache (optional)
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = "your-kv-namespace-id"
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"

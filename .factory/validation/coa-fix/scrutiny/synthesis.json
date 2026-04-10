@@ -1,0 +1,28 @@
+{
+  "milestone": "coa-fix",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": { "passed": true, "command": "npm run test", "exitCode": 0 },
+    "typecheck": { "passed": true, "command": "npm run typecheck", "exitCode": 0 },
+    "lint": { "passed": true, "command": "npm run lint", "exitCode": 0 }
+  },
+  "reviewsSummary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "feature description (fix-coa-form-validation)",
+      "suggestion": "Clarify feature description: change 'alphanumeric codes with hyphens' to 'numeric codes with hyphens' since the regex only accepts digits and hyphens, not full alphanumeric including letters.",
+      "evidence": "Feature fix-coa-form-validation description states 'accept alphanumeric codes with hyphens' but regex `/^[0-9]+(-[0-9]+)*$/` only matches digits and hyphens.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [],
+  "previousRound": null
+}

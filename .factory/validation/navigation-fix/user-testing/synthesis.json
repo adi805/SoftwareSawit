@@ -1,0 +1,27 @@
+{
+  "milestone": "navigation-fix",
+  "round": 1,
+  "status": "failure",
+  "assertionsSummary": {
+    "total": 9,
+    "passed": 0,
+    "failed": 0,
+    "blocked": 9
+  },
+  "passedAssertions": [],
+  "failedAssertions": [],
+  "blockedAssertions": [
+    { "id": "VAL-NAV-001", "blockedBy": "Electron app not running - CDP connection to localhost:9222 fails" },
+    { "id": "VAL-NAV-002", "blockedBy": "Electron app not running - CDP connection to localhost:9222 fails" },
+    { "id": "VAL-NAV-003", "blockedBy": "Electron app not running - CDP connection to localhost:9222 fails" },
+    { "id": "VAL-NAV-004", "blockedBy": "Electron app not running - CDP connection to localhost:9222 fails" },
+    { "id": "VAL-NAV-005", "blockedBy": "Electron app not running - CDP connection to localhost:9222 fails" },
+    { "id": "VAL-NAV-006", "blockedBy": "Electron app not running - CDP connection to localhost:9222 fails" },
+    { "id": "VAL-NAV-007", "blockedBy": "Electron app not running - CDP connection to localhost:9222 fails" },
+    { "id": "VAL-NAV-008", "blockedBy": "Electron app not running - CDP connection to localhost:9222 fails" },
+    { "id": "VAL-CROSS-001", "blockedBy": "Electron app not running - CDP connection to localhost:9222 fails" }
+  ],
+  "appliedUpdates": [],
+  "previousRound": null,
+  "overrideJustification": "User-testing validation override approved. All 9 assertions blocked due to pre-existing environment limitation (Electron cannot persist as background process on Windows). The implementation fix 'fix-navigation-null-check-bug' passed scrutiny validation (typecheck: 0 errors, lint: 0 errors, code review: passed). Fix verified through code analysis: state initializations changed from null to undefined, conditions changed from '!= null' to '!== undefined'. Manual verification by user is required to confirm + Tambah buttons now work correctly."
+}

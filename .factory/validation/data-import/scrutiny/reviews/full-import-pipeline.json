@@ -1,0 +1,37 @@
+{
+  "featureId": "full-import-pipeline",
+  "reviewedAt": "2026-04-07T00:30:00.000Z",
+  "commitId": "6be3d79",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The feature was marked complete with commit 6be3d79, but that commit implements ORG-1 parsing utility, NOT the full import pipeline. The import functions (importBlokBatch, importCOABatch, importAspekKerjaBatch) exist in the codebase (from earlier commits), but the worker never actually executed them or verified data counts. The feature requires executing the full import pipeline and verifying counts (Blok > 0, COA > 0, Aspek Kerja > 0), which was not done.",
+    "issues": [
+      {
+        "file": "commit 6be3d79",
+        "severity": "blocking",
+        "description": "Commit 6be3d79 ('feat: add ORG-1 parsing utility for Blok-ORG mapping') does not implement the full-import-pipeline feature. The commit adds parseORG1Data, mapORG1ToBlok, and compareORG1WithBlok functions - unrelated to import pipeline execution."
+      },
+      {
+        "file": "feature execution",
+        "severity": "blocking",
+        "description": "The feature requires executing the import pipeline (import aresta.xlsx to Blok, COA sheet to COA, AK sheet to Aspek Kerja) and verifying counts. The worker ran lint and typecheck but never actually executed the imports or verified data counts."
+      },
+      {
+        "file": "runtime verification",
+        "severity": "blocking",
+        "description": "Expected behavior states 'Data counts verified: Blok > 0, COA > 0, Aspek Kerja > 0'. Worker reported Electron app startup issues due to database schema mismatch and did not complete runtime verification of actual imports."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The worker discovered that pre-existing databases (blok.db) had old schema without new columns (pokok, sph, bulan_tanam, status_tanaman), causing runtime failures. This indicates missing database migration strategy.",
+      "evidence": "Transcript shows: 'Electron app could not start due to database schema mismatch (blok.db had old schema without new columns). Required manual deletion of databases to test.'"
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "FAIL - The commit 6be3d79 associated with this feature implements ORG-1 parsing, not the full import pipeline. The import functions exist in the codebase (from prior commits), but the worker never executed them to verify the import pipeline works or that data counts meet expectations (Blok > 0, COA > 0, Aspek Kerja > 0). Only static code verification (lint, typecheck) was performed."
+}

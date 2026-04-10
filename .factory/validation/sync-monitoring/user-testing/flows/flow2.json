@@ -1,0 +1,49 @@
+{
+  "groupId": "flow2",
+  "assertions": {
+    "VAL-SYNC-005": {
+      "status": "blocked",
+      "reason": "Electron app crashed during previous flow validator's sync-failure test, losing CDP connection. After restart, direct API tests show sync failure handling exists, but no dedicated red sync-failure toast was observed via UI. Warning toasts for connection failures are shown (yellow)."
+    },
+    "VAL-SYNC-006": {
+      "status": "blocked",
+      "reason": "No sync conflicts exist in the system (getSyncConflictStats returns total:0), so the conflict detection badge cannot be verified. The ConflictResolutionDialog component exists in code but no trigger scenario is available."
+    },
+    "VAL-SYNC-007": {
+      "status": "blocked",
+      "reason": "No sync conflicts exist in the system, so the conflict resolution dialog cannot be opened. The backend API (resolveSyncConflict) exists but there's no UI path to reach it without pending conflicts."
+    },
+    "VAL-SYNC-008": {
+      "status": "pass",
+      "reason": "Manual sync trigger API (triggerManualSync) exists and is exposed. Dashboard shows 'Sinkronisasi sekarang' button. Auto-sync also triggers when reconnecting after offline."
+    },
+    "VAL-SYNC-009": {
+      "status": "pass",
+      "reason": "Sync Settings page has 'Riwayat Sync' button that opens a dialog with date/module/direction/status filters and pagination controls. Dialog structure matches spec. Data is empty in current state but UI is complete."
+    },
+    "VAL-SYNC-010": {
+      "status": "pass",
+      "reason": "Status bar shows 'Next: baru saja' timer indicator. API getAutoSyncTimerStatus returns isRunning:true, nextSyncAt, and intervalMs."
+    },
+    "VAL-SYNC-012": {
+      "status": "fail",
+      "reason": "Backend API getSyncHealthDashboardData exists and returns accurate queue/module stats. However, Sync Settings page does NOT display queue statistics, failed items list, or per-module breakdown in the UI. Only basic module configuration cards are shown."
+    },
+    "VAL-SYNC-013": {
+      "status": "fail",
+      "reason": "Backend API retrySyncHealthFailedItem exists, but there are NO retry buttons in the Sync Settings UI for failed items. The failed items list is not rendered on the page."
+    }
+  },
+  "frictions": [
+    "Sync Settings UI is very minimal - only module path configuration cards are shown",
+    "Queue stats, failed items list, retry buttons, clear queue button, and connection quality indicator are missing from Sync Settings page UI",
+    "Sync history backend (getSyncHistory) throws 'datatype mismatch' error",
+    "All Kas transactions have syncStatus='pending' which may not reflect actual sync state"
+  ],
+  "blockers": [
+    "Electron crash in flow1 prevented testing of sync-failure toast and conflict UI",
+    "No sync conflicts exist in system, blocking conflict-related assertions"
+  ],
+  "toolsUsed": ["agent-browser", "electron-evaluate"],
+  "evidenceDir": "C:\\Users\\acer\\.factory\\missions\\64db8f33-2f16-49a3-a6dc-439227a1269d\\evidence\\sync-monitoring\\direct"
+}

@@ -1,0 +1,45 @@
+{
+  "featureId": "F018",
+  "reviewedAt": "2026-04-08T10:45:00.000Z",
+  "commitId": "dc3e627",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "F018 (Add manual sync button functionality) is fully implemented as part of the F017 SyncStatusBar component. All required behaviors are present: the button triggers immediate sync, is hidden during active sync (functionally disabled), shows progress via spinner and percentage, resets the auto-sync timer, and displays success/error feedback via toast notifications. The code passes typecheck and lint with no errors.",
+    "issues": [
+      {
+        "file": "src/main/autoSyncTimer.ts",
+        "line": 658,
+        "severity": "non_blocking",
+        "description": "Manual sync only processes the first configured module (timerState.config.modules[0]). If multiple modules have pending changes, users must wait for the next auto-sync cycle or trigger manual sync again. Consider batching all configured modules in a single manual sync call."
+      },
+      {
+        "file": "src/renderer/components/SyncStatusBar.tsx",
+        "line": 347,
+        "severity": "non_blocking",
+        "description": "The manual sync button is completely hidden (conditional rendering) rather than visibly disabled during sync. While this functionally prevents clicks, a disabled visible button with a spinner would provide clearer UX feedback that a sync is in progress."
+      },
+      {
+        "file": "src/main/autoSyncTimer.ts",
+        "line": 617,
+        "severity": "non_blocking",
+        "description": "The isSyncing guard in triggerManualSync() is a simple boolean check without atomic locking. In a single-threaded Electron main process this is practically safe, but a more robust guard could reject concurrent IPC invocations at the handler level."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "No project conventions were violated. The worker followed the existing IPC pattern (preload → renderer context → main process handler → autoSyncTimer) consistently.",
+      "evidence": "preload/preload.ts:763-764, src/renderer/context/SyncContext.tsx:339, src/main/main.ts:1805-1808, src/main/autoSyncTimer.ts:614"
+    },
+    {
+      "area": "skills",
+      "observation": "The worker followed the backend-worker skill procedure. The transcript shows the worker first gathered context, then inspected existing SyncStatusBar and SyncContext code, verified the manual sync flow end-to-end, and ran baseline validators before completing.",
+      "evidence": "Transcript shows verification commands: npm run typecheck, npm run lint, npm run test, git status — all passing. No skill deviations noted."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Feature F018 passes review. The manual sync button functionality is correctly wired through the full stack (renderer → preload → main → autoSyncTimer) and satisfies all validation contract assertions it fulfills: MANUAL_SYNC_TRIGGER, BUTTON_DISABLED_DURING_SYNC, and FEEDBACK_DISPLAYED. All identified issues are minor UX or enhancement opportunities, not blocking defects."
+}

@@ -1,0 +1,62 @@
+{
+  "featureId": "F001-UI",
+  "reviewedAt": "2026-04-08T14:40:00.000Z",
+  "commitId": "b099343",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The Dashboard Approval Page (F001-UI) is a solid frontend implementation. It introduces a new `DashboardApprovalPage.tsx` with summary cards, unified table, module/status/date/search filters, overdue highlighting, pagination, approval/reject modals, and history view. Code follows Tailwind/React patterns, TypeScript compiles cleanly, andlint passes. The implementation correctly routes in `App.tsx` and adds sidebar navigation. However, it makes N+1-like backend calls (up to 6 count queries and up to 6 data fetch queries every load) which could become a performance concern at scale, and the Overdue summary card shows only the count of overdue items on the current page rather than globally.",
+    "issues": [
+      {
+        "file": "src/renderer/pages/DashboardApprovalPage.tsx",
+        "line": 112,
+        "severity": "non_blocking",
+        "description": "Inefficient data loading: loadPendingApprovals fetches up to 6 paginated requests (PA1 + PA2 for each of Kas/Bank/Gudang at 1000 page size) and then filters client-side. This creates heavy main-process DB churn and will not scale past a few hundred items per module. The page should ideally call a single unified backend endpoint (e.g. dashboard:getPendingApprovals) that returns aggregated pending items with server-side pagination, sort, and filter."
+      },
+      {
+        "file": "src/renderer/pages/DashboardApprovalPage.tsx",
+        "line": 325,
+        "severity": "non_blocking",
+        "description": "Overdue summary card displays only overdue items on the current rendered page (`pagination.data.filter(...)`). Users expect the Overdue card to show the total overdue count across all pending items, not the current page slice. This is misleading when there are multiple pages."
+      },
+      {
+        "file": "src/renderer/pages/DashboardApprovalPage.tsx",
+        "line": 404,
+        "severity": "non_blocking",
+        "description": "canApproveItem allows any non-creator user to approve PA2, but the expected behavior says 'Different approver required for stage 2'. The comment admits this simplification, lacking a check against approver_1_id. Since F002-BE added dashboard approval endpoints that enforce this server-side, using those endpoints instead of direct module approve* calls would close this gap."
+      },
+      {
+        "file": "src/renderer/pages/DashboardApprovalPage.tsx",
+        "line": 880,
+        "severity": "non_blocking",
+        "description": "HTML table lacks accessibility affordances: no `scope` attributes on th elements (though some have `scope='col'`), and action buttons use only `title` attributes without `aria-label`, which may reduce screen-reader coverage."
+      },
+      {
+        "file": "src/renderer/App.tsx",
+        "line": 580,
+        "severity": "non_blocking",
+        "description": "App.tsx nests `<DashboardApprovalPage>` twice when `currentPage === 'approvalDashboard'`: once directly via `renderPageContent()` and again inside the `approvalDashboard` layout branch, resulting in duplicated dashboard content being wrapped. The layout branch already renders the component, so `renderPageContent` adds a second instance."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md says 'IPC channels: camelCase with namespace (e.g., dashboard:getPendingApprovals)'. The preload.ts already exposes `getDashboardPendingApprovals`, `approveFromDashboard`, etc., matching this convention, but the current DashboardApprovalPage.tsx bypasses them and directly calls module-specific APIs like `getKasWithPagination` and `approveKasTransaction`. This breaks the intended abstraction and duplicates filtering logic that F002-BE already centralized.",
+      "evidence": "DashboardApprovalPage.tsx lines 112-150 call getKasWithPagination / getBankWithPagination / getGudangWithPagination; lines 404-420 call approveKasTransaction / approveBankTransaction / approveGudangTransaction directly. Compare to preload.ts lines 620-641 which expose dashboard:* channels."
+    },
+    {
+      "area": "skills",
+      "observation": "The frontend-worker SKILL.md work procedure step 6 says 'Manual Verification with agent-browser' and step 3 says 'Write Tests First (TDD)'. The worker transcript shows no agent-browser usage and no component tests were added for the UI. Handoff says 'Tests verified through existing test suite - no new tests required for UI component'. While the feature passes typecheck/lint/tests, the skill explicitly expects agent-browser verification and component tests, which were skipped.",
+      "evidence": "Transcript skeleton shows no agent-browser tool calls. Handoff JSON shows interactiveChecks: [] and tests.added: [], with skillFeedback.followedProcedure: true despite deviation from explicit test/browser steps."
+    },
+    {
+      "area": "services",
+      "observation": "No new services were needed beyond vite-dev-server, but the dashboard page does not leverage the dashboard-specific IPC endpoints created by F002-BE, making the frontend feature partially decoupled from its designated backend service.",
+      "evidence": "src/preload/preload.ts has dashboard:getPendingApprovals, dashboard:approve, dashboard:reject, dashboard:getApprovalCounts, but none are imported or used in DashboardApprovalPage.tsx."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "F001-UI delivers the required Dashboard Approval Page with complete UI elements: summary cards, unified table, filters, pagination, approve/reject modals, overdue highlighting, empty state, and history. TypeScript and lint pass. However, the page bypasses the dedicated dashboard IPC endpoints added in F002-BE, instead making multiple per-module pagination calls that are inefficient and bypass server-side permission checks (e.g., PA2 different-approver enforcement). There are also minor UI bugs: the Overdue card counts only the current page, and App.tsx duplicates the DashboardApprovalPage render on the approvalDashboard route. Recommendation: refactor to use the dashboard:* IPC APIs in a follow-up cleanup."
+}

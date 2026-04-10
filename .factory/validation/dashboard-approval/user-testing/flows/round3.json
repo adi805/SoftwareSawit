@@ -1,0 +1,100 @@
+{
+  "groupId": "round3",
+  "testedAt": "2026-04-09T05:30:00.000Z",
+  "isolation": {
+    "appUrl": "electron://localhost:9223",
+    "credentials": { "username": "admin", "password": "Admin123!" },
+    "dataDirectory": "C:/Users/acer/AppData/Roaming/software-sawit/data"
+  },
+  "toolsUsed": ["agent-browser", "node-sql.js"],
+  "assertions": [
+    {
+      "id": "VAL-DASH-011",
+      "title": "Large Dataset Performance (100+ Items)",
+      "status": "pass",
+      "steps": [
+        { "action": "Seed 120 additional test transactions across Kas, Bank, Gudang modules via sql.js", "expected": "Database has 127+ pending items", "observed": "127 total pending transactions confirmed in dashboard" },
+        { "action": "Load Dashboard Approval page with 127 items", "expected": "Page loads within 3 seconds", "observed": "Performance timing reports loadEventEnd - navigationStart = 700ms" },
+        { "action": "Set page size to 100 items", "expected": "Table renders 100 rows, pagination responsive", "observed": "100 rows displayed, pagination shows 'Halaman 1 dari 2', controls are responsive" },
+        { "action": "Scroll through table", "expected": "Smooth scrolling without browser freeze", "observed": "Page remained responsive, no freeze detected" }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/user-testing/flows/round3-100items.png"]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASH-012",
+      "title": "Overdue Items Highlighted",
+      "status": "pass",
+      "steps": [
+        { "action": "Seed 45 transactions with created_at set to 48 hours ago", "expected": "Items >24h old exist in database", "observed": "15 old transactions per module (45 total) inserted with timestamps 48h in the past" },
+        { "action": "Restart app and load dashboard, sort by oldest", "expected": "Overdue badge shown, row background red-tinted", "observed": "Overdue card shows 45 items. Sorted oldest first shows '48j lalu' for seeded old transactions. Code review confirms bg-red-50 class is applied via isOverdue() check." }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/user-testing/flows/round3-100items.png"]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASH-014",
+      "title": "Real-Time Updates",
+      "status": "fail",
+      "steps": [
+        { "action": "Code review of DashboardApprovalPage.tsx for polling or WebSocket", "expected": "Polling interval or WebSocket connection for auto-refresh", "observed": "No setInterval, polling, or WebSocket usage found in component. Only manual refresh via filter changes triggers reload." }
+      ],
+      "evidence": {},
+      "issues": "Dashboard does not auto-refresh when transactions change in other modules. Users must manually change filters or navigate away/back to see updates."
+    },
+    {
+      "id": "VAL-DASH-018",
+      "title": "Mobile Responsiveness",
+      "status": "fail",
+      "steps": [
+        { "action": "Set viewport to 375x667 (mobile)", "expected": "Summary cards stack vertically in single column", "observed": "Screenshot confirms summary cards remain in 2-column grid layout on small screens. Table is horizontally scrollable." }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/user-testing/flows/round3-mobile.png"]
+      },
+      "issues": "Summary cards use 'grid-cols-2 md:grid-cols-4' without 'grid-cols-1' for smallest screens, so they don't stack into a single column on mobile."
+    },
+    {
+      "id": "VAL-DASH-019",
+      "title": "Accessibility",
+      "status": "blocked",
+      "steps": [
+        { "action": "Test Tab key navigation through dashboard", "expected": "Interactive elements reachable via keyboard", "observed": "Sidebar buttons, filters, and action buttons are keyboard accessible via Tab." },
+        { "action": "Check for ARIA labels and color contrast", "expected": "WCAG AA compliance", "observed": "Basic keyboard navigation verified, but comprehensive WCAG audit (color contrast ratios, ARIA labels audit, screen reader behavior) requires Lighthouse or axe-core, neither of which is available in the testing environment." }
+      ],
+      "evidence": {},
+      "issues": "Tool limitation: no Lighthouse/axe-core for automated accessibility scoring."
+    },
+    {
+      "id": "VAL-DASH-020",
+      "title": "Error Handling",
+      "status": "fail",
+      "steps": [
+        { "action": "Code review of loadPendingApprovals and loadCounts error handling", "expected": "Error state UI with retry button and friendly message", "observed": "Both functions catch errors and only call console.error(). No React error state is set, no retry button rendered, no per-module failure indicator shown." },
+        { "action": "Simulate IPC failure by mocking getKasWithPagination to reject", "expected": "Dashboard shows user-friendly error UI", "observed": "Page displays loading state indefinitely without any error message or retry option." }
+      ],
+      "evidence": {},
+      "issues": "Missing error handling UI in DashboardApprovalPage. Errors are silently logged to console only."
+    }
+  ],
+  "frictions": [
+    {
+      "description": "agent-browser fill command timed out on React inputs; required eval-based setter",
+      "resolved": true,
+      "resolution": "Used document.querySelector + Object.getOwnPropertyDescriptor value setter with dispatchEvent",
+      "affectedAssertions": []
+    },
+    {
+      "description": "Seeded data went to 04.db but running Electron instance had loaded DBs into memory earlier; changes weren't picked up until app restart",
+      "resolved": true,
+      "resolution": "Restarted Electron main process after seeding to load updated databases",
+      "affectedAssertions": ["VAL-DASH-011", "VAL-DASH-012"]
+    }
+  ],
+  "blockers": [],
+  "summary": "Round 3 tested 6 assertions. 2 previously-failed assertions now pass after test data seeding (VAL-DASH-011, VAL-DASH-012). 3 assertions remain failed due to unfixed code issues (VAL-DASH-014 missing real-time updates, VAL-DASH-018 mobile grid not stacking, VAL-DASH-020 missing error UI). 1 assertion remains blocked for tool availability (VAL-DASH-019)."
+}
