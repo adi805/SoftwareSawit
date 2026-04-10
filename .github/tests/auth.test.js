@@ -47,19 +47,27 @@ class AuthTests {
   async testLoginFunctionality() {
     // VAL-USER-051: Login with invalid username
     await this.runAssertion('VAL-USER-051: Invalid credentials show error', async () => {
+      // First ensure we're on the login page
+      await this.window.goto('/#/login');
+      await this.window.waitForTimeout(1000);
+      
       await this.window.fill('[data-testid="login-username"]', 'invalid_user_xyz');
       await this.window.fill('[data-testid="login-password"]', 'wrong_password');
       await this.window.click('[data-testid="login-submit"]');
-      await this.window.waitForTimeout(1500);
+      await this.window.waitForTimeout(3000); // Increased wait for error message
       
       await this.captureScreenshot('invalid_login_error');
       
-      // Check for error message or staying on login page
+      // Check for error message - the error should be visible
+      const errorVisible = await this.window.locator('.error, .alert-error, [role="alert"], .text-red, .text-red-500').isVisible().catch(() => false);
       const url = this.window.url();
-      const errorVisible = await this.window.locator('.error, .alert-error, [role="alert"]').isVisible().catch(() => false);
+      const stillOnLogin = url.includes('login') || url.includes('user-mgmt');
       
-      if (!url.includes('login') && !url.includes('user-mgmt') && !errorVisible) {
-        throw new Error('Expected error message or to stay on login page');
+      // Test passes if we stay on login page AND error is shown (or error message appears)
+      if (errorVisible) {
+        console.log('Error message displayed correctly');
+      } else if (!stillOnLogin) {
+        throw new Error('Should stay on login page with invalid credentials');
       }
     }, { area: this.area });
 

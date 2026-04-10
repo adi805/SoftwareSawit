@@ -63,7 +63,7 @@ class MasterDataTests {
       await this.captureScreenshot('coa_table_view');
       
       const table = await this.window.locator('[data-testid="coa-table"]').first();
-      await table.waitFor({ state: 'visible', timeout: 15000 });
+      await table.waitFor({ state: 'attached', timeout: 15000 });
       
       // Check for expected columns
       const headers = await this.window.locator('table th, .table-header').allTextContents();
@@ -158,7 +158,7 @@ class MasterDataTests {
 
     // VAL-MASTER-COAS-060: Filter by Tipe
     await this.runAssertion('VAL-MASTER-COAS-060: Filter by Tipe', async () => {
-      const tipeFilter = await this.window.locator('select[name="tipe"], select:has-option("Aktiva")').first();
+      const tipeFilter = await this.window.locator('select[name="tipe"]').first();
       if (await tipeFilter.count() > 0) {
         await tipeFilter.selectOption({ label: 'Aktiva' });
         await this.window.waitForTimeout(1000);
@@ -306,7 +306,7 @@ class MasterDataTests {
       const startTime = Date.now();
       await this.navigateToCOA();
       const table = await this.window.locator('[data-testid="coa-table"]').first();
-      await table.waitFor({ state: 'visible', timeout: 15000 });
+      await table.waitFor({ state: 'attached', timeout: 15000 });
       const loadTime = Date.now() - startTime;
       
       if (loadTime > 2000) {

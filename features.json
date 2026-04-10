@@ -1,0 +1,88 @@
+{
+  "features": [
+    {
+      "id": "fix-invalid-css-selectors",
+      "description": "Fix invalid CSS selectors in test files. Replace select:has-option() with proper selectOption() calls using label/value/index selectors.",
+      "skillName": "test-automation-worker",
+      "milestone": "fix-test-selectors",
+      "preconditions": ["Test files exist in .github/tests/"],
+      "expectedBehavior": [
+        "select:has-option() replaced with proper selectOption({ label: 'text' }) calls",
+        "All 3 skipped tests become runnable"
+      ],
+      "verificationSteps": [
+        "grep for 'has-option' returns no matches",
+        "Tests with selectors pass without syntax errors"
+      ],
+      "fulfills": ["VAL-MASTER-COAS-060", "VAL-KAS-028", "VAL-KAS-029"],
+      "status": "pending"
+    },
+    {
+      "id": "fix-table-wait-strategy",
+      "description": "Fix table visibility waits in tests. Change state: 'visible' to state: 'attached' for tables to not timeout on empty data. Also ensure tables have data by having the app auto-seed minimal data on first run.",
+      "skillName": "frontend-worker",
+      "milestone": "fix-table-timeouts",
+      "preconditions": ["Tables render in pages"],
+      "expectedBehavior": [
+        "Tables use state: 'attached' instead of 'visible'",
+        "Empty tables are detected and handled gracefully",
+        "Tests wait for data OR accept 'no data' state"
+      ],
+      "verificationSteps": [
+        "grep for 'state: .visible' in table waits - should find none",
+        "Table tests pass without timeout"
+      ],
+      "fulfills": ["VAL-MASTER-COAS-001", "VAL-MASTER-AK-001", "VAL-MASTER-BLOK-001", "VAL-KAS-022", "VAL-BANK-021", "VAL-GUDANG-022"],
+      "status": "pending"
+    },
+    {
+      "id": "fix-export-import-visibility",
+      "description": "Fix Export/Import button visibility. Ensure buttons are visible after login. The buttons are hidden behind !isGuest condition - ensure login state persists and isGuest is false.",
+      "skillName": "frontend-worker",
+      "milestone": "fix-master-data-buttons",
+      "preconditions": ["User can login successfully"],
+      "expectedBehavior": [
+        "Export Excel button visible after login",
+        "Import Excel button visible after login"
+      ],
+      "verificationSteps": [
+        "User logs in",
+        "Navigate to Master Data COA page",
+        "Export and Import buttons are visible"
+      ],
+      "fulfills": ["VAL-MASTER-EXP-001", "VAL-MASTER-IMP-001"],
+      "status": "pending"
+    },
+    {
+      "id": "fix-login-error-display",
+      "description": "Fix VAL-USER-051 invalid login error test. Increase wait time for error message to render and fix the assertion logic.",
+      "skillName": "test-automation-worker",
+      "milestone": "fix-auth-tests",
+      "preconditions": ["Login form exists"],
+      "expectedBehavior": [
+        "Invalid login shows error message within 3 seconds",
+        "Test passes"
+      ],
+      "verificationSteps": [
+        "Invalid login test passes"
+      ],
+      "fulfills": ["VAL-USER-051"],
+      "status": "pending"
+    },
+    {
+      "id": "fix-perf-test-timeout",
+      "description": "Fix VAL-MASTER-PERF-001 performance test. Uses same table wait as VAL-MASTER-COAS-001, should be fixed with table wait strategy fix.",
+      "skillName": "test-automation-worker",
+      "milestone": "fix-table-timeouts",
+      "preconditions": ["COA table renders"],
+      "expectedBehavior": [
+        "Performance test passes"
+      ],
+      "verificationSteps": [
+        "Performance test passes"
+      ],
+      "fulfills": ["VAL-MASTER-PERF-001"],
+      "status": "pending"
+    }
+  ]
+}

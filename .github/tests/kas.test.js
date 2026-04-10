@@ -41,7 +41,7 @@ class KasTests {
 
     // VAL-KAS-028: Filter by transaction type
     await this.runAssertion('VAL-KAS-028: Filter by transaction type', async () => {
-      const typeFilter = await this.window.locator('select[name="type"], select:has-option("Masuk"), select:has-option("Keluar")').first();
+      const typeFilter = await this.window.locator('select[name="type"]').first();
       if (await typeFilter.count() > 0) {
         await typeFilter.selectOption({ label: 'Kas Masuk' });
         await this.window.waitForTimeout(1000);
@@ -51,7 +51,7 @@ class KasTests {
 
     // VAL-KAS-029: Filter by status
     await this.runAssertion('VAL-KAS-029: Filter by approval status', async () => {
-      const statusFilter = await this.window.locator('select[name="status"], select:has-option("Pending")').first();
+      const statusFilter = await this.window.locator('select[name="status"]').first();
       if (await statusFilter.count() > 0) {
         await statusFilter.selectOption({ label: 'Pending Approval 1' });
         await this.window.waitForTimeout(1000);
