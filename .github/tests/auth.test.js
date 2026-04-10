@@ -66,7 +66,7 @@ class AuthTests {
     // VAL-USER-050: Login with valid credentials
     await this.runAssertion('VAL-USER-050: Valid login redirects to dashboard', async () => {
       await this.window.fill('[data-testid="login-username"]', 'admin');
-      await this.window.fill('[data-testid="login-password"]', 'admin123');
+      await this.window.fill('[data-testid="login-password"]', 'Admin123!');
       await this.window.click('[data-testid="login-submit"]');
       
       await this.window.waitForTimeout(2000);
@@ -228,7 +228,7 @@ class AuthTests {
       const usernameInput = await this.window.locator('[data-testid="login-username"]').first();
       if (await usernameInput.count() > 0) {
         await this.window.fill('[data-testid="login-username"]', 'admin');
-        await this.window.fill('[data-testid="login-password"]', 'admin123');
+        await this.window.fill('[data-testid="login-password"]', 'Admin123!');
         await this.window.click('[data-testid="login-submit"]');
         await this.window.waitForTimeout(2000);
       }

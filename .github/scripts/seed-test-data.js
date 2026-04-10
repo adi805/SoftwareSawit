@@ -6,15 +6,34 @@
  */
 
 const Database = require('better-sqlite3');
+const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
 
-// Database paths
-const DB_DIR = path.join(process.env.APPDATA || process.env.HOME, 'SoftwareSawit', 'data');
-const COA_DB = path.join(DB_DIR, 'coa.db');
-const KAS_DB = path.join(process.env.LOCALAPPDATA || process.env.HOME, 'SoftwareSawit', 'kas.db');
-const BANK_DB = path.join(DB_DIR, 'bank.db');
-const GUDANG_DB = path.join(DB_DIR, 'gudang.db');
+// Database paths - CORRECT paths matching the app's expected locations
+const BASE_DIR = path.join(process.env.APPDATA || process.env.HOME, 'SoftwareSawit');
+const DATA_DIR = path.join(BASE_DIR, 'data');
+
+// User database
+const USERS_DB = path.join(DATA_DIR, 'users.db');
+
+// Master databases
+const MASTER_DIR = path.join(DATA_DIR, 'master');
+const COA_DB = path.join(MASTER_DIR, 'coa.db');
+
+// Transaction databases (year/month based)
+const currentDate = new Date();
+const YEAR = currentDate.getFullYear();
+const MONTH = String(currentDate.getMonth() + 1).padStart(2, '0');
+
+const KAS_DIR = path.join(DATA_DIR, 'kas', String(YEAR));
+const KAS_DB = path.join(KAS_DIR, MONTH + '.db');
+
+const BANK_DIR = path.join(DATA_DIR, 'bank', String(YEAR));
+const BANK_DB = path.join(BANK_DIR, MONTH + '.db');
+
+const GUDANG_DIR = path.join(DATA_DIR, 'gudang', String(YEAR));
+const GUDANG_DB = path.join(GUDANG_DIR, MONTH + '.db');
 
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) {
@@ -175,35 +194,102 @@ function seedTransactions(db, name) {
   console.log(`Seeded ${txData.length} ${name} transactions`);
 }
 
+async function seedUsers(db) {
+  console.log('Seeding Users (admin)...');
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY,
+      username TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      full_name TEXT,
+      role TEXT NOT NULL,
+      status TEXT DEFAULT 'active',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE TABLE IF NOT EXISTS sessions (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      token TEXT UNIQUE NOT NULL,
+      ip_address TEXT,
+      user_agent TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      expires_at TEXT DEFAULT (datetime('now', '+7 days')),
+      last_activity TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE TABLE IF NOT EXISTS login_attempts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL,
+      attempt_time TEXT DEFAULT CURRENT_TIMESTAMP,
+      success INTEGER DEFAULT 0
+    );
+  `);
+
+  // Hash password using bcrypt (matching the app's hashPassword function)
+  const passwordHash = await bcrypt.hash('Admin123!', 10);
+  
+  const insert = db.prepare(`
+    INSERT OR IGNORE INTO users (id, username, password_hash, full_name, role, status)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `);
+
+  const userData = [
+    ['admin-001', 'admin', passwordHash, 'Administrator', 'Administrator', 'active'],
+  ];
+
+  const insertMany = db.transaction((data) => {
+    for (const row of data) {
+      insert.run(...row);
+    }
+  });
+  insertMany(userData);
+  console.log(`Seeded ${userData.length} users with bcrypt hash`);
+}
+
 async function main() {
   console.log('Starting test data seeding...');
-  console.log(`DB Dir: ${DB_DIR}`);
-
-  ensureDir(DB_DIR);
+  console.log(`Base Dir: ${BASE_DIR}`);
+  console.log(`Data Dir: ${DATA_DIR}`);
 
   try {
+    // Seed Users (MUST be first - app checks user count to create default admin)
+    ensureDir(DATA_DIR);
+    const usersDb = new Database(USERS_DB);
+    await seedUsers(usersDb);
+    usersDb.close();
+
     // Seed COA
+    ensureDir(MASTER_DIR);
     const coaDb = new Database(COA_DB);
     seedCOA(coaDb);
     seedAspekKerja(coaDb);
     seedBlok(coaDb);
     coaDb.close();
 
-    // Seed transactions
-    ensureDir(path.dirname(KAS_DB));
+    // Seed Kas transactions
+    ensureDir(KAS_DIR);
     const kasDb = new Database(KAS_DB);
     seedTransactions(kasDb, 'Kas');
     kasDb.close();
 
+    // Seed Bank transactions
+    ensureDir(BANK_DIR);
     const bankDb = new Database(BANK_DB);
     seedTransactions(bankDb, 'Bank');
     bankDb.close();
 
+    // Seed Gudang transactions
+    ensureDir(GUDANG_DIR);
     const gudangDb = new Database(GUDANG_DB);
     seedTransactions(gudangDb, 'Gudang');
     gudangDb.close();
 
     console.log('✅ Test data seeded successfully!');
+    console.log('  USERS DB:', USERS_DB);
+    console.log('  COA DB:', COA_DB);
+    console.log('  KAS DB:', KAS_DB);
+    console.log('  BANK DB:', BANK_DB);
+    console.log('  GUDANG DB:', GUDANG_DB);
     process.exit(0);
   } catch (err) {
     console.error('❌ Seeding failed:', err.message);

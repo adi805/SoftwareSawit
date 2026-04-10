@@ -124,23 +124,36 @@ jobs:
       - name: Seed test data
         run: |
           Write-Host "Seeding test data..."
-          $dbPath = "$env:APPDATA\SoftwareSawit\data"
-          New-Item -ItemType Directory -Force -Path $dbPath
+          $dbBase = "$env:APPDATA\SoftwareSawit"
+          $dbData = "$dbBase\data"
+          $dbMaster = "$dbData\master"
+          $dbYear = Get-Date -Format "yyyy"
+          $dbMonth = (Get-Date).Month.ToString("00")
+          $dbKas = "$dbData\kas\$dbYear"
+          $dbBank = "$dbData\bank\$dbYear"
+          $dbGudang = "$dbData\gudang\$dbYear"
+          
+          New-Item -ItemType Directory -Force -Path $dbMaster
+          New-Item -ItemType Directory -Force -Path $dbKas
+          New-Item -ItemType Directory -Force -Path $dbBank
+          New-Item -ItemType Directory -Force -Path $dbGudang
+          
           if (Test-Path ".github/scripts/seed-test-data.js") {
             node .github/scripts/seed-test-data.js
           } else {
             Write-Host "Seed script not found, creating minimal seed data..."
             # Create minimal SQLite databases with test data
-            npm install --save-dev better-sqlite3
+            npm install --save-dev better-sqlite3 --legacy-peer-deps
             node -e "
               const Database = require('better-sqlite3');
               const fs = require('fs');
               const path = require('path');
-              const dbDir = process.env.APPDATA + '\\SoftwareSawit\\data';
-              fs.mkdirSync(dbDir, {recursive:true});
+              const base = process.env.APPDATA + '\\\\SoftwareSawit\\\\data';
+              const master = base + '\\\\master';
+              fs.mkdirSync(master, {recursive:true});
               
               // Seed COA
-              const coaDb = new Database(dbDir + '\\coa.db');
+              const coaDb = new Database(master + '\\\\coa.db');
               coaDb.exec('CREATE TABLE IF NOT EXISTS coa (id TEXT, kode TEXT, nama TEXT, tipe TEXT, parent_id TEXT, status_aktif INTEGER DEFAULT 1, created_at TEXT, updated_at TEXT)');
               coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('1','1-1000','Kas','Aktiva Lancar',NULL,1,datetime('now'),datetime('now'))\");
               coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('2','1-1100','Bank','Aktiva Lancar','1',1,datetime('now'),datetime('now'))\");
@@ -149,6 +162,17 @@ jobs:
               coaDb.exec('CREATE TABLE IF NOT EXISTS blok (id TEXT, kode TEXT, nama TEXT, tahun_tanam INTEGER, luas REAL, pokok INTEGER, sph REAL, bulan_tanam TEXT)');
               coaDb.exec(\"INSERT OR IGNORE INTO blok VALUES ('1','B01','Blok A',2025,10.5,1050,100,'Januari')\");
               coaDb.close();
+              
+              // Seed Kas
+              const year = new Date().getFullYear().toString();
+              const month = String(new Date().getMonth() + 1).padStart(2, '0');
+              const kasDir = base + '\\\\kas\\\\' + year;
+              fs.mkdirSync(kasDir, {recursive:true});
+              const kasDb = new Database(kasDir + '\\\\' + month + '.db');
+              kasDb.exec('CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, status TEXT, created_by TEXT)');
+              kasDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('1','KAS-001','2026-01-15','Kas Masuk',500000,'Test','1','Pending Approval 1','admin')\");
+              kasDb.close();
+              
               console.log('Test data seeded successfully');
             }
         shell: pwsh
