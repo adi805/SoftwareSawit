@@ -6,9 +6,11 @@
  * 
  * NOTE: Users are NOT seeded - the app auto-creates default admin user
  * if no users exist (see createDefaultAdmin in userDatabase.ts)
+ * 
+ * Uses sql.js (pure JavaScript SQLite) to avoid native module issues in CI
  */
 
-const Database = require('better-sqlite3');
+const initSqlJs = require('sql.js');
 const path = require('path');
 const fs = require('fs');
 
@@ -42,9 +44,16 @@ function ensureDir(dir) {
   }
 }
 
-function seedCOA(db) {
+function saveDb(db, filepath) {
+  const data = db.export();
+  const buffer = Buffer.from(data);
+  fs.writeFileSync(filepath, buffer);
+  console.log('Saved: ' + filepath);
+}
+
+async function seedCOA(db) {
   console.log('Seeding COA...');
-  db.exec(`
+  db.run(`
     CREATE TABLE IF NOT EXISTS coa (
       id TEXT PRIMARY KEY,
       kode TEXT UNIQUE NOT NULL,
@@ -54,7 +63,7 @@ function seedCOA(db) {
       status_aktif INTEGER DEFAULT 1,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
+    )
   `);
 
   const coaData = [
@@ -68,18 +77,16 @@ function seedCOA(db) {
   ];
 
   const stmt = db.prepare('INSERT OR IGNORE INTO coa VALUES (?, ?, ?, ?, ?, 1, datetime("now"), datetime("now"))');
-  const insertMany = db.transaction((data) => {
-    for (const row of data) {
-      stmt.run(...row);
-    }
-  });
-  insertMany(coaData);
+  for (const row of coaData) {
+    stmt.run(row);
+  }
+  stmt.free();
   console.log('Seeded ' + coaData.length + ' COA records');
 }
 
-function seedAspekKerja(db) {
+async function seedAspekKerja(db) {
   console.log('Seeding Aspek Kerja...');
-  db.exec(`
+  db.run(`
     CREATE TABLE IF NOT EXISTS aspek_kerja (
       id TEXT PRIMARY KEY,
       kode TEXT UNIQUE NOT NULL,
@@ -89,7 +96,7 @@ function seedAspekKerja(db) {
       status_aktif INTEGER DEFAULT 1,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
+    )
   `);
 
   const akData = [
@@ -99,18 +106,16 @@ function seedAspekKerja(db) {
   ];
 
   const stmt = db.prepare('INSERT OR IGNORE INTO aspek_kerja VALUES (?, ?, ?, ?, ?, 1, datetime("now"), datetime("now"))');
-  const insertMany = db.transaction((data) => {
-    for (const row of data) {
-      stmt.run(...row);
-    }
-  });
-  insertMany(akData);
+  for (const row of akData) {
+    stmt.run(row);
+  }
+  stmt.free();
   console.log('Seeded ' + akData.length + ' Aspek Kerja records');
 }
 
-function seedBlok(db) {
+async function seedBlok(db) {
   console.log('Seeding Blok...');
-  db.exec(`
+  db.run(`
     CREATE TABLE IF NOT EXISTS blok (
       id TEXT PRIMARY KEY,
       kode TEXT UNIQUE NOT NULL,
@@ -125,7 +130,7 @@ function seedBlok(db) {
       status_2027 TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
+    )
   `);
 
   const blokData = [
@@ -135,18 +140,16 @@ function seedBlok(db) {
   ];
 
   const stmt = db.prepare('INSERT OR IGNORE INTO blok VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, datetime("now"), datetime("now"))');
-  const insertMany = db.transaction((data) => {
-    for (const row of data) {
-      stmt.run(...row);
-    }
-  });
-  insertMany(blokData);
+  for (const row of blokData) {
+    stmt.run(row);
+  }
+  stmt.free();
   console.log('Seeded ' + blokData.length + ' Blok records');
 }
 
-function seedTransactions(db, name) {
+async function seedTransactions(db, name) {
   console.log('Seeding ' + name + ' transactions...');
-  db.exec(`
+  db.run(`
     CREATE TABLE IF NOT EXISTS transactions (
       id TEXT PRIMARY KEY,
       transaction_number TEXT UNIQUE NOT NULL,
@@ -161,7 +164,7 @@ function seedTransactions(db, name) {
       created_by TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
+    )
   `);
 
   const txData = [
@@ -170,45 +173,50 @@ function seedTransactions(db, name) {
   ];
 
   const stmt = db.prepare('INSERT OR IGNORE INTO transactions VALUES (?, ?, ?, ?, ?, ?, ?, NULL, NULL, ?, ?, datetime("now"), datetime("now"))');
-  const insertMany = db.transaction((data) => {
-    for (const row of data) {
-      stmt.run(...row);
-    }
-  });
-  insertMany(txData);
+  for (const row of txData) {
+    stmt.run(row);
+  }
+  stmt.free();
   console.log('Seeded ' + txData.length + ' ' + name + ' transactions');
 }
 
-function main() {
+async function main() {
   console.log('Starting test data seeding...');
   console.log('Base Dir: ' + BASE_DIR);
   console.log('Data Dir: ' + DATA_DIR);
 
   try {
+    // Initialize sql.js
+    const SQL = await initSqlJs();
+
     // Seed COA (includes Aspek Kerja and Blok)
     ensureDir(MASTER_DIR);
-    const coaDb = new Database(COA_DB);
-    seedCOA(coaDb);
-    seedAspekKerja(coaDb);
-    seedBlok(coaDb);
+    const coaDb = new SQL.Database();
+    await seedCOA(coaDb);
+    await seedAspekKerja(coaDb);
+    await seedBlok(coaDb);
+    saveDb(coaDb, COA_DB);
     coaDb.close();
 
     // Seed Kas transactions
     ensureDir(KAS_DIR);
-    const kasDb = new Database(KAS_DB);
-    seedTransactions(kasDb, 'Kas');
+    const kasDb = new SQL.Database();
+    await seedTransactions(kasDb, 'Kas');
+    saveDb(kasDb, KAS_DB);
     kasDb.close();
 
     // Seed Bank transactions
     ensureDir(BANK_DIR);
-    const bankDb = new Database(BANK_DB);
-    seedTransactions(bankDb, 'Bank');
+    const bankDb = new SQL.Database();
+    await seedTransactions(bankDb, 'Bank');
+    saveDb(bankDb, BANK_DB);
     bankDb.close();
 
     // Seed Gudang transactions
     ensureDir(GUDANG_DIR);
-    const gudangDb = new Database(GUDANG_DB);
-    seedTransactions(gudangDb, 'Gudang');
+    const gudangDb = new SQL.Database();
+    await seedTransactions(gudangDb, 'Gudang');
+    saveDb(gudangDb, GUDANG_DB);
     gudangDb.close();
 
     console.log('Test data seeded successfully!');
