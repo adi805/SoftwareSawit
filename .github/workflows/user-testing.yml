@@ -121,6 +121,38 @@ jobs:
           }
         shell: pwsh
 
+      - name: Seed test data
+        run: |
+          Write-Host "Seeding test data..."
+          $dbPath = "$env:APPDATA\SoftwareSawit\data"
+          New-Item -ItemType Directory -Force -Path $dbPath
+          if (Test-Path ".github/scripts/seed-test-data.js") {
+            node .github/scripts/seed-test-data.js
+          } else {
+            Write-Host "Seed script not found, creating minimal seed data..."
+            # Create minimal SQLite databases with test data
+            npm install --save-dev better-sqlite3
+            node -e "
+              const Database = require('better-sqlite3');
+              const fs = require('fs');
+              const path = require('path');
+              const dbDir = process.env.APPDATA + '\\SoftwareSawit\\data';
+              fs.mkdirSync(dbDir, {recursive:true});
+              
+              // Seed COA
+              const coaDb = new Database(dbDir + '\\coa.db');
+              coaDb.exec('CREATE TABLE IF NOT EXISTS coa (id TEXT, kode TEXT, nama TEXT, tipe TEXT, parent_id TEXT, status_aktif INTEGER DEFAULT 1, created_at TEXT, updated_at TEXT)');
+              coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('1','1-1000','Kas','Aktiva Lancar',NULL,1,datetime('now'),datetime('now'))\");
+              coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('2','1-1100','Bank','Aktiva Lancar','1',1,datetime('now'),datetime('now'))\");
+              coaDb.exec('CREATE TABLE IF NOT EXISTS aspek_kerja (id TEXT, kode TEXT, nama TEXT, coa_id TEXT, jenis TEXT, status_aktif INTEGER DEFAULT 1)');
+              coaDb.exec(\"INSERT OR IGNORE INTO aspek_kerja VALUES ('1','AK01','Panen','1','Operasional',1)\");
+              coaDb.exec('CREATE TABLE IF NOT EXISTS blok (id TEXT, kode TEXT, nama TEXT, tahun_tanam INTEGER, luas REAL, pokok INTEGER, sph REAL, bulan_tanam TEXT)');
+              coaDb.exec(\"INSERT OR IGNORE INTO blok VALUES ('1','B01','Blok A',2025,10.5,1050,100,'Januari')\");
+              coaDb.close();
+              console.log('Test data seeded successfully');
+            }
+        shell: pwsh
+
       - name: Run user tests
         id: run_tests
         run: |
