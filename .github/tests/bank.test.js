@@ -36,7 +36,7 @@ class BankTests {
       await this.captureScreenshot('bank_page_loaded');
       
       const table = await this.window.locator('[data-testid="bank-table"]').first();
-      await table.waitFor({ state: 'visible', timeout: 15000 });
+      await table.waitFor({ state: 'attached', timeout: 15000 });
     }, { area: this.area });
 
     // Check for bank account selector

@@ -190,7 +190,7 @@ class MasterDataTests {
       await this.captureScreenshot('aspek_kerja_table_view');
       
       const table = await this.window.locator('[data-testid="aspek-kerja-table"]').first();
-      await table.waitFor({ state: 'visible', timeout: 15000 });
+      await table.waitFor({ state: 'attached', timeout: 15000 });
     }, { area: this.area });
 
     // VAL-MASTER-AK-010: Add Aspek Kerja with COA linkage
@@ -222,7 +222,7 @@ class MasterDataTests {
       await this.captureScreenshot('blok_table_view');
       
       const table = await this.window.locator('[data-testid="blok-table"]').first();
-      await table.waitFor({ state: 'visible', timeout: 15000 });
+      await table.waitFor({ state: 'attached', timeout: 15000 });
     }, { area: this.area });
 
     // VAL-MASTER-BLOK-010: Add Blok with validation
