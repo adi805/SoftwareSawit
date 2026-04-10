@@ -1,0 +1,51 @@
+{
+  "featureId": "F011-FIX",
+  "reviewedAt": "2026-04-09T15:00:00.000Z",
+  "commitId": null,
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The F011-FIX feature was defined as a fix for two blocking issues from F011-UI: (1) wire syncStatusFilter to backend data fetch in all three list pages, and (2) create SyncStatusBadge tests. Despite the fix feature existing in features.json, no worker session was assigned, no handoff exists, and no code changes have been committed to the repository. The current codebase still mirrors the original F011-UI commit (e066cfe) with the exact same defects: syncStatusFilter is purely cosmetic in KasListPage, BankListPage, and GudangListPage, and src/renderer/components/SyncStatusBadge.test.tsx does not exist.",
+    "issues": [
+      {
+        "file": "src/renderer/pages/KasListPage.tsx",
+        "line": 146,
+        "severity": "blocking",
+        "description": "syncStatusFilter state is rendered in the UI but loadTransactions does NOT pass it to window.electronAPI.getKasWithPagination. It is also missing from the useCallback dependency array and from the page-reset useEffect. The filter does nothing."
+      },
+      {
+        "file": "src/renderer/pages/BankListPage.tsx",
+        "line": 1,
+        "severity": "blocking",
+        "description": "Same defect as KasListPage: syncStatusFilter UI exists but is not wired to window.electronAPI.getBankWithPagination, not in useCallback deps, and does not trigger page reset."
+      },
+      {
+        "file": "src/renderer/pages/GudangListPage.tsx",
+        "line": 1,
+        "severity": "blocking",
+        "description": "Same defect as KasListPage: syncStatusFilter UI exists but is not wired to window.electronAPI.getGudangWithPagination, not in useCallback deps, and does not trigger page reset."
+      },
+      {
+        "file": "src/renderer/components/SyncStatusBadge.test.tsx",
+        "line": 1,
+        "severity": "blocking",
+        "description": "Missing test file. The fix feature explicitly requires SyncStatusBadge tests with rendering, prop variations, and tooltip tests, but the file does not exist in the repository."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md clearly mandates 'Write tests BEFORE implementation (TDD)' and 'Test files: *.test.ts alongside source files', yet the original F011-UI commit contained zero tests for SyncStatusBadge. The fix feature was created specifically because this convention was ignored, but the fix itself has not been implemented either.",
+      "evidence": "AGENTS.md Testing Requirements section; src/renderer/components/SyncStatusBadge.tsx exists but SyncStatusBadge.test.tsx does not."
+    },
+    {
+      "area": "skills",
+      "observation": "frontend-worker SKILL.md section 3 requires TDD (write tests first) and section 6 requires Manual Verification with agent-browser. The original F011-UI worker followed neither, and the fix feature was never worked on.",
+      "evidence": "Original F011-UI worker handoff has empty interactiveChecks and no committed test file. Fix feature F011-FIX has no worker session assigned in features.json."
+    }
+  ],
+  "addressesFailureFrom": ".factory\\validation\\sync-monitoring\\scrutiny\\reviews\\F011-UI.json",
+  "summary": "Review FAIL for F011-FIX. No code changes were actually made for this fix feature. The original F011-UI blocking issues remain completely unaddressed: the sync status filter is still non-functional in all three list pages, and the SyncStatusBadge test file is still missing. The fix must be implemented before proceeding to user testing."
+}

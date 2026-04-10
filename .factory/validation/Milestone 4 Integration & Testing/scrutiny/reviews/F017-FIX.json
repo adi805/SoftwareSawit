@@ -1,0 +1,63 @@
+{
+  "featureId": "F017-FIX",
+  "reviewedAt": "2026-04-08T12:00:00.000Z",
+  "commitId": null,
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "F017-FIX has not been implemented. The feature is still pending in features.json with no worker session assigned and no commit in the repository. The codebase still contains the original IPC listener leak in SyncContext.tsx that caused F017 to fail scrutiny. The preload APIs in preload.ts still lack unsubscribe/off methods for the five event listeners (onAutoSyncTimerStatus, onAutoSyncTimerProgress, onAutoSyncTimerResult, onNetworkStatusChange, onNetworkStatusSyncControl), and the useEffect cleanup in SyncContext.tsx still only removes window online/offline listeners without removing the IPC listeners.",
+    "issues": [
+      {
+        "file": "src/preload/preload.ts",
+        "line": 767,
+        "severity": "blocking",
+        "description": "onAutoSyncTimerStatus registers an ipcRenderer.on listener but provides no way to unsubscribe. A matching offAutoSyncTimerStatus (or generic off method) is required so SyncContext can clean up."
+      },
+      {
+        "file": "src/preload/preload.ts",
+        "line": 771,
+        "severity": "blocking",
+        "description": "onAutoSyncTimerProgress registers an ipcRenderer.on listener but provides no way to unsubscribe."
+      },
+      {
+        "file": "src/preload/preload.ts",
+        "line": 775,
+        "severity": "blocking",
+        "description": "onAutoSyncTimerResult registers an ipcRenderer.on listener but provides no way to unsubscribe."
+      },
+      {
+        "file": "src/preload/preload.ts",
+        "line": 807,
+        "severity": "blocking",
+        "description": "onNetworkStatusChange registers an ipcRenderer.on listener but provides no way to unsubscribe."
+      },
+      {
+        "file": "src/preload/preload.ts",
+        "line": 812,
+        "severity": "blocking",
+        "description": "onNetworkStatusSyncControl registers an ipcRenderer.on listener but provides no way to unsubscribe."
+      },
+      {
+        "file": "src/renderer/context/SyncContext.tsx",
+        "line": 470,
+        "severity": "blocking",
+        "description": "The useEffect registers five IPC event listeners but the cleanup function only removes window online/offline listeners. It must also call the preload off/unsubscribe methods for all five IPC listeners to prevent duplicate registrations and memory leaks when pauseReason changes."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md mentions IPC for main-renderer communication but does not document the convention that every ipcRenderer.on listener exposed in preload.ts must have a matching removal method (ipcRenderer.removeListener or removeAllListeners) so React useEffects can clean them up. This continues to be a gap that contributed to the original F017 leak and the unaddressed F017-FIX.",
+      "evidence": "preload.ts lines 767-813 register listeners without off methods; AGENTS.md has no guidance on listener cleanup in preload APIs."
+    },
+    {
+      "area": "skills",
+      "observation": "F017-FIX is assigned skillName 'backend-worker', which is the same mismatched skill that was used for F017. The skill file only describes Blok/COA database schema changes and backend procedures, not frontend React IPC cleanup or preload API work. This mismatch may explain why the fix was never started.",
+      "evidence": "features.json assigns 'backend-worker' to F017-FIX; .factory/skills/backend-worker/SKILL.md contains only database/backend procedures with no mention of preload.ts, SyncContext, or renderer-side IPC cleanup."
+    }
+  ],
+  "addressesFailureFrom": ".factory/validation/Milestone 4 Integration & Testing/scrutiny/reviews/F017.json",
+  "summary": "F017-FIX fails scrutiny because it has not been implemented at all. The repository still contains the original IPC listener leak that caused F017 to fail. To resolve the failure, a worker must: (1) add unsubscribe/off methods in preload.ts for all five IPC listeners, (2) update electron.d.ts with the new off method types, and (3) update SyncContext.tsx useEffect cleanup to call those off methods. Until this is done, the blocking leak remains unaddressed."
+}

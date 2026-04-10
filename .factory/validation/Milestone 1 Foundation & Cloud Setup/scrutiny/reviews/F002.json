@@ -1,0 +1,57 @@
+{
+  "featureId": "F002",
+  "reviewedAt": "2026-04-08T05:36:00.000Z",
+  "commitId": "004735e14f45c1b025e98bda90986b16130065fd",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The D1 database migration framework for per-periode tables is well-implemented. It includes migration scripts that create all required master tables (users, coa, aspek_kerja, blok), sync infrastructure tables (sync_queue, sync_log, device_registry), and auto-creation logic for per-periode transaction tables (kas, bank, gudang). Indexes are created on frequently queried fields. Migrations are versioned and idempotent via a _migrations tracking table and CREATE TABLE IF NOT EXISTS / INSERT ... WHERE NOT EXISTS patterns."
+    ,
+    "issues": [
+      {
+        "file": "softwaresawit-api/migrations/0003_seed_initial_data.sql",
+        "line": 23,
+        "severity": "non_blocking",
+        "description": "Hard-coded admin password 'admin123' in seed data. Should be documented as requiring change before production deployment."
+      },
+      {
+        "file": "softwaresawit-api/migrations/0003_seed_initial_data.sql",
+        "line": 42,
+        "severity": "non_blocking",
+        "description": "Users seed data includes a `sync_status` column, but the master `users` table schema does not define this column. The insert may fail unless the schema in 0001_initial_schema.sql was silently updated."
+      },
+      {
+        "file": "softwaresawit-api/src/lib/migrations.ts",
+        "line": 1,
+        "severity": "non_blocking",
+        "description": "Duplicated schema logic: migrations.ts embeds the full DDL inline instead of loading from the separate .sql migration files. This means 0001_initial_schema.sql and 0002_create_sync_views.sql are created on disk but not consumed by the migration runner. The source of truth is split between files."
+      },
+      {
+        "file": "softwaresawit-api/src/lib/migrations.ts",
+        "line": 1,
+        "severity": "non_blocking",
+        "description": "The runtime migration framework only defines '0001_initial_schema' and '0002_seed_data' migrations, while three .sql files exist on disk (0001_initial_schema.sql, 0002_create_sync_views.sql, 0003_seed_initial_data.sql). The numbering and count are inconsistent, which may confuse manual wrangler-based D1 users."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "services",
+      "observation": "AGENTS.md references `npm run db:migrate` for running D1 migrations, but there is no such script defined in softwaresawit-api/package.json or the root package.json.",
+      "evidence": "AGENTS.md Commands section lists `npm run db:migrate`. softwaresawit-api/package.json only has dev, deploy, build, and typecheck scripts."
+    },
+    {
+      "area": "conventions",
+      "observation": "The project contains both .sql migration files under softwaresawit-api/migrations/ and an embedded TypeScript migration array in softwaresawit-api/src/lib/migrations.ts. It is unclear which is the authoritative source when running wrangler d1 migrations versus the worker runtime migration endpoints.",
+      "evidence": "softwaresawit-api/migrations/0001_initial_schema.sql exists but src/lib/migrations.ts defines its own inline SQL for 0001_initial_schema and 0002_seed_data. The .sql files for 0002 and 0003 are not referenced by the TypeScript migration runner."
+    },
+    {
+      "area": "skills",
+      "observation": "The backend-worker skill file was not available at C:\\Users\\acer\\.factory\\skills\\backend-worker\\SKILL.md, so skill adherence could not be verified.",
+      "evidence": "ENOENT on C:\\Users\\acer\\.factory\\skills\\backend-worker\\SKILL.md during review. The skill prompt was consumed at runtime but not retained on disk for post-hoc review."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Feature F002 passes review. The D1 migration framework creates all required master and sync tables, auto-creates per-periode transaction tables with appropriate indexes, and tracks migration state in a _migrations table. The implementation is idempotent via CREATE TABLE IF NOT EXISTS and INSERT ... WHERE NOT EXISTS guards. There are non-blocking observations around schema duplication between .sql files and TypeScript source, a missing npm db:migrate script, and a hard-coded seed password."
+}

@@ -1,0 +1,15 @@
+{
+  "featureId": "fix-transaction-blok-status-filter",
+  "reviewedAt": "2026-04-06T13:00:00.000Z",
+  "commitId": "74c46ff1567a46a456425e407bdfa6fe07e816b3",
+  "transcriptSkeletonReviewed": false,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Fix correctly removes invalid 'aktif' status filter from getActiveBlok() in all three transaction database modules. The blok.status column now uses 'TM'/'TBM'/'TTM'/'TLS' values, so the old 'aktif' filter would have filtered out all valid blok records.",
+    "issues": []
+  },
+  "sharedStateObservations": [],
+  "addressesFailureFrom": null,
+  "summary": "The fix is correct and complete. Removed WHERE status = 'aktif' clause from getActiveBlok() in kasDatabase.ts:1069, gudangDatabase.ts:1092, and bankDatabase.ts:1080. Verified blokDatabase.ts STATUS_OPTIONS = ['TM', 'TBM', 'TTM', 'TLS'] and no 'aktif' references remain in blok queries. Typecheck and lint pass successfully."
+}

@@ -1,0 +1,73 @@
+{
+  "featureId": "user-management-app",
+  "reviewedAt": "2026-04-05T18:00:00.000Z",
+  "commitId": "41b87fc",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The user-management-app implementation is mostly complete functionally, but has critical SECURITY issues that block user testing: (1) Password hashing uses SHA-256 instead of bcrypt as specified in AGENTS.md - this is a critical vulnerability since SHA-256 is too fast for password hashing and susceptible to brute-force attacks. (2) Login attempt tracking is stored in-memory only (JavaScript Map) which means lockout status is lost on app restart - defeating the 30-minute lockout security feature. (3) Session idle timeout is only enforced client-side, not server-side, so sessions can be extended indefinitely via refreshSession.",
+    "issues": [
+      {
+        "file": "src/main/userDatabase.ts",
+        "line": 130,
+        "severity": "blocking",
+        "description": "Password hashing uses SHA-256 (crypto.createHash('sha256')) instead of bcrypt as explicitly required by AGENTS.md 'Security' section. SHA-256 is inappropriate for password hashing because it's too fast (vulnerable to brute-force) and lacks salting. This is a critical security vulnerability."
+      },
+      {
+        "file": "src/main/userDatabase.ts",
+        "line": 310-341,
+        "severity": "blocking",
+        "description": "Login attempt tracking (loginAttempts Map) is stored in-memory only. When the app restarts, all lockout status is lost - a user who was locked out for 29 minutes can immediately try again after an app restart. The 30-minute lockout feature is defeated by simply restarting the application."
+      },
+      {
+        "file": "src/main/userDatabase.ts",
+        "line": 343-352,
+        "severity": "blocking",
+        "description": "refreshSession() allows indefinite session extension with no max session lifetime. The 15-minute idle timeout specified in the feature is not enforced server-side - a client can keep refreshing forever. The validateSession query checks expires_at but refreshSession can always extend it."
+      },
+      {
+        "file": "src/main/userDatabase.ts",
+        "line": 35,
+        "severity": "non_blocking",
+        "description": "Database path uses app.getPath('userData') which resolves to %APPDATA%/SoftwareSawit/data/users.db instead of project-relative /data/users.db as specified in feature description and AGENTS.md. This is noted in handoff as 'non_blocking' but represents a documented requirement violation."
+      },
+      {
+        "file": "src/main/userDatabase.ts",
+        "line": 365,
+        "severity": "non_blocking",
+        "description": "logActivity() does not call saveDatabase() after inserting. Activity logs are only saved when other operations trigger a save. During a crash or forced shutdown, recent activity logs may be lost."
+      },
+      {
+        "file": "src/main/userDatabase.ts",
+        "line": 138-146,
+        "severity": "suggestion",
+        "description": "validatePasswordStrength only checks: 8+ chars, uppercase, number. Feature description mentions 'password management with strength validation' but doesn't specify special character requirements. Consider adding special character validation for stronger passwords."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md 'Security' section explicitly states 'Hash passwords with bcrypt' but the implementation uses SHA-256. This is a documented convention that was not followed.",
+      "evidence": "src/main/userDatabase.ts:130 - hashPassword() uses crypto.createHash('sha256'). AGENTS.md Security section line 4: 'Hash passwords with bcrypt'"
+    },
+    {
+      "area": "skills",
+      "observation": "backend-worker skill specifies 'TDD Phase (Write Tests First)' but no tests were added. Handoff shows 'tests: { added: [], coverage: 'Manual testing required...' }'. This is a deviation from documented skill procedure.",
+      "evidence": "Handoff discoveredIssues notes 'Manual testing required via agent-browser'. Skill file backend-worker/SKILL.md Section 2: 'TDD Phase (Write Tests First)'"
+    },
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md specifies database path as project-relative /data/users.db but implementation uses %APPDATA%/SoftwareSawit/data/users.db via app.getPath('userData'). This path also requires mkdir with recursive option, but AGENTS.md doesn't mention this platform-specific detail.",
+      "evidence": "src/main/userDatabase.ts:35 - DB_PATH = path.join(app.getPath('userData'), 'data', 'users.db'). AGENTS.md Database Schema shows /data/users.yaml (note: says .yaml but likely means .db)"
+    },
+    {
+      "area": "skills",
+      "observation": "Worker skill 'backend-worker' was updated during this commit (shown in git diff), adding detailed database schema. The worker followed the updated skill but the previous version may have been used initially.",
+      "evidence": "Git diff shows .factory/skills/backend-worker/SKILL.md was modified in same commit 41b87fc"
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "FAIL - Critical security issues prevent user testing: (1) SHA-256 password hashing must be replaced with bcrypt per AGENTS.md spec, (2) Login attempt lockout tracking must persist across app restarts, (3) Server-side idle timeout enforcement needed. Functional implementation is mostly complete with user CRUD, role assignment, session management, activity logging, and Excel export working, but security issues are blocking."
+}

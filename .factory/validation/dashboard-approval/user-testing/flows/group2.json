@@ -1,0 +1,88 @@
+{
+  "groupId": "group2",
+  "testedAt": "2026-04-08T15:00:00.000Z",
+  "isolation": {
+    "appUrl": "electron://localhost:9223",
+    "credentials": { "username": "admin", "password": "Admin123!" },
+    "dataDirectory": "C:/Users/acer/AppData/Roaming/software-sawit/data"
+  },
+  "toolsUsed": ["agent-browser"],
+  "assertions": [
+    {
+      "id": "VAL-DASH-004",
+      "title": "Module Filter Functions Correctly",
+      "status": "pass",
+      "steps": [
+        { "action": "Select 'Kas' module filter", "expected": "Only Kas transactions shown", "observed": "Table filtered to Kas items only" },
+        { "action": "Select 'Bank' module filter", "expected": "Only Bank transactions shown", "observed": "Table filtered to Bank items only" },
+        { "action": "Select 'Gudang' module filter", "expected": "Only Gudang transactions shown", "observed": "Table filtered to Gudang items only" },
+        { "action": "Select 'Semua Modul' filter", "expected": "All modules shown", "observed": "All modules displayed" }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group2/filter-kas.png", "dashboard-approval/group2/filter-bank.png", "dashboard-approval/group2/filter-gudang.png"],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASH-005",
+      "title": "Status Filter Functions Correctly",
+      "status": "fail",
+      "steps": [
+        { "action": "Select 'Pending Approval 1' filter", "expected": "Only PA1 items shown", "observed": "Only PA1 items displayed" },
+        { "action": "Select 'Pending Approval 2' filter", "expected": "Only PA2 items shown", "observed": "PA2 items displayed correctly (2 items)" },
+        { "action": "Select 'Semua Status' filter", "expected": "Both PA1 and PA2 shown", "observed": "Only PA1 items shown; PA2 items missing from unified view" }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group2/filter-pa2.png"],
+        "consoleErrors": "none"
+      },
+      "issues": "Same root cause as VAL-DASH-003: DashboardApprovalPage.tsx has a logic error in loadPendingApprovals() where PA2 items are not fetched when status filter is 'all'."
+    },
+    {
+      "id": "VAL-DASH-015",
+      "title": "Search Functionality",
+      "status": "pass",
+      "steps": [
+        { "action": "Search by transaction number 'BANK'", "expected": "Bank transactions returned", "observed": "1 Bank transaction returned matching 'BANK'" },
+        { "action": "Clear search using Reset Filter", "expected": "Full list restored", "observed": "All items restored after reset" }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group2/search-bank.png"],
+        "consoleErrors": "none",
+        "network": "Debounce observed - results update after ~300ms delay"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASH-016",
+      "title": "Date Range Filter",
+      "status": "pass",
+      "steps": [
+        { "action": "Set start date to 2026-04-07 and end date to 2026-04-08", "expected": "Transactions within range shown", "observed": "5 transactions within date range displayed" }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group2/date-filter.png"],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-005",
+      "title": "Multi-Module Dashboard Aggregation",
+      "status": "pass",
+      "steps": [
+        { "action": "View dashboard with 'Semua Modul' filter", "expected": "Transactions from all modules visible with correct badges", "observed": "Kas, Bank, and Gudang transactions all visible with correct colored module badges" },
+        { "action": "Verify module filter works per module", "expected": "Filter isolates each module", "observed": "Kas/Bank/Gudang filters each show only their respective transactions" }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group1/dashboard-with-data.png", "dashboard-approval/group2/filter-kas.png", "dashboard-approval/group2/filter-bank.png", "dashboard-approval/group2/filter-gudang.png"],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 5 assertions: 4 passed, 1 failed (VAL-DASH-005: status filter 'All' missing PA2 items)"
+}

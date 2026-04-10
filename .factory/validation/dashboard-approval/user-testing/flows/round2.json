@@ -1,0 +1,96 @@
+{
+  "groupId": "round2",
+  "testedAt": "2026-04-09T04:45:00.000Z",
+  "isolation": {
+    "appUrl": "electron://localhost:9223",
+    "credentials": { "username": "admin", "password": "Admin123!" },
+    "dataDirectory": "C:/Users/acer/AppData/Roaming/software-sawit/data"
+  },
+  "toolsUsed": ["agent-browser"],
+  "assertions": [
+    {
+      "id": "VAL-DASH-003",
+      "title": "Unified Table Shows All Pending Transactions",
+      "status": "pass",
+      "steps": [
+        { "action": "View dashboard with 'Semua Status' filter", "expected": "All pending transactions visible including PA1 and PA2", "observed": "Table shows 7 transactions: 5 PA1 and 2 PA2. Both statuses visible in unified view." }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/round2/all-view-after-fix.png"],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASH-005",
+      "title": "Status Filter Functions Correctly",
+      "status": "pass",
+      "steps": [
+        { "action": "Select 'Pending Approval 1' filter", "expected": "Only PA1 items shown", "observed": "5 PA1 items displayed correctly" },
+        { "action": "Select 'Pending Approval 2' filter", "expected": "Only PA2 items shown", "observed": "2 PA2 items displayed correctly with no duplicates after code fix" },
+        { "action": "Select 'Semua Status' filter", "expected": "Both PA1 and PA2 shown", "observed": "7 total items (5 PA1 + 2 PA2) displayed correctly" }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/round2/all-view-after-fix.png", "dashboard-approval/round2/pa2-filter-fixed.png"],
+        "consoleErrors": "none"
+      },
+      "issues": "Previously failed due to PA2 duplicates when filtering to PA2. Fixed in DashboardApprovalPage.tsx by only fetching PA2 separately when statusFilter is 'all'."
+    },
+    {
+      "id": "VAL-DASH-009",
+      "title": "Navigation to Module Works",
+      "status": "pass",
+      "steps": [
+        { "action": "Click Bank module badge in table row", "expected": "Navigation to Bank module list page", "observed": "Page navigated to Bank module showing Bank transactions" },
+        { "action": "Verify module page shows related transactions", "expected": "Bank transactions visible", "observed": "3 Bank transactions displayed in Bank module list" }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/round2/module-navigation-bank.png"],
+        "consoleErrors": "none"
+      },
+      "issues": "Previously failed because onNavigateToKas/Bank/Gudang props were not passed from App.tsx. Fixed by adding the navigation props to both DashboardApprovalPage instances in App.tsx."
+    },
+    {
+      "id": "VAL-DASH-018",
+      "title": "Mobile Responsiveness",
+      "status": "fail",
+      "steps": [
+        { "action": "Resize viewport to 375x667 (iPhone dimensions)", "expected": "Table horizontal scrolls, cards stack vertically, buttons tappable, text readable", "observed": "Page loads successfully and table appears scrollable. Action buttons remain visible. However, summary cards remain in 2-column grid instead of stacking into a single column." }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/round2/mobile-viewport.png"]
+      },
+      "issues": "Summary cards use grid-cols-2 on all screen sizes. For full mobile compliance, should use grid-cols-1 on small screens (sm:grid-cols-2 md:grid-cols-4)."
+    },
+    {
+      "id": "VAL-DASH-019",
+      "title": "Accessibility",
+      "status": "blocked",
+      "steps": [
+        { "action": "Test keyboard tab navigation through dashboard elements", "expected": "All interactive elements reachable via keyboard", "observed": "Sidebar buttons, filters, search box, and action buttons are all reachable via Tab key." }
+      ],
+      "evidence": {},
+      "issues": "Basic keyboard navigation verified, but comprehensive WCAG AA compliance (color contrast, ARIA labels, screen reader behavior) requires Lighthouse or axe-core which are not available in the current toolset."
+    },
+    {
+      "id": "VAL-DASH-020",
+      "title": "Error Handling",
+      "status": "fail",
+      "steps": [
+        { "action": "Review error handling in DashboardApprovalPage.tsx loadPendingApprovals and loadCounts", "expected": "User-facing error UI with retry button, friendly messages, per-module failure indicators", "observed": "Errors are caught in try-catch blocks and only logged to console.error. No error state is set or displayed to the user." }
+      ],
+      "evidence": {},
+      "issues": "Code review confirms missing error handling UI. loadPendingApprovals and loadCounts catch errors and log them but do not render any retry button, friendly message, or module-specific failure indicator."
+    }
+  ],
+  "frictions": [
+    {
+      "description": "agent-browser fill command timed out on Electron login textboxes; required React-compatible input setter via eval",
+      "resolved": true,
+      "resolution": "Used Object.getOwnPropertyDescriptor to set input values and dispatch input/change events for React state binding",
+      "affectedAssertions": []
+    }
+  ],
+  "blockers": [],
+  "summary": "Round 2 tested 6 assertions. 3 previously-failed assertions now pass after code fixes (VAL-DASH-003, VAL-DASH-005, VAL-DASH-009). 1 assertion failed due to mobile grid not stacking (VAL-DASH-018). 1 assertion failed due to missing error handling UI (VAL-DASH-020). 1 assertion remains blocked for tool availability (VAL-DASH-019)."
+}

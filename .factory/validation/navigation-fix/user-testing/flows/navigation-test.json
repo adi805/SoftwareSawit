@@ -1,0 +1,36 @@
+{
+  "assertions": [
+    { "id": "VAL-NAV-001", "status": "blocked", "evidence": "Electron app not running - cannot connect to CDP at localhost:9222", "notes": "App was running earlier today (per electron-err.log: 'DevTools listening on ws://127.0.0.1:9222/devtools/browser/a61012e0-474d-49f5-86c8-739426723e76') but has since closed. All attempts to restart Electron with --remote-debugging-port=9222 fail immediately. The app exits without creating a window." },
+    { "id": "VAL-NAV-002", "status": "blocked", "evidence": "Electron app not running - cannot connect to CDP at localhost:9222", "notes": "Same blocker as VAL-NAV-001" },
+    { "id": "VAL-NAV-003", "status": "blocked", "evidence": "Electron app not running - cannot connect to CDP at localhost:9222", "notes": "Same blocker as VAL-NAV-001" },
+    { "id": "VAL-NAV-004", "status": "blocked", "evidence": "Electron app not running - cannot connect to CDP at localhost:9222", "notes": "Same blocker as VAL-NAV-001" },
+    { "id": "VAL-NAV-005", "status": "blocked", "evidence": "Electron app not running - cannot connect to CDP at localhost:9222", "notes": "Same blocker as VAL-NAV-001" },
+    { "id": "VAL-NAV-006", "status": "blocked", "evidence": "Electron app not running - cannot connect to CDP at localhost:9222", "notes": "Same blocker as VAL-NAV-001" },
+    { "id": "VAL-NAV-007", "status": "blocked", "evidence": "Electron app not running - cannot connect to CDP at localhost:9222", "notes": "Same blocker as VAL-NAV-001" },
+    { "id": "VAL-NAV-008", "status": "blocked", "evidence": "Electron app not running - cannot connect to CDP at localhost:9222", "notes": "Same blocker as VAL-NAV-001" },
+    { "id": "VAL-CROSS-001", "status": "blocked", "evidence": "Electron app not running - cannot connect to CDP at localhost:9222", "notes": "Same blocker as VAL-NAV-001" }
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [
+    "VAL-NAV-001",
+    "VAL-NAV-002", 
+    "VAL-NAV-003",
+    "VAL-NAV-004",
+    "VAL-NAV-005",
+    "VAL-NAV-006",
+    "VAL-NAV-007",
+    "VAL-NAV-008",
+    "VAL-CROSS-001"
+  ],
+  "frictions": [
+    "Electron process exits immediately after start - possible display/window creation issue in this environment",
+    "No visible error output when Electron process terminates"
+  ],
+  "blockers": [
+    "Electron app is not running and cannot be started",
+    "CDP connection to localhost:9222 fails - nothing listening on port",
+    "Multiple attempts to start Electron with 'npx electron . --dev --remote-debugging-port=9222' result in immediate process termination"
+  ],
+  "toolsUsed": ["agent-browser"],
+  "environmentNotes": "Environment is Windows (win32 10.0.26200). Electron version 34.5.8 is installed and executable binary is valid. App was running earlier today (timestamp in logs shows 10:38:26 - 10:50:28) but has since closed. Current state shows no process listening on port 9222."
+}

@@ -1,0 +1,6 @@
+{
+  "name": "SoftwareSawit",
+  "description": "Aplikasi Desktop Multi-Modul dengan Sinkronisasi untuk manajemen perkebunan kelapa sawit",
+  "private": false,
+  "auto_init": true
+}

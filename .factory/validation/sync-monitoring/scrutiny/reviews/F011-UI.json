@@ -1,0 +1,63 @@
+{
+  "featureId": "F011-UI",
+  "reviewedAt": "2026-04-09T08:45:00.000Z",
+  "commitId": "e066cfe",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The SyncStatusBadge component is correctly implemented with colored badges and tooltips, and badges are displayed in all three transaction list pages. However, the sync status filter UI is incomplete — the filter dropdown exists but is not wired to the data fetch, so it has no effect. Additionally, claimed test files do not exist in the commit, and there is a type mismatch between the backend sync_status ('error') and the frontend SyncStatusValue type.",
+    "issues": [
+      {
+        "file": "src/renderer/pages/KasListPage.tsx",
+        "line": 146,
+        "severity": "blocking",
+        "description": "syncStatusFilter state is declared and rendered in the UI, but loadTransactions does not pass it to window.electronAPI.getKasWithPagination, nor is it included in the useCallback dependency array or the page-reset useEffect. The filter dropdown is non-functional. Same issue exists in BankListPage.tsx and GudangListPage.tsx."
+      },
+      {
+        "file": "src/renderer/pages/BankListPage.tsx",
+        "line": 1,
+        "severity": "blocking",
+        "description": "Same as KasListPage: syncStatusFilter UI exists but is not wired to the backend data fetch, making the filter non-functional."
+      },
+      {
+        "file": "src/renderer/pages/GudangListPage.tsx",
+        "line": 1,
+        "severity": "blocking",
+        "description": "Same as KasListPage: syncStatusFilter UI exists but is not wired to the backend data fetch, making the filter non-functional."
+      },
+      {
+        "file": "src/renderer/types/electron.d.ts",
+        "line": 136,
+        "severity": "non_blocking",
+        "description": "sync_status is typed as 'synced' | 'pending' | 'conflict' | 'error', but SyncStatusBadge.tsx only accepts 'synced' | 'pending' | 'failed' | 'conflict'. The 'error' backend value has no matching frontend type and will silently fall back to pending styling."
+      },
+      {
+        "file": "src/renderer/components/SyncStatusBadge.tsx",
+        "line": 52,
+        "severity": "non_blocking",
+        "description": "sizeClasses defines icon size overrides (w-3.5 h-3.5, w-4 h-4) but the SVG icons in statusConfig always use hardcoded className='w-3 h-3', so size changes don't affect icon dimensions."
+      },
+      {
+        "file": "src/renderer/components/SyncStatusBadge.tsx",
+        "line": 1,
+        "severity": "blocking",
+        "description": "Handoff claims a test file with 5 test cases was added for SyncStatusBadge, but git diff shows only 5 files changed and no test file was committed. There is zero test coverage for this feature."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "frontend-worker SKILL.md section 6 mandates Manual Verification with agent-browser, but the worker's interactiveChecks array was empty and no browser screenshots were taken. The skill's TDD step (section 3) was also not followed: the handoff listed test cases but no actual test file was committed.",
+      "evidence": "Transcript shows no agent-browser tool calls. Handoff lists tests.addedcases for SyncStatusBadge but git diff (5 files: SyncStatusBadge.tsx, 3 list pages, electron.d.ts) contains no test file."
+    },
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md correctly documents component naming, Tailwind usage, and TypeScript strictness, which the worker followed. However, AGENTS.md Testing Requirements section says 'Write tests BEFORE implementation (TDD)' and 'Test files: *.test.ts alongside source files', yet this was not enforced or verified.",
+      "evidence": "No SyncStatusBadge.test.tsx exists alongside src/renderer/components/SyncStatusBadge.tsx."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Review fail for F011-UI. The SyncStatusBadge component and list-page integrations are mostly correct, but the sync status filter is purely cosmetic because the frontend never passes the filter value to the backend API. Additionally, claimed tests do not exist in the commit, and there is a type mismatch between backend 'error' and frontend 'failed' sync statuses."
+}

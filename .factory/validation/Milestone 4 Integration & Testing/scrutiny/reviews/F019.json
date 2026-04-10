@@ -1,0 +1,57 @@
+{
+  "featureId": "F019",
+  "reviewedAt": "2026-04-08T00:00:00.000Z",
+  "commitId": "90b50e2",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The F019 feature added src/main/syncE2e.test.ts with 887 lines of test code. While the file is well-organized and names tests after each VAL-FLOW assertion, these are unit/integration tests that heavily mock dependencies (syncDatabase, retryService, electron-log) rather than true end-to-end tests. The tests cannot actually be executed because Jest is not configured in the project—there is no jest.config, jest is not in package.json dependencies or scripts, and the existing 'test' script simply echoes 'No tests configured'. Several tests assert behavior against mocked modules without exercising real database or network paths, and the performance test only covers 100 records instead of the 1000+ specified in the validation contract (VAL-FLOW-006).",
+    "issues": [
+      {
+        "file": "src/main/syncE2e.test.ts",
+        "line": 1,
+        "severity": "blocking",
+        "description": "Tests are not true E2E tests. They mock core dependencies (syncDatabase, retryService, electron-log) and only exercise service wrappers in isolation, failing to validate actual offline→online sync, multi-device behavior, or network interruption recovery."
+      },
+      {
+        "file": "package.json",
+        "line": 14,
+        "severity": "blocking",
+        "description": "Jest is not configured in the project. The 'test' script is 'echo \"No tests configured\" && exit 0', jest is absent from devDependencies, and there is no jest.config file. The added test files cannot be executed, meaning the tests provide no verifiable coverage."
+      },
+      {
+        "file": "src/main/syncE2e.test.ts",
+        "line": 384,
+        "severity": "blocking",
+        "description": "VAL-FLOW-006 (Large Data Sync Performance) only tests 100 records, while the validation contract and feature expectedBehavior specify 1000+ records and performance within acceptable time."
+      },
+      {
+        "file": "src/main/syncE2e.test.ts",
+        "line": 17,
+        "severity": "non_blocking",
+        "description": "jest.mock('./retryService') is used, yet tests call retryService functions and expect real return values (e.g., calculateNextRetryDelay). If Jest were enabled, these tests could fail or behave unpredictably because the module is auto-mocked without explicit mock implementations."
+      },
+      {
+        "file": "src/main/syncE2e.test.ts",
+        "line": 540,
+        "severity": "non_blocking",
+        "description": "VAL-FLOW-010 Period Rollover tests do not verify actual period table creation in D1 or local DB; they only queue items with a 'tanggal' field and assert batch queue result."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "services",
+      "observation": "The project has Jest test files (retryService.test.ts, batchSyncService.test.ts, syncE2e.test.ts) but Jest is not installed or configured in package.json. The services.yaml 'test' command maps to 'npm run test', which currently does nothing. A proper test runner setup should be documented or configured.",
+      "evidence": "package.json scripts.test = 'echo \"No tests configured\" && exit 0'; no jest in devDependencies; no jest.config.* found."
+    },
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md mentions offline-first, queueing, retry, and conflict resolution patterns, but does not explicitly state that E2E tests should use real Electron/browser automation (agent-browser) and API calls rather than mocked unit tests. The validation contract specifies agent-browser + curl for VAL-FLOW assertions, but this expectation is not surfaced in AGENTS.md.",
+      "evidence": "Validation contract specifies 'Tool: agent-browser + curl' for every VAL-FLOW assertion, but AGENTS.md only briefly mentions 'Testing & Validation Guidance' without emphasizing true E2E verification."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Feature F019 fails scrutiny. The added test file is well-structured in naming and organization, but it is not executable (no Jest configured) and it is not end-to-end (heavily mocked, no real network or database exercised). Key requirements like 1000+ record performance testing and actual offline/online cycle verification are not met. To pass, the project needs a working test runner and either true E2E tests via Playwright/CDP/Electron or integration tests that exercise real local SQLite and cloud API calls without mocking the entire data layer."
+}

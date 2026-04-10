@@ -1,0 +1,93 @@
+{
+  "featureId": "F016-FIX",
+  "reviewedAt": "2026-04-08T04:00:00.000Z",
+  "commitId": "",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "Feature F016-FIX was never implemented. There is no worker session, no handoff, no git commit, and no code changes addressing the original F016 failures. The repository still contains all the blocking issues identified in the prior F016 review: COA/Blok form pages use non-local-first direct APIs, preload.ts and electron.d.ts lack local-first master data bindings, and AspekKerja has no local-first operations at all.",
+    "issues": [
+      {
+        "file": "N/A",
+        "line": null,
+        "severity": "blocking",
+        "description": "No implementation exists for F016-FIX. The feature status in features.json is 'pending' with zero workerSessionIds, the handoffs/ directory contains no F016-FIX handoff, git log contains no F016-FIX commit, and worker-transcripts.jsonl contains no F016-FIX transcript."
+      },
+      {
+        "file": "src/preload/preload.ts",
+        "line": null,
+        "severity": "blocking",
+        "description": "Preload script still does not expose localFirstCreateCOA, localFirstUpdateCOA, localFirstDeleteCOA, localFirstCreateBlok, localFirstUpdateBlok, or localFirstDeleteBlok. The local-first IPC handlers in main.ts remain unreachable from the renderer."
+      },
+      {
+        "file": "src/renderer/types/electron.d.ts",
+        "line": null,
+        "severity": "blocking",
+        "description": "TypeScript type definitions for window.electronAPI are still missing local-first COA and Blok method signatures. No types were added for master data local-first operations."
+      },
+      {
+        "file": "src/renderer/pages/COAFormPage.tsx",
+        "line": 108,
+        "severity": "blocking",
+        "description": "COAFormPage still calls window.electronAPI.updateCOA() instead of localFirstUpdateCOA, so edits bypass the sync queue."
+      },
+      {
+        "file": "src/renderer/pages/COAFormPage.tsx",
+        "line": 117,
+        "severity": "blocking",
+        "description": "COAFormPage still calls window.electronAPI.createCOA() instead of localFirstCreateCOA, so new COA entries are not queued for sync."
+      },
+      {
+        "file": "src/renderer/pages/COAListPage.tsx",
+        "line": 152,
+        "severity": "blocking",
+        "description": "COAListPage still calls window.electronAPI.deleteCOA(id) instead of localFirstDeleteCOA, so deletions bypass the sync queue."
+      },
+      {
+        "file": "src/renderer/pages/BlokFormPage.tsx",
+        "line": 146,
+        "severity": "blocking",
+        "description": "BlokFormPage still calls window.electronAPI.createBlok() instead of localFirstCreateBlok, so new Blok entries are not queued for sync."
+      },
+      {
+        "file": "src/renderer/pages/BlokFormPage.tsx",
+        "line": 192,
+        "severity": "blocking",
+        "description": "BlokFormPage still calls window.electronAPI.updateBlok() instead of localFirstUpdateBlok, so edits bypass the sync queue."
+      },
+      {
+        "file": "src/renderer/pages/BlokListPage.tsx",
+        "line": 157,
+        "severity": "blocking",
+        "description": "BlokListPage still calls window.electronAPI.deleteBlok(id) instead of localFirstDeleteBlok, so deletions bypass the sync queue."
+      },
+      {
+        "file": "src/main/localFirstOperations.ts",
+        "line": null,
+        "severity": "blocking",
+        "description": "AspekKerja local-first operations (createAspekKerjaLocalFirst, updateAspekKerjaLocalFirst, deleteAspekKerjaLocalFirst) are still missing. The expectedBehavior for F016-FIX explicitly requires these."
+      },
+      {
+        "file": "src/main/main.ts",
+        "line": 1658,
+        "severity": "non_blocking",
+        "description": "IPC handlers for localFirst:coa:* and localFirst:blok:* were added in the original F016 commit, but without corresponding preload/types/page updates they remain dead code."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The backend-worker skill file should include an explicit checklist for local-first integration work: (1) add operations to localFirstOperations.ts, (2) add IPC handlers in main.ts, (3) expose APIs in preload.ts, (4) add types in electron.d.ts, (5) update form/list pages to use local-first APIs. The original F016 worker missed steps 3-5, and the fix feature was never spawned.",
+      "evidence": "F016 handoff only mentions localFirstOperations.ts and dist/ build artifacts. F013-F015 successfully followed all 5 steps. F016-FIX was never started."
+    },
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md documents the offline-first pattern but does not provide a concrete wiring checklist for new modules. Adding a 'Local-First Integration Checklist' to AGENTS.md could prevent this class of omission in future master data features.",
+      "evidence": "Both F016 and F016-FIX gaps stem from incomplete wiring through the preload/type/renderer layers, which AGENTS.md does not explicitly enumerate."
+    }
+  ],
+  "addressesFailureFrom": ".factory/validation/Milestone 4 Integration & Testing/scrutiny/reviews/F016.json",
+  "summary": "F016-FIX fails review because it was never implemented. There is no commit, no code diff, and no transcript to review. All blocking issues from the original F016 review remain completely unaddressed in the current codebase: preload/types are missing local-first master data bindings, COA/Blok form and list pages still use direct non-sync APIs, and AspekKerja lacks local-first operations entirely."
+}

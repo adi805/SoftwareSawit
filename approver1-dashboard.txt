@@ -1,0 +1,5 @@
+
+    SSoftwareSawitDashboardDashboard ApprovalMaster DataCOAAspek KerjaBlokKas ModuleBank ModuleGudang ModuleSocket: ON (9222)LogsAApprover OneApproverOnlineSync tidak dikonfigurasiDashboard ApprovalKelola semua transaksi yang menunggu persetujuanPending Approval 15Kas: 4Bank: 2Gudang: 1Pending Approval 22Total: 7 transaksiOverdue (>24h)0Perlu perhatian segeraTotal Pending7Dari semua modulSemua ModulKasBankGudangSemua StatusPending Approval 1Pending Approval 2-TerbaruTerlama5 dataNoModulNo TransaksiTanggalJenisJumlahStatusPembuatAksi1KasKAS-M/20260408/00022026-04-070j laluKas MasukRp 2.000.000Pending Approval 1admin2KasKAS-K/20260408/00012026-04-080j laluKas KeluarRp 800.000Pending Approval 1245b3936-7c21-4f94-8adf-09d2af4374223GudangGUD-M/20260408/00012026-04-080j laluGudang MasukRp 500.000Pending Approval 1admin4BankBANK-M/20260408/00012026-04-080j laluBank MasukRp 2.500.000Pending Approval 1admin5KasKAS-M/20260408/00012026-04-080j laluKas MasukRp 1.500.000Pending Approval 1adminMenampilkan 1 - 5 dari 510 per halaman20 per halaman50 per halaman100 per halamanAwal<Halaman 1 dari 1>Akhir
+  
+
+

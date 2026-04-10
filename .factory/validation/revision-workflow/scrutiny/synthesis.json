@@ -1,0 +1,72 @@
+{
+  "milestone": "revision-workflow",
+  "round": 1,
+  "status": "fail",
+  "validatorsRun": {
+    "test": { "passed": true, "command": "npm test", "exitCode": 0 },
+    "typecheck": { "passed": true, "command": "npm run typecheck", "exitCode": 0 },
+    "lint": { "passed": true, "command": "npm run lint", "exitCode": 0 }
+  },
+  "reviewsSummary": {
+    "total": 4,
+    "passed": 3,
+    "failed": 1,
+    "failedFeatures": ["F006-BE"]
+  },
+  "blockingIssues": [
+    {
+      "featureId": "F006-BE",
+      "severity": "blocking",
+      "description": "Missing IPC handlers in main.ts for revision:create, revision:get, revision:hasPending, and revision:getPendingCount. These channels are exposed in preload.ts and called by the renderer (F005-UI), breaking the revision creation flow from the UI."
+    },
+    {
+      "featureId": "F006-BE",
+      "severity": "blocking",
+      "description": "createRevisionRequest in Kas, Bank, and Gudang databases does not enforce 'only creator or admin can request revision'. The function accepts requestedBy without validating the user's role or comparing against transaction.created_by. Violates VAL-REV-010."
+    },
+    {
+      "featureId": "F006-BE",
+      "severity": "blocking",
+      "description": "applyRevisionToTransaction omits proposed_transaction_type in Kas, Bank, and Gudang databases. The column exists in the schema and interfaces, but is never written to the transactions table during approval. A revision that changes only transaction_type will apply zero changes."
+    },
+    {
+      "featureId": "F006-BE",
+      "severity": "blocking",
+      "description": "revisionWorkflow.test.ts contains only trivial assertions on mock data literals without ever calling the actual database functions. This provides zero meaningful coverage of createRevisionRequest, approveRevision, rejectRevision, or applyRevision logic."
+    }
+  ],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add an explicit IPC cross-check rule: every channel exposed in preload.ts MUST have a corresponding ipcMain.handle() in main.ts. This should be part of both backend and frontend review checklists.",
+      "evidence": "F006-BE review found missing handlers for revision:create, revision:get, revision:hasPending, revision:getPendingCount even though they were exposed in preload.ts.",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Document the revision status naming convention explicitly: revision statuses use 'Pending Revision Approval 1/2' rather than 'Pending Approval 1/2' to avoid collision with transaction approval statuses.",
+      "evidence": "F004-BE review noted a discrepancy between the feature description and the implemented status names.",
+      "isSystemic": false
+    },
+    {
+      "target": "skills/backend-worker",
+      "suggestion": "Clarify the TDD step to require tests that actually invoke the functions under test, not literal/placeholder assertions on mock objects. Consider adding a verification step that checks whether new tests import and call the implemented functions.",
+      "evidence": "F006-BE review found 21 test cases in revisionWorkflow.test.ts that assert hard-coded literals without calling any database function.",
+      "isSystemic": true
+    },
+    {
+      "target": "skills/frontend-worker",
+      "suggestion": "Clarify when component-level tests and agent-browser manual verification are required vs optional. Currently workers skip both steps consistently when backend dependencies are pending.",
+      "evidence": "F005-UI and F007-UI reviews both noted skipped component tests and missing agent-browser verification.",
+      "isSystemic": true
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "applyRevision is not exported as a standalone function (it is a private helper).",
+      "reason": "already-documented-convention-ok"
+    }
+  ],
+  "previousRound": null
+}

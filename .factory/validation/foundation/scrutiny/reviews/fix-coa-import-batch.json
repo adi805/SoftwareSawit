@@ -1,0 +1,15 @@
+{
+  "featureId": "fix-coa-import-batch",
+  "reviewedAt": "2026-04-05T12:50:00.000Z",
+  "commitId": "6e68ac4",
+  "transcriptSkeletonReviewed": false,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Fix correctly addresses the parent-child relationship issue in batch COA import. The implementation introduces batchKodeToId to track kode->id mappings for records inserted in the same batch, allowing parent-child relationships to be established when both parent and child are imported together.",
+    "issues": []
+  },
+  "sharedStateObservations": [],
+  "addressesFailureFrom": null,
+  "summary": "The fix commit 6e68ac4 successfully resolves the blocking issue where COA batch import failed to establish parent-child relationships when both parent and child records were imported in the same batch. The solution builds parentIdMap from existing COA records before the batch loop, then introduces batchKodeToId to track newly inserted records' kode->id mappings, enabling lookups of parents within the same batch. The fix is minimal (16 lines added, 2 removed) and correctly handles both existing-record parents (via parentIdMap) and batch-inserted parents (via batchKodeToId)."
+}

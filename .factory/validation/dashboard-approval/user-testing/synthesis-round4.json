@@ -1,0 +1,50 @@
+{
+  "milestone": "dashboard-approval",
+  "round": 3,
+  "status": "fail",
+  "assertionsSummary": {
+    "total": 23,
+    "passed": 19,
+    "failed": 3,
+    "blocked": 1
+  },
+  "passedAssertions": [
+    "VAL-DASH-001",
+    "VAL-DASH-002",
+    "VAL-DASH-003",
+    "VAL-DASH-004",
+    "VAL-DASH-005",
+    "VAL-DASH-006",
+    "VAL-DASH-007",
+    "VAL-DASH-008",
+    "VAL-DASH-009",
+    "VAL-DASH-010",
+    "VAL-DASH-011",
+    "VAL-DASH-012",
+    "VAL-DASH-013",
+    "VAL-DASH-015",
+    "VAL-DASH-016",
+    "VAL-DASH-017",
+    "VAL-CROSS-001",
+    "VAL-CROSS-002",
+    "VAL-CROSS-005"
+  ],
+  "failedAssertions": [
+    { "id": "VAL-DASH-014", "reason": "No polling or WebSocket mechanism in DashboardApprovalPage; dashboard does not auto-refresh when transactions change in other modules" },
+    { "id": "VAL-DASH-018", "reason": "Mobile viewport: summary cards use grid-cols-2 without grid-cols-1 for smallest screens, failing to stack vertically" },
+    { "id": "VAL-DASH-020", "reason": "loadPendingApprovals and loadCounts catch errors and only console.error(); no user-facing retry button, friendly message, or per-module failure indicator" }
+  ],
+  "blockedAssertions": [
+    { "id": "VAL-DASH-019", "blockedBy": "Basic keyboard navigation verified, but comprehensive WCAG AA audit requires Lighthouse or axe-core not available in current toolset" }
+  ],
+  "appliedUpdates": [
+    { "target": "src/renderer/pages/DashboardApprovalPage.tsx", "description": "Fixed PA2 duplicate bug in loadPendingApprovals: PA2 data is now only fetched separately when statusFilter is 'all', preventing duplicates when PA2 is explicitly selected", "source": "flow-report" },
+    { "target": "src/renderer/App.tsx", "description": "Added onNavigateToKas, onNavigateToBank, onNavigateToGudang props to DashboardApprovalPage instances to enable module badge navigation", "source": "flow-report" },
+    { "target": "user-testing.md", "description": "Confirmed that sql.js databases are loaded into memory at Electron startup; any seeded data requires app restart to be visible in dashboard", "source": "flow-report" },
+    { "target": "C:/Users/acer/AppData/Roaming/software-sawit/data/kas/2026/04.db", "description": "Seeded 40 Kas transactions for performance/overdue testing", "source": "setup" },
+    { "target": "C:/Users/acer/AppData/Roaming/software-sawit/data/bank/2026/04.db", "description": "Seeded 40 Bank transactions for performance/overdue testing", "source": "setup" },
+    { "target": "C:/Users/acer/AppData/Roaming/software-sawit/data/gudang/2026/04.db", "description": "Seeded 40 Gudang transactions (15 with 48h-old timestamps) for performance/overdue testing", "source": "setup" },
+    { "target": "validation-state.json", "description": "Updated assertion statuses: VAL-DASH-011 and VAL-DASH-012 moved to passed after data seeding and successful testing", "source": "flow-report" }
+  ],
+  "previousRound": ".factory/validation/dashboard-approval/user-testing/synthesis-round2.json"
+}

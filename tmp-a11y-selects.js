@@ -1,0 +1,1 @@
+JSON.stringify(Array.from(document.querySelectorAll('select')).map(s => ({ ariaLabel: s.getAttribute('aria-label'), id: s.id, labels: Array.from(s.labels || []).map(l => l.textContent.trim()), name: s.name })))

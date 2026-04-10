@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "context7": {
+      "type": "streamable-http",
+      "url": "https://mcp.context7.com/mcp",
+      "disabled": false
+    },
+    "software-sawit": {
+      "type": "streamable-http",
+      "url": "http://localhost:3456",
+      "disabled": false
+    },
+    "playwright-electron": {
+      "command": "npx",
+      "args": ["-y", "@iflow-mcp/robertn702-playwright-mcp-electron", "--cdp-endpoint", "http://127.0.0.1:9222"],
+      "disabled": false
+    }
+  }
+}

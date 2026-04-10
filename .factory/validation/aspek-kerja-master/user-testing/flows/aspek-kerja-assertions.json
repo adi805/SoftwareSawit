@@ -1,0 +1,50 @@
+{
+  "flowId": "aspek-kerja-assertions",
+  "milestone": "aspek-kerja-master",
+  "testedAssertions": ["VAL-AK-001", "VAL-AK-002", "VAL-AK-003"],
+  "results": [
+    {
+      "assertionId": "VAL-AK-001",
+      "status": "blocked",
+      "reason": "Import functionality requires native file dialog which agent-browser cannot capture. Database is in-memory sql.js and not directly accessible for inspection."
+    },
+    {
+      "assertionId": "VAL-AK-002",
+      "status": "passed",
+      "evidence": "AspekKerjaListPage shows columns: Kode, Nama, COA Kode, COA Nama, Jenis, Status. Text extraction shows: 'NoKodeNamaCOA KodeCOA NamaJenisStatusAksi' and data rows show correct COA linkage (AK-001→111 Kas Besar, AK-002→121 Bank BCA, AK-003→510 Beban Gaji)."
+    },
+    {
+      "assertionId": "VAL-AK-003",
+      "status": "blocked",
+      "reason": "Import functionality requires native file dialog which agent-browser cannot capture. Cannot test import with invalid coa_kode without file dialog access."
+    }
+  ],
+  "frictions": [
+    {
+      "description": "Native file dialogs (Open/Save) triggered by Import Excel and Export Excel buttons are not captured by agent-browser's accessibility tree",
+      "impact": "Cannot automate import/export testing"
+    },
+    {
+      "description": "Database is in-memory sql.js within Electron app, not directly accessible for external inspection",
+      "impact": "Cannot verify COA linkage via direct database queries"
+    }
+  ],
+  "blockers": [
+    {
+      "description": "Import Excel button triggers native OS file dialog that agent-browser cannot interact with",
+      "rootCause": "Browser automation tools cannot access native OS dialogs"
+    }
+  ],
+  "toolsUsed": ["agent-browser"],
+  "isolationContext": {
+    "appUrl": "ws://127.0.0.1:9222",
+    "session": "931722d0f4f5",
+    "cdpPort": 9222
+  },
+  "evidenceFiles": [
+    "D:\\Estate\\Droid\\SoftwareSawit\\.factory\\validation\\aspek-kerja-master\\user-testing\\flows\\aspek-kerja-list-initial.png",
+    "D:\\Estate\\Droid\\SoftwareSawit\\.factory\\validation\\aspek-kerja-master\\user-testing\\flows\\aspek-kerja-list-annotated.png",
+    "D:\\Estate\\Droid\\SoftwareSawit\\.factory\\validation\\aspek-kerja-master\\user-testing\\flows\\aspek-kerja-list-text.txt"
+  ],
+  "timestamp": "2026-04-06T22:57:00Z"
+}

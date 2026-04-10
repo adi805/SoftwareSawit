@@ -1,0 +1,94 @@
+{
+  "milestone": "Milestone 4: Integration & Testing",
+  "round": 2,
+  "status": "fail",
+  "validatorsRun": {
+    "test": { "passed": true, "command": "npm run test", "exitCode": 0 },
+    "typecheck": { "passed": true, "command": "npm run typecheck", "exitCode": 0 },
+    "lint": { "passed": true, "command": "npm run lint", "exitCode": 0 }
+  },
+  "reviewsSummary": {
+    "total": 4,
+    "passed": 0,
+    "failed": 4,
+    "failedFeatures": ["F013-FIX", "F016-FIX", "F017-FIX", "F019-FIX"]
+  },
+  "blockingIssues": [
+    {
+      "featureId": "F013-FIX",
+      "severity": "blocking",
+      "description": "Fix feature was never implemented. Kas sync queue payloads still use `transaction_date` while batchSyncService.ts expects `tanggal` for periode routing, causing all Kas transactions to sync to the wrong periode database."
+    },
+    {
+      "featureId": "F016-FIX",
+      "severity": "blocking",
+      "description": "Fix feature was never implemented. Master data local-first sync remains unwired: preload.ts and electron.d.ts lack local-first COA/Blok bindings, COA/Blok form/list pages still use direct non-sync APIs, and AspekKerja lacks local-first operations entirely."
+    },
+    {
+      "featureId": "F017-FIX",
+      "severity": "blocking",
+      "description": "Fix feature was never implemented. IPC event listeners in SyncContext.tsx (onAutoSyncTimerStatus, onAutoSyncTimerProgress, onAutoSyncTimerResult, onNetworkStatusChange, onNetworkStatusSyncControl) are still never removed, causing listener accumulation and memory leak on every offline/online transition."
+    },
+    {
+      "featureId": "F019-FIX",
+      "severity": "blocking",
+      "description": "Fix feature was never implemented. Jest is still not installed or configured, the test script is still a no-op, and src/main/syncE2e.test.ts remains unexecutable and heavily mocked with only 100 records in the performance test instead of the required 1000+."
+    }
+  ],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add a convention that IPC listeners registered in React useEffect must always be removed in the cleanup function. Reference the specific APIs: onAutoSyncTimerStatus, onAutoSyncTimerProgress, onAutoSyncTimerResult, onNetworkStatusChange, onNetworkStatusSyncControl.",
+      "evidence": "F017 review found a blocking memory leak in SyncContext.tsx because 5 renderer IPC listeners were never cleaned up, and the effect re-runs on every offline/online transition. F017-FIX was never implemented, so the leak persists.",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add an explicit integration checklist for wiring local-first sync operations through preload.ts -> electron.d.ts -> renderer form/list pages. The checklist should be referenced for all new module integrations.",
+      "evidence": "F016 failed because localFirst operations for COA/Blok existed in main but were never exposed in preload/types or used in renderer pages. F016-FIX was never implemented, so master data sync remains broken.",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Clarify that end-to-end test assertions (VAL-FLOW-*) must use real Electron/browser automation and actual API/database calls. Mocked unit tests alone do not satisfy the validation contract.",
+      "evidence": "F019 added syncE2e.test.ts with mocked dependencies and no real network/DB exercised. F019-FIX was never implemented, so no real test runner or E2E tests exist.",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Document the field naming convention for periode derivation: batchSyncService.ts expects the transaction date field to be named `tanggal` in sync queue payloads.",
+      "evidence": "F013 review found Kas uses `transaction_date` in localFirstOperations.ts but batchSyncService.ts checks for `tanggal`, causing wrong periode routing. F013-FIX was never implemented, so the mismatch persists.",
+      "isSystemic": false
+    },
+    {
+      "target": "skills",
+      "suggestion": "Consider splitting UI sync integration features (e.g., SyncStatusBar, offline banners) to a frontend-specific skill, or extend backend-worker with a renderer-side integration procedure. Currently backend-worker only covers schema changes.",
+      "evidence": "F017 and F019-UI were assigned backend-worker but the work was entirely React/UI. The skill file contains no UI procedures, and workers reported following the skill despite it being mismatched.",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Document the convention that every ipcRenderer.on listener exposed in preload.ts must have a matching removal method (off/unsubscribe) so React useEffects can clean them up.",
+      "evidence": "F017-FIX review confirmed preload.ts still registers listeners without off methods, and AGENTS.md has no guidance on listener cleanup.",
+      "isSystemic": true
+    },
+    {
+      "target": "skills",
+      "suggestion": "The backend-worker skill should include a concrete 5-step local-first integration checklist: (1) add operations to localFirstOperations.ts, (2) add IPC handlers in main.ts, (3) expose APIs in preload.ts, (4) add types in electron.d.ts, (5) update form/list pages to use local-first APIs.",
+      "evidence": "F016-FIX review found the original F016 worker missed steps 3-5, and the fix was never spawned. F013-F015 successfully followed all 5 steps.",
+      "isSystemic": true
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "services.yaml should add a softwaresawit-api service entry.",
+      "reason": "ambiguous"
+    },
+    {
+      "observation": "services.yaml test command should be updated to actually run jest.",
+      "reason": "ambiguous — F019-FIX was never implemented so no jest config exists to wire up yet"
+    }
+  ],
+  "previousRound": ".factory/validation/Milestone 4 Integration & Testing/scrutiny/synthesis.json"
+}

@@ -1,0 +1,88 @@
+{
+  "groupId": "group3",
+  "testedAt": "2026-04-08T15:10:00.000Z",
+  "isolation": {
+    "appUrl": "electron://localhost:9223",
+    "credentials": [
+      { "username": "admin", "password": "Admin123!" },
+      { "username": "approver1", "password": "Approver1!" }
+    ],
+    "dataDirectory": "C:/Users/acer/AppData/Roaming/software-sawit/data"
+  },
+  "toolsUsed": ["agent-browser", "electron-evaluate"],
+  "assertions": [
+    {
+      "id": "VAL-DASH-006",
+      "title": "Approve Action Advances Status",
+      "status": "pass",
+      "steps": [
+        { "action": "Click Setujui on a PA1 Bank transaction", "expected": "Approve modal opens", "observed": "Modal displayed with transaction details and confirmation" },
+        { "action": "Confirm approval", "expected": "Status advances to PA2, counts update", "observed": "Toast success appeared. PA1 count decreased from 7 to 6, PA2 increased from 1 to 2. Total remained 8." }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group3/approve-modal.png", "dashboard-approval/group3/after-approve2.png"],
+        "consoleErrors": "none",
+        "network": "IPC: dashboard:approve -> success response"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASH-007",
+      "title": "Reject Action Changes Status to Rejected",
+      "status": "pass",
+      "steps": [
+        { "action": "Click Tolak on a PA1 transaction", "expected": "Reject modal opens with reason field", "observed": "Modal displayed with required 'Alasan Penolakan' textarea" },
+        { "action": "Click Tolak without entering reason", "expected": "Validation error", "observed": "Error message 'Alasan penolakan harus diisi' displayed" },
+        { "action": "Enter reason 'Data tidak valid' and confirm", "expected": "Status changes to Rejected, item removed from pending", "observed": "Transaction removed from pending list. PA1 count dropped from 6 to 5. Total dropped from 8 to 7." }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group3/reject-modal.png", "dashboard-approval/group3/reject-validation-error.png", "dashboard-approval/group3/after-reject.png"],
+        "consoleErrors": "none"
+      },
+      "issues": "Minor UI issue: error message 'Alasan penolakan harus diisi' persists at top of page after successful rejection instead of being cleared."
+    },
+    {
+      "id": "VAL-DASH-008",
+      "title": "Creator Cannot Approve Own Transaction",
+      "status": "pass",
+      "steps": [
+        { "action": "Login as approver1 (creator of some Kas transactions)", "expected": "Dashboard loads for approver1", "observed": "Dashboard Approval page loaded" },
+        { "action": "Examine action buttons on creator's own transactions", "expected": "Setujui/Tolak hidden for own items", "observed": "Transactions created by approver1 show ONLY 'Riwayat' button. Setujui and Tolak buttons are absent. Admin-created transactions show all three buttons." }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group3/approver1-dashboard.png", "dashboard-approval/group3/approver1-row2.png"],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-001",
+      "title": "Transaction Creation to Dashboard Visibility",
+      "status": "pass",
+      "steps": [
+        { "action": "Create transactions via IPC in Kas, Bank, Gudang modules", "expected": "Transactions appear in dashboard", "observed": "All created transactions visible in dashboard with PA1 status" }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group1/dashboard-with-data.png"],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-002",
+      "title": "Approval Status Propagation Across Areas",
+      "status": "pass",
+      "steps": [
+        { "action": "Approve a Bank transaction from dashboard", "expected": "Status updates in dashboard and module backend", "observed": "Dashboard PA1/PA2 counts updated. getBankWithPagination confirmed status changed to 'Pending Approval 2'." }
+      ],
+      "evidence": {
+        "screenshots": ["dashboard-approval/group3/after-approve2.png"],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 5 assertions: all 5 passed. Approval/reject flows and permission checks work correctly."
+}

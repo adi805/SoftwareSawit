@@ -1,0 +1,45 @@
+{
+  "featureId": "F016-UI",
+  "reviewedAt": "2026-04-08T03:45:00.000Z",
+  "commitId": "b5822aa6bb517004064a8f93e4e5be28b232bf20",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The ConflictResolutionDialog component (VAL-UI-007) is well-implemented. It creates a modal dialog that queries pending conflicts from sync_db via IPC, presents local/remote versions with diff highlighting, and allows users to choose keep-local, keep-remote, or manual merge. The component is properly integrated into SyncStatusBar (with conflict badge) and SyncSettingsPage. IPC handlers are added in main.ts and preload.ts with corresponding type declarations in electron.d.ts.",
+    "issues": [
+      {
+        "file": "src/renderer/components/ConflictResolutionDialog.tsx",
+        "line": 180,
+        "severity": "non_blocking",
+        "description": "After resolving a conflict and moving to the next one, mergeDefaultData is called with (remaining[0].localData, remaining[0].localData) instead of (localData, remoteData). This means the merge editor won't show remote values for the newly selected conflict until the user manually opens merge."
+      },
+      {
+        "file": "src/renderer/components/ConflictResolutionDialog.tsx",
+        "line": 148,
+        "severity": "non_blocking",
+        "description": "Auto-selecting the first conflict on every open can be disorienting if the user intentionally had a different conflict selected before closing and reopening the dialog. State is not persisted across open/close cycles."
+      },
+      {
+        "file": "src/renderer/components/ConflictResolutionDialog.tsx",
+        "line": 108,
+        "severity": "non_blocking",
+        "description": "getPendingSyncConflicts takes an optional module parameter but the dialog always calls it without any module filter, which is acceptable for a global dialog but slightly inconsistent with the IPC API design."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "UI components use inline SVG icons extensively rather than a shared icon component or library. This is consistent with the existing codebase pattern but increases duplication and maintenance burden.",
+      "evidence": "ConflictResolutionDialog.tsx contains ~20 inline SVG blocks; SyncStatusBar.tsx also uses inline SVGs. No shared Icon component exists in src/renderer/components."
+    },
+    {
+      "area": "knowledge",
+      "observation": "The syncDatabase.ts already had getPendingConflicts, getConflictById, resolveConflict, discardConflict, and getConflictStats functions implemented before this feature. The F016-UI worker only needed to expose them via IPC and build the UI. This indicates the backend infrastructure was ready ahead of the UI milestone.",
+      "evidence": "src/main/syncDatabase.ts lines 1394-1640 contain the complete conflict resolution CRUD. The commit only adds IPC wiring in main.ts and the React component."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "F016-UI passes review. The conflict resolution dialog fulfills VAL-UI-007: it queries sync_db for pending conflicts, renders local/remote diff comparisons, and supports local/remote/merge resolutions. Integration points in SyncStatusBar and SyncSettingsPage are correct. One minor bug: merge data is initialized with duplicated localData when advancing to the next conflict after resolution, but this is non-blocking."
+}

@@ -1,0 +1,1 @@
+JSON.stringify(Array.from(document.querySelectorAll('[aria-live], [role="alert"], [role="status"]')).map(el => ({ tag: el.tagName, ariaLive: el.getAttribute('aria-live'), role: el.getAttribute('role'), text: el.textContent.trim().slice(0,50) })))

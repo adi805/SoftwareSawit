@@ -1,0 +1,809 @@
+{
+  "total_count": 5,
+  "jobs": [
+    {
+      "id": 70729950472,
+      "run_id": 24226938613,
+      "workflow_name": "User Testing - Electron GUI Tests",
+      "head_branch": "master",
+      "run_url": "https://api.github.com/repos/adi805/SoftwareSawit/actions/runs/24226938613",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOR-j53s8AAAAQd9VlCA",
+      "head_sha": "33b35700498952caba375e5dfead7bfc9a62402c",
+      "url": "https://api.github.com/repos/adi805/SoftwareSawit/actions/jobs/70729950472",
+      "html_url": "https://github.com/adi805/SoftwareSawit/actions/runs/24226938613/job/70729950472",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-04-10T04:48:50Z",
+      "started_at": "2026-04-10T04:48:53Z",
+      "completed_at": "2026-04-10T04:54:28Z",
+      "name": "Authentication & User Management Tests",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-04-10T04:48:54Z",
+          "completed_at": "2026-04-10T04:48:55Z"
+        },
+        {
+          "name": "Checkout code",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-04-10T04:48:55Z",
+          "completed_at": "2026-04-10T04:49:02Z"
+        },
+        {
+          "name": "Setup Node.js",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-04-10T04:49:02Z",
+          "completed_at": "2026-04-10T04:49:12Z"
+        },
+        {
+          "name": "Debug environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-04-10T04:49:12Z",
+          "completed_at": "2026-04-10T04:49:21Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-04-10T04:49:21Z",
+          "completed_at": "2026-04-10T04:49:51Z"
+        },
+        {
+          "name": "Verify dependencies installed",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-04-10T04:49:51Z",
+          "completed_at": "2026-04-10T04:49:52Z"
+        },
+        {
+          "name": "Install Playwright",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-04-10T04:49:52Z",
+          "completed_at": "2026-04-10T04:53:25Z"
+        },
+        {
+          "name": "Build application",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-04-10T04:53:25Z",
+          "completed_at": "2026-04-10T04:53:32Z"
+        },
+        {
+          "name": "Create test directories",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-04-10T04:53:32Z",
+          "completed_at": "2026-04-10T04:53:33Z"
+        },
+        {
+          "name": "Setup test database",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-04-10T04:53:33Z",
+          "completed_at": "2026-04-10T04:53:33Z"
+        },
+        {
+          "name": "Run user tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-04-10T04:53:33Z",
+          "completed_at": "2026-04-10T04:54:22Z"
+        },
+        {
+          "name": "Capture final screenshots",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-04-10T04:54:22Z",
+          "completed_at": "2026-04-10T04:54:23Z"
+        },
+        {
+          "name": "Upload test artifacts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-04-10T04:54:23Z",
+          "completed_at": "2026-04-10T04:54:24Z"
+        },
+        {
+          "name": "Process test results",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-04-10T04:54:24Z",
+          "completed_at": "2026-04-10T04:54:24Z"
+        },
+        {
+          "name": "Post test summary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-04-10T04:54:24Z",
+          "completed_at": "2026-04-10T04:54:24Z"
+        },
+        {
+          "name": "Check test results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 16,
+          "started_at": "2026-04-10T04:54:24Z",
+          "completed_at": "2026-04-10T04:54:25Z"
+        },
+        {
+          "name": "Post Setup Node.js",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 31,
+          "started_at": "2026-04-10T04:54:25Z",
+          "completed_at": "2026-04-10T04:54:25Z"
+        },
+        {
+          "name": "Post Checkout code",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 32,
+          "started_at": "2026-04-10T04:54:25Z",
+          "completed_at": "2026-04-10T04:54:27Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 33,
+          "started_at": "2026-04-10T04:54:27Z",
+          "completed_at": "2026-04-10T04:54:27Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/adi805/SoftwareSawit/check-runs/70729950472",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000000118,
+      "runner_name": "GitHub Actions 1000000118",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 70729950476,
+      "run_id": 24226938613,
+      "workflow_name": "User Testing - Electron GUI Tests",
+      "head_branch": "master",
+      "run_url": "https://api.github.com/repos/adi805/SoftwareSawit/actions/runs/24226938613",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOR-j53s8AAAAQd9VlDA",
+      "head_sha": "33b35700498952caba375e5dfead7bfc9a62402c",
+      "url": "https://api.github.com/repos/adi805/SoftwareSawit/actions/jobs/70729950476",
+      "html_url": "https://github.com/adi805/SoftwareSawit/actions/runs/24226938613/job/70729950476",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-04-10T04:48:50Z",
+      "started_at": "2026-04-10T04:48:54Z",
+      "completed_at": "2026-04-10T04:54:17Z",
+      "name": "Transaction CRUD Operations Tests",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-04-10T04:48:56Z",
+          "completed_at": "2026-04-10T04:48:59Z"
+        },
+        {
+          "name": "Checkout code",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-04-10T04:48:59Z",
+          "completed_at": "2026-04-10T04:49:08Z"
+        },
+        {
+          "name": "Setup Node.js",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-04-10T04:49:08Z",
+          "completed_at": "2026-04-10T04:49:14Z"
+        },
+        {
+          "name": "Debug environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-04-10T04:49:14Z",
+          "completed_at": "2026-04-10T04:49:21Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-04-10T04:49:21Z",
+          "completed_at": "2026-04-10T04:49:49Z"
+        },
+        {
+          "name": "Verify dependencies installed",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-04-10T04:49:49Z",
+          "completed_at": "2026-04-10T04:49:50Z"
+        },
+        {
+          "name": "Install Playwright",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-04-10T04:49:50Z",
+          "completed_at": "2026-04-10T04:53:13Z"
+        },
+        {
+          "name": "Build application",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-04-10T04:53:13Z",
+          "completed_at": "2026-04-10T04:53:21Z"
+        },
+        {
+          "name": "Create test directories",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-04-10T04:53:21Z",
+          "completed_at": "2026-04-10T04:53:21Z"
+        },
+        {
+          "name": "Setup test database",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-04-10T04:53:21Z",
+          "completed_at": "2026-04-10T04:53:22Z"
+        },
+        {
+          "name": "Run user tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-04-10T04:53:22Z",
+          "completed_at": "2026-04-10T04:54:11Z"
+        },
+        {
+          "name": "Capture final screenshots",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-04-10T04:54:11Z",
+          "completed_at": "2026-04-10T04:54:11Z"
+        },
+        {
+          "name": "Upload test artifacts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-04-10T04:54:11Z",
+          "completed_at": "2026-04-10T04:54:12Z"
+        },
+        {
+          "name": "Process test results",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-04-10T04:54:12Z",
+          "completed_at": "2026-04-10T04:54:13Z"
+        },
+        {
+          "name": "Post test summary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-04-10T04:54:13Z",
+          "completed_at": "2026-04-10T04:54:13Z"
+        },
+        {
+          "name": "Check test results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 16,
+          "started_at": "2026-04-10T04:54:13Z",
+          "completed_at": "2026-04-10T04:54:14Z"
+        },
+        {
+          "name": "Post Setup Node.js",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 31,
+          "started_at": "2026-04-10T04:54:14Z",
+          "completed_at": "2026-04-10T04:54:14Z"
+        },
+        {
+          "name": "Post Checkout code",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 32,
+          "started_at": "2026-04-10T04:54:14Z",
+          "completed_at": "2026-04-10T04:54:16Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 33,
+          "started_at": "2026-04-10T04:54:16Z",
+          "completed_at": "2026-04-10T04:54:16Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/adi805/SoftwareSawit/check-runs/70729950476",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000000119,
+      "runner_name": "GitHub Actions 1000000119",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 70729950481,
+      "run_id": 24226938613,
+      "workflow_name": "User Testing - Electron GUI Tests",
+      "head_branch": "master",
+      "run_url": "https://api.github.com/repos/adi805/SoftwareSawit/actions/runs/24226938613",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOR-j53s8AAAAQd9VlEQ",
+      "head_sha": "33b35700498952caba375e5dfead7bfc9a62402c",
+      "url": "https://api.github.com/repos/adi805/SoftwareSawit/actions/jobs/70729950481",
+      "html_url": "https://github.com/adi805/SoftwareSawit/actions/runs/24226938613/job/70729950481",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-04-10T04:48:50Z",
+      "started_at": "2026-04-10T04:48:54Z",
+      "completed_at": "2026-04-10T04:54:19Z",
+      "name": "Approval Workflows Tests",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-04-10T04:48:55Z",
+          "completed_at": "2026-04-10T04:48:57Z"
+        },
+        {
+          "name": "Checkout code",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-04-10T04:48:57Z",
+          "completed_at": "2026-04-10T04:49:03Z"
+        },
+        {
+          "name": "Setup Node.js",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-04-10T04:49:03Z",
+          "completed_at": "2026-04-10T04:49:08Z"
+        },
+        {
+          "name": "Debug environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-04-10T04:49:08Z",
+          "completed_at": "2026-04-10T04:49:14Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-04-10T04:49:14Z",
+          "completed_at": "2026-04-10T04:49:42Z"
+        },
+        {
+          "name": "Verify dependencies installed",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-04-10T04:49:42Z",
+          "completed_at": "2026-04-10T04:49:43Z"
+        },
+        {
+          "name": "Install Playwright",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-04-10T04:49:43Z",
+          "completed_at": "2026-04-10T04:53:15Z"
+        },
+        {
+          "name": "Build application",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-04-10T04:53:15Z",
+          "completed_at": "2026-04-10T04:53:24Z"
+        },
+        {
+          "name": "Create test directories",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-04-10T04:53:24Z",
+          "completed_at": "2026-04-10T04:53:24Z"
+        },
+        {
+          "name": "Setup test database",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-04-10T04:53:24Z",
+          "completed_at": "2026-04-10T04:53:24Z"
+        },
+        {
+          "name": "Run user tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-04-10T04:53:24Z",
+          "completed_at": "2026-04-10T04:54:13Z"
+        },
+        {
+          "name": "Capture final screenshots",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-04-10T04:54:13Z",
+          "completed_at": "2026-04-10T04:54:14Z"
+        },
+        {
+          "name": "Upload test artifacts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-04-10T04:54:14Z",
+          "completed_at": "2026-04-10T04:54:15Z"
+        },
+        {
+          "name": "Process test results",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-04-10T04:54:15Z",
+          "completed_at": "2026-04-10T04:54:15Z"
+        },
+        {
+          "name": "Post test summary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-04-10T04:54:15Z",
+          "completed_at": "2026-04-10T04:54:15Z"
+        },
+        {
+          "name": "Check test results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 16,
+          "started_at": "2026-04-10T04:54:15Z",
+          "completed_at": "2026-04-10T04:54:16Z"
+        },
+        {
+          "name": "Post Setup Node.js",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 31,
+          "started_at": "2026-04-10T04:54:16Z",
+          "completed_at": "2026-04-10T04:54:16Z"
+        },
+        {
+          "name": "Post Checkout code",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 32,
+          "started_at": "2026-04-10T04:54:16Z",
+          "completed_at": "2026-04-10T04:54:18Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 33,
+          "started_at": "2026-04-10T04:54:18Z",
+          "completed_at": "2026-04-10T04:54:18Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/adi805/SoftwareSawit/check-runs/70729950481",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000000121,
+      "runner_name": "GitHub Actions 1000000121",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 70729950487,
+      "run_id": 24226938613,
+      "workflow_name": "User Testing - Electron GUI Tests",
+      "head_branch": "master",
+      "run_url": "https://api.github.com/repos/adi805/SoftwareSawit/actions/runs/24226938613",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOR-j53s8AAAAQd9VlFw",
+      "head_sha": "33b35700498952caba375e5dfead7bfc9a62402c",
+      "url": "https://api.github.com/repos/adi805/SoftwareSawit/actions/jobs/70729950487",
+      "html_url": "https://github.com/adi805/SoftwareSawit/actions/runs/24226938613/job/70729950487",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-04-10T04:48:50Z",
+      "started_at": "2026-04-10T04:48:53Z",
+      "completed_at": "2026-04-10T04:54:28Z",
+      "name": "Sync & Conflict Resolution Tests",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-04-10T04:48:54Z",
+          "completed_at": "2026-04-10T04:48:55Z"
+        },
+        {
+          "name": "Checkout code",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-04-10T04:48:55Z",
+          "completed_at": "2026-04-10T04:49:01Z"
+        },
+        {
+          "name": "Setup Node.js",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-04-10T04:49:01Z",
+          "completed_at": "2026-04-10T04:49:14Z"
+        },
+        {
+          "name": "Debug environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-04-10T04:49:14Z",
+          "completed_at": "2026-04-10T04:49:25Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-04-10T04:49:25Z",
+          "completed_at": "2026-04-10T04:49:57Z"
+        },
+        {
+          "name": "Verify dependencies installed",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-04-10T04:49:57Z",
+          "completed_at": "2026-04-10T04:49:58Z"
+        },
+        {
+          "name": "Install Playwright",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-04-10T04:49:58Z",
+          "completed_at": "2026-04-10T04:53:26Z"
+        },
+        {
+          "name": "Build application",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-04-10T04:53:26Z",
+          "completed_at": "2026-04-10T04:53:33Z"
+        },
+        {
+          "name": "Create test directories",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-04-10T04:53:33Z",
+          "completed_at": "2026-04-10T04:53:33Z"
+        },
+        {
+          "name": "Setup test database",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-04-10T04:53:33Z",
+          "completed_at": "2026-04-10T04:53:34Z"
+        },
+        {
+          "name": "Run user tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-04-10T04:53:34Z",
+          "completed_at": "2026-04-10T04:54:22Z"
+        },
+        {
+          "name": "Capture final screenshots",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-04-10T04:54:22Z",
+          "completed_at": "2026-04-10T04:54:23Z"
+        },
+        {
+          "name": "Upload test artifacts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-04-10T04:54:23Z",
+          "completed_at": "2026-04-10T04:54:24Z"
+        },
+        {
+          "name": "Process test results",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-04-10T04:54:24Z",
+          "completed_at": "2026-04-10T04:54:24Z"
+        },
+        {
+          "name": "Post test summary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-04-10T04:54:24Z",
+          "completed_at": "2026-04-10T04:54:25Z"
+        },
+        {
+          "name": "Check test results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 16,
+          "started_at": "2026-04-10T04:54:25Z",
+          "completed_at": "2026-04-10T04:54:25Z"
+        },
+        {
+          "name": "Post Setup Node.js",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 31,
+          "started_at": "2026-04-10T04:54:25Z",
+          "completed_at": "2026-04-10T04:54:25Z"
+        },
+        {
+          "name": "Post Checkout code",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 32,
+          "started_at": "2026-04-10T04:54:25Z",
+          "completed_at": "2026-04-10T04:54:27Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 33,
+          "started_at": "2026-04-10T04:54:27Z",
+          "completed_at": "2026-04-10T04:54:27Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/adi805/SoftwareSawit/check-runs/70729950487",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000000120,
+      "runner_name": "GitHub Actions 1000000120",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 70730417980,
+      "run_id": 24226938613,
+      "workflow_name": "User Testing - Electron GUI Tests",
+      "head_branch": "master",
+      "run_url": "https://api.github.com/repos/adi805/SoftwareSawit/actions/runs/24226938613",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOR-j53s8AAAAQd9yHPA",
+      "head_sha": "33b35700498952caba375e5dfead7bfc9a62402c",
+      "url": "https://api.github.com/repos/adi805/SoftwareSawit/actions/jobs/70730417980",
+      "html_url": "https://github.com/adi805/SoftwareSawit/actions/runs/24226938613/job/70730417980",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-04-10T04:54:29Z",
+      "started_at": "2026-04-10T04:54:32Z",
+      "completed_at": "2026-04-10T04:54:48Z",
+      "name": "aggregate-results",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-04-10T04:54:33Z",
+          "completed_at": "2026-04-10T04:54:35Z"
+        },
+        {
+          "name": "Download all artifacts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-04-10T04:54:35Z",
+          "completed_at": "2026-04-10T04:54:37Z"
+        },
+        {
+          "name": "Aggregate test reports",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-04-10T04:54:37Z",
+          "completed_at": "2026-04-10T04:54:43Z"
+        },
+        {
+          "name": "Upload aggregate report",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-04-10T04:54:43Z",
+          "completed_at": "2026-04-10T04:54:45Z"
+        },
+        {
+          "name": "Post aggregate summary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-04-10T04:54:45Z",
+          "completed_at": "2026-04-10T04:54:45Z"
+        },
+        {
+          "name": "Check overall results",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-04-10T04:54:45Z",
+          "completed_at": "2026-04-10T04:54:46Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-04-10T04:54:46Z",
+          "completed_at": "2026-04-10T04:54:46Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/adi805/SoftwareSawit/check-runs/70730417980",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000000122,
+      "runner_name": "GitHub Actions 1000000122",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

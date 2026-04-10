@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SoftwareSawit Test Report</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px; margin-bottom: 20px; }
+    .header h1 { font-size: 28px; margin-bottom: 10px; }
+    .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+    .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .card h3 { font-size: 14px; color: #666; margin-bottom: 10px; text-transform: uppercase; }
+    .card .value { font-size: 32px; font-weight: bold; }
+    .card.passed .value { color: #10b981; }
+    .card.failed .value { color: #ef4444; }
+    .card.skipped .value { color: #f59e0b; }
+    .card.total .value { color: #3b82f6; }
+    .progress-bar { height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin-top: 10px; }
+    .progress-fill { height: 100%; background: #10b981; border-radius: 4px; transition: width 0.3s; }
+    .results-table { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .results-table table { width: 100%; border-collapse: collapse; }
+    .results-table th { background: #f9fafb; padding: 12px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb; }
+    .results-table td { padding: 12px; border-bottom: 1px solid #e5e7eb; }
+    .results-table tr:hover { background: #f9fafb; }
+    .status-badge { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .status-passed { background: #d1fae5; color: #065f46; }
+    .status-failed { background: #fee2e2; color: #991b1b; }
+    .status-skipped { background: #fef3c7; color: #92400e; }
+    .error-message { color: #ef4444; font-size: 12px; margin-top: 5px; }
+    .screenshots { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; margin-top: 20px; }
+    .screenshot { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .screenshot img { width: 100%; height: 200px; object-fit: cover; }
+    .screenshot .info { padding: 10px; }
+    .screenshot .name { font-weight: 600; font-size: 14px; }
+    .screenshot .area { font-size: 12px; color: #666; }
+    .timestamp { color: #9ca3af; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🧪 SoftwareSawit Test Report</h1>
+      <p>Generated: 4/10/2026, 12:15:58 PM</p>
+      <p>Group: all</p>
+    </div>
+    
+    <div class="summary-cards">
+      <div class="card total">
+        <h3>Total Tests</h3>
+        <div class="value">106</div>
+      </div>
+      <div class="card passed">
+        <h3>Passed</h3>
+        <div class="value">93</div>
+      </div>
+      <div class="card failed">
+        <h3>Failed</h3>
+        <div class="value">10</div>
+      </div>
+      <div class="card skipped">
+        <h3>Skipped</h3>
+        <div class="value">3</div>
+      </div>
+    </div>
+    
+    <div class="card" style="margin-bottom: 20px;">
+      <h3>Pass Rate</h3>
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <span style="font-size: 24px; font-weight: bold; color: #10b981;">87.7%</span>
+        <div class="progress-bar" style="flex: 1;">
+          <div class="progress-fill" style="width: 87.7%;"></div>
+        </div>
+      </div>
+      <p class="timestamp">Duration: 114.79s</p>
+    </div>
+    
+    <div class="results-table">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Test Name</th>
+            <th>Area</th>
+            <th>Status</th>
+            <th>Duration</th>
+            <th>Error</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+            <tr>
+              <td>1</td>
+              <td>VAL-USER-050: Login page renders correctly</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>311ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>2</td>
+              <td>VAL-USER-003: Login form has required fields</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>21ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>3</td>
+              <td>VAL-USER-051: Invalid credentials show error</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-failed">failed</span></td>
+              <td>1845ms</td>
+              <td><div class="error-message">Expected error message or to stay on login page</div></td>
+            </tr>
+          
+            <tr>
+              <td>4</td>
+              <td>VAL-USER-050: Valid login redirects to dashboard</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>2467ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>5</td>
+              <td>VAL-USER-090: Navigate to User Management</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>10ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>6</td>
+              <td>VAL-USER-001: Create user form accessible</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>7</td>
+              <td>VAL-USER-007: All 5 roles available in dropdown</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>5ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>8</td>
+              <td>VAL-USER-002: Duplicate username validation</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>0ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>9</td>
+              <td>VAL-USER-030: Preview permissions on role selection</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>10</td>
+              <td>VAL-USER-090: User list displays with columns</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>11</td>
+              <td>VAL-USER-040: Change password form accessible</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>12</td>
+              <td>VAL-USER-005: Password strength indicator</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>13</td>
+              <td>VAL-USER-060: Logout functionality works</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>14</td>
+              <td>VAL-USER-071: Session validation</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>2271ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>15</td>
+              <td>VAL-USER-074: Active sessions viewable</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>16</td>
+              <td>VAL-USER-080: Activity log accessible</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>17</td>
+              <td>VAL-USER-100: Export user list button</td>
+              <td>Authentication</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>18</td>
+              <td>VAL-MASTER-COAS-001: Display COA table with all columns</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-failed">failed</span></td>
+              <td>5209ms</td>
+              <td><div class="error-message">locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator('[data-testid="coa-table"]').first() to be visible
+</div></td>
+            </tr>
+          
+            <tr>
+              <td>19</td>
+              <td>VAL-MASTER-COAS-002: COA table pagination</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>20</td>
+              <td>VAL-MASTER-COAS-010: Add COA with valid data</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>21</td>
+              <td>VAL-MASTER-COAS-011: Kode field validation - required</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>22</td>
+              <td>VAL-MASTER-COAS-050: Search by Kode</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>23</td>
+              <td>VAL-MASTER-COAS-060: Filter by Tipe</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-skipped">skipped</span></td>
+              <td>7ms</td>
+              <td><div class="error-message">locator.count: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'select:has-option("Aktiva")' is not a valid selector.
+    at query (<anonymous>:5261:41)
+    at <anonymous>:5271:7
+    at SelectorEvaluatorImpl._cached (<anonymous>:5048:20)
+    at SelectorEvaluatorImpl._queryCSS (<anonymous>:5258:17)
+    at SelectorEvaluatorImpl._querySimple (<anonymous>:5138:19)
+    at <anonymous>:5086:29
+    at SelectorEvaluatorImpl._cached (<anonymous>:5048:20)
+    at SelectorEvaluatorImpl.query (<anonymous>:5079:19)
+    at Object.query (<anonymous>:5293:44)
+    at <anonymous>:5251:21</div></td>
+            </tr>
+          
+            <tr>
+              <td>24</td>
+              <td>VAL-MASTER-EXP-001: Export Excel button visible</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-failed">failed</span></td>
+              <td>3ms</td>
+              <td><div class="error-message">Export Excel button not found</div></td>
+            </tr>
+          
+            <tr>
+              <td>25</td>
+              <td>VAL-MASTER-IMP-001: Import Excel button visible</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-failed">failed</span></td>
+              <td>4ms</td>
+              <td><div class="error-message">Import Excel button not found</div></td>
+            </tr>
+          
+            <tr>
+              <td>26</td>
+              <td>VAL-MASTER-AK-001: Display Aspek Kerja table</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-failed">failed</span></td>
+              <td>5188ms</td>
+              <td><div class="error-message">locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator('[data-testid="aspek-kerja-table"]').first() to be visible
+</div></td>
+            </tr>
+          
+            <tr>
+              <td>27</td>
+              <td>VAL-MASTER-AK-010: Add Aspek Kerja with COA linkage</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>28</td>
+              <td>VAL-MASTER-BLOK-001: Display Blok table</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-failed">failed</span></td>
+              <td>5184ms</td>
+              <td><div class="error-message">locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator('[data-testid="blok-table"]').first() to be visible
+</div></td>
+            </tr>
+          
+            <tr>
+              <td>29</td>
+              <td>VAL-MASTER-BLOK-010: Add Blok with validation</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>30</td>
+              <td>VAL-MASTER-IMP-010: Select valid Excel file</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>31</td>
+              <td>VAL-MASTER-IMP-020: Preview shows first 10 rows</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>32</td>
+              <td>VAL-MASTER-COPY-001: Copy single row</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>33</td>
+              <td>VAL-MASTER-EDGE-001: Empty COA table state</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>34</td>
+              <td>VAL-MASTER-PERF-001: Table load time</td>
+              <td>MasterData</td>
+              <td><span class="status-badge status-failed">failed</span></td>
+              <td>5009ms</td>
+              <td><div class="error-message">locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator('table, .data-table').first() to be visible
+</div></td>
+            </tr>
+          
+            <tr>
+              <td>35</td>
+              <td>VAL-KAS-022: Kas transaction list displays</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-failed">failed</span></td>
+              <td>5188ms</td>
+              <td><div class="error-message">locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator('[data-testid="kas-table"]').first() to be visible
+</div></td>
+            </tr>
+          
+            <tr>
+              <td>36</td>
+              <td>VAL-KAS-028: Filter by transaction type</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-skipped">skipped</span></td>
+              <td>6ms</td>
+              <td><div class="error-message">locator.count: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'select:has-option("Masuk")' is not a valid selector.
+    at query (<anonymous>:5261:41)
+    at <anonymous>:5271:7
+    at SelectorEvaluatorImpl._cached (<anonymous>:5048:20)
+    at SelectorEvaluatorImpl._queryCSS (<anonymous>:5258:17)
+    at SelectorEvaluatorImpl._querySimple (<anonymous>:5138:19)
+    at <anonymous>:5086:29
+    at SelectorEvaluatorImpl._cached (<anonymous>:5048:20)
+    at SelectorEvaluatorImpl.query (<anonymous>:5079:19)
+    at Object.query (<anonymous>:5293:44)
+    at <anonymous>:5251:21</div></td>
+            </tr>
+          
+            <tr>
+              <td>37</td>
+              <td>VAL-KAS-029: Filter by approval status</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-skipped">skipped</span></td>
+              <td>5ms</td>
+              <td><div class="error-message">locator.count: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'select:has-option("Pending")' is not a valid selector.
+    at query (<anonymous>:5261:41)
+    at <anonymous>:5271:7
+    at SelectorEvaluatorImpl._cached (<anonymous>:5048:20)
+    at SelectorEvaluatorImpl._queryCSS (<anonymous>:5258:17)
+    at SelectorEvaluatorImpl._querySimple (<anonymous>:5138:19)
+    at <anonymous>:5086:29
+    at SelectorEvaluatorImpl._cached (<anonymous>:5048:20)
+    at SelectorEvaluatorImpl.query (<anonymous>:5079:19)
+    at Object.query (<anonymous>:5293:44)
+    at <anonymous>:5251:21</div></td>
+            </tr>
+          
+            <tr>
+              <td>38</td>
+              <td>VAL-KAS-054: COA name displayed in transactions</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>39</td>
+              <td>VAL-KAS-001: Create Kas Masuk form</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>40</td>
+              <td>VAL-KAS-002: Create Kas Keluar form</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>41</td>
+              <td>VAL-KAS-003: Form validation for required fields</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>926ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>42</td>
+              <td>VAL-KAS-001: Submit Kas transaction</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>193ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>43</td>
+              <td>VAL-KAS-011: Edit pending transaction</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>9ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>44</td>
+              <td>VAL-KAS-013: Fully approved edit restriction</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>6ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>45</td>
+              <td>VAL-KAS-017: Delete pending transaction</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>9ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>46</td>
+              <td>VAL-KAS-060: Copy transaction</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>47</td>
+              <td>VAL-KAS-037: Approver 1 approve button</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>16ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>48</td>
+              <td>VAL-KAS-042: Cannot approve own transaction check</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>6ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>49</td>
+              <td>VAL-KAS-044: Reject requires reason</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>5ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>50</td>
+              <td>VAL-KAS-045: Approval history visible</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>5ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>51</td>
+              <td>VAL-KAS-047: Export to Excel button</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>6ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>52</td>
+              <td>VAL-KAS-048: Import from Excel button</td>
+              <td>Kas</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>5ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>53</td>
+              <td>VAL-BANK-021: Bank transaction list displays</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-failed">failed</span></td>
+              <td>5259ms</td>
+              <td><div class="error-message">locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator('[data-testid="bank-table"]').first() to be visible
+</div></td>
+            </tr>
+          
+            <tr>
+              <td>54</td>
+              <td>VAL-BANK: Bank account selector</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>5ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>55</td>
+              <td>VAL-BANK-001: Create Bank Masuk form</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>56</td>
+              <td>VAL-BANK-002: Create Bank Keluar form</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>2ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>57</td>
+              <td>VAL-BANK-001: Fill Bank transaction form</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>166ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>58</td>
+              <td>VAL-BANK-012: Edit pending transaction</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>5ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>59</td>
+              <td>VAL-BANK-014: Cannot edit fully approved</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>5ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>60</td>
+              <td>VAL-BANK-063: Copy transaction</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>61</td>
+              <td>VAL-BANK-037: Approver 1 approve button</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>5ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>62</td>
+              <td>VAL-BANK-042: Cannot approve own transaction</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>63</td>
+              <td>VAL-BANK-041: Approver configuration validation</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>64</td>
+              <td>VAL-BANK-047: Export to Excel</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>65</td>
+              <td>VAL-BANK-048: Import from Excel</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>2ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>66</td>
+              <td>VAL-BANK-054: Export includes all fields</td>
+              <td>Bank</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>1ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>67</td>
+              <td>VAL-GUDANG-022: Gudang transaction list displays</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-failed">failed</span></td>
+              <td>5152ms</td>
+              <td><div class="error-message">locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator('[data-testid="gudang-table"]').first() to be visible
+</div></td>
+            </tr>
+          
+            <tr>
+              <td>68</td>
+              <td>VAL-GUDANG-026: Stock display</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>69</td>
+              <td>VAL-GUDANG-001: Create Gudang Masuk form</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>70</td>
+              <td>VAL-GUDANG-002: Create Gudang Keluar form</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>71</td>
+              <td>VAL-GUDANG-001: Fill Gudang transaction form</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>30028ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>72</td>
+              <td>VAL-GUDANG-012: Edit pending transaction</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>11ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>73</td>
+              <td>VAL-GUDANG-014: Cannot edit fully approved</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>5ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>74</td>
+              <td>VAL-GUDANG-064: Copy transaction</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>5ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>75</td>
+              <td>VAL-GUDANG-038: Approver 1 approve button</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>6ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>76</td>
+              <td>VAL-GUDANG-039: Approver 2 approve button</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>5ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>77</td>
+              <td>VAL-GUDANG-043: Cannot approve own transaction</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>78</td>
+              <td>VAL-GUDANG-042: Approver configuration validation</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>0ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>79</td>
+              <td>VAL-GUDANG-048: Export to Excel</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>7ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>80</td>
+              <td>VAL-GUDANG-049: Import from Excel</td>
+              <td>Gudang</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>81</td>
+              <td>VAL-SYNC-001: Sync settings page accessible</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>1251ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>82</td>
+              <td>VAL-ADMIN-001: Module-specific sync paths</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>21ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>83</td>
+              <td>VAL-SYNC-002: Path validation</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>84</td>
+              <td>VAL-SYNC-010: Connection status indicator</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>85</td>
+              <td>VAL-SYNC-050: Connection notification area</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>86</td>
+              <td>VAL-SYNC-061: Offline indicator</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>87</td>
+              <td>VAL-SYNC-021: Sync queue status</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>88</td>
+              <td>VAL-SYNC-030: Manual sync button</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>89</td>
+              <td>VAL-SYNC-040: Conflict detection area</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>90</td>
+              <td>VAL-SYNC-051: Sync progress indicator</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>91</td>
+              <td>VAL-SYNC-060: Offline functionality check</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>92</td>
+              <td>VAL-ADMIN-010: All location statuses</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>10ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>93</td>
+              <td>VAL-ADMIN-020: Admin settings visible</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>94</td>
+              <td>VAL-ADMIN-022: View/Edit mode toggle</td>
+              <td>Sync</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>95</td>
+              <td>VAL-CROSS-001: Module independence</td>
+              <td>CrossArea</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>10ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>96</td>
+              <td>VAL-CROSS-002: Database separation</td>
+              <td>CrossArea</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>0ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>97</td>
+              <td>VAL-CROSS-006: COA deletion protection</td>
+              <td>CrossArea</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>6ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>98</td>
+              <td>VAL-CROSS-007: Aspek Kerja deletion protection</td>
+              <td>CrossArea</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>99</td>
+              <td>VAL-CROSS-011: Master data consistency</td>
+              <td>CrossArea</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>100</td>
+              <td>VAL-CROSS-013: Kas report generation</td>
+              <td>CrossArea</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>3ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>101</td>
+              <td>VAL-CROSS-017: Report includes only approved</td>
+              <td>CrossArea</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>0ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>102</td>
+              <td>VAL-CROSS-020: Report text copyable</td>
+              <td>CrossArea</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>103</td>
+              <td>VAL-CROSS-023: Period switching</td>
+              <td>CrossArea</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>104</td>
+              <td>VAL-CROSS-026: Module-specific approval permissions</td>
+              <td>CrossArea</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>9ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>105</td>
+              <td>VAL-CROSS-027: Module visibility by permission</td>
+              <td>CrossArea</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+            <tr>
+              <td>106</td>
+              <td>VAL-CROSS-028: Admin full access</td>
+              <td>CrossArea</td>
+              <td><span class="status-badge status-passed">passed</span></td>
+              <td>4ms</td>
+              <td>-</td>
+            </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    
+    <h2 style="margin: 30px 0 15px;">📸 Screenshots</h2>
+    <div class="screenshots">
+      
+        <div class="screenshot">
+          <img src="../screenshots/_login_page_loaded_1775798050400.png" alt="login_page_loaded" loading="lazy">
+          <div class="info">
+            <div class="name">login_page_loaded</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:10 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_invalid_login_error_1775798052363.png" alt="invalid_login_error" loading="lazy">
+          <div class="info">
+            <div class="name">invalid_login_error</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:12 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_failure_VAL-USER-051: Invalid credentials show error_1775798052568.png" alt="failure_VAL-USER-051: Invalid credentials show error" loading="lazy">
+          <div class="info">
+            <div class="name">failure_VAL-USER-051: Invalid credentials show error</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:12 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_after_valid_login_1775798055004.png" alt="after_valid_login" loading="lazy">
+          <div class="info">
+            <div class="name">after_valid_login</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:15 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_coa_table_view_1775798057542.png" alt="coa_table_view" loading="lazy">
+          <div class="info">
+            <div class="name">coa_table_view</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:17 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_failure_VAL-MASTER-COAS-001: Display COA table with all columns_1775798062745.png" alt="failure_VAL-MASTER-COAS-001: Display COA table with all columns" loading="lazy">
+          <div class="info">
+            <div class="name">failure_VAL-MASTER-COAS-001: Display COA table with all columns</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:22 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_failure_VAL-MASTER-COAS-060: Filter by Tipe_1775798062959.png" alt="failure_VAL-MASTER-COAS-060: Filter by Tipe" loading="lazy">
+          <div class="info">
+            <div class="name">failure_VAL-MASTER-COAS-060: Filter by Tipe</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:23 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_failure_VAL-MASTER-EXP-001: Export Excel button visible_1775798063148.png" alt="failure_VAL-MASTER-EXP-001: Export Excel button visible" loading="lazy">
+          <div class="info">
+            <div class="name">failure_VAL-MASTER-EXP-001: Export Excel button visible</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:23 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_failure_VAL-MASTER-IMP-001: Import Excel button visible_1775798063342.png" alt="failure_VAL-MASTER-IMP-001: Import Excel button visible" loading="lazy">
+          <div class="info">
+            <div class="name">failure_VAL-MASTER-IMP-001: Import Excel button visible</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:23 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_aspek_kerja_table_view_1775798063517.png" alt="aspek_kerja_table_view" loading="lazy">
+          <div class="info">
+            <div class="name">aspek_kerja_table_view</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:23 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_failure_VAL-MASTER-AK-001: Display Aspek Kerja table_1775798068702.png" alt="failure_VAL-MASTER-AK-001: Display Aspek Kerja table" loading="lazy">
+          <div class="info">
+            <div class="name">failure_VAL-MASTER-AK-001: Display Aspek Kerja table</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:28 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_blok_table_view_1775798068866.png" alt="blok_table_view" loading="lazy">
+          <div class="info">
+            <div class="name">blok_table_view</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:29 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_failure_VAL-MASTER-BLOK-001: Display Blok table_1775798074048.png" alt="failure_VAL-MASTER-BLOK-001: Display Blok table" loading="lazy">
+          <div class="info">
+            <div class="name">failure_VAL-MASTER-BLOK-001: Display Blok table</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:34 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_failure_VAL-MASTER-PERF-001: Table load time_1775798079263.png" alt="failure_VAL-MASTER-PERF-001: Table load time" loading="lazy">
+          <div class="info">
+            <div class="name">failure_VAL-MASTER-PERF-001: Table load time</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:39 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_kas_page_loaded_1775798079433.png" alt="kas_page_loaded" loading="lazy">
+          <div class="info">
+            <div class="name">kas_page_loaded</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:39 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_failure_VAL-KAS-022: Kas transaction list displays_1775798084617.png" alt="failure_VAL-KAS-022: Kas transaction list displays" loading="lazy">
+          <div class="info">
+            <div class="name">failure_VAL-KAS-022: Kas transaction list displays</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:44 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_failure_VAL-KAS-028: Filter by transaction type_1775798084776.png" alt="failure_VAL-KAS-028: Filter by transaction type" loading="lazy">
+          <div class="info">
+            <div class="name">failure_VAL-KAS-028: Filter by transaction type</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:44 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_failure_VAL-KAS-029: Filter by approval status_1775798084976.png" alt="failure_VAL-KAS-029: Filter by approval status" loading="lazy">
+          <div class="info">
+            <div class="name">failure_VAL-KAS-029: Filter by approval status</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:45 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_kas_validation_error_1775798085859.png" alt="kas_validation_error" loading="lazy">
+          <div class="info">
+            <div class="name">kas_validation_error</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:46 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_kas_form_filled_1775798086104.png" alt="kas_form_filled" loading="lazy">
+          <div class="info">
+            <div class="name">kas_form_filled</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:46 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_bank_page_loaded_1775798086366.png" alt="bank_page_loaded" loading="lazy">
+          <div class="info">
+            <div class="name">bank_page_loaded</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:46 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_failure_VAL-BANK-021: Bank transaction list displays_1775798091620.png" alt="failure_VAL-BANK-021: Bank transaction list displays" loading="lazy">
+          <div class="info">
+            <div class="name">failure_VAL-BANK-021: Bank transaction list displays</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:51 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_bank_form_filled_1775798091790.png" alt="bank_form_filled" loading="lazy">
+          <div class="info">
+            <div class="name">bank_form_filled</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:51 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_gudang_page_loaded_1775798091987.png" alt="gudang_page_loaded" loading="lazy">
+          <div class="info">
+            <div class="name">gudang_page_loaded</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:14:52 PM</div>
+          </div>
+        </div>
+      
+        <div class="screenshot">
+          <img src="../screenshots/_sync_settings_page_1775798157263.png" alt="sync_settings_page" loading="lazy">
+          <div class="info">
+            <div class="name">sync_settings_page</div>
+            <div class="area"></div>
+            <div class="timestamp">4/10/2026, 12:15:58 PM</div>
+          </div>
+        </div>
+      
+    </div>
+    
+  </div>
+</body>
+</html>

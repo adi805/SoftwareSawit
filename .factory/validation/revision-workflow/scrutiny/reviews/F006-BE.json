@@ -1,0 +1,83 @@
+{
+  "featureId": "F006-BE",
+  "reviewedAt": "2026-04-09T10:00:00.000Z",
+  "commitId": "d6d71be",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The F006-BE feature adds revision workflow backend functions to kasDatabase.ts, bankDatabase.ts, and gudangDatabase.ts, and includes a test file (revisionWorkflow.test.ts). However, several critical gaps exist: (1) Missing IPC handlers in main.ts for revision:create, revision:get, revision:hasPending, and revision:getPendingCount, which are exposed in preload.ts and used by the renderer (F005-UI). (2) The createRevisionRequest database functions do NOT enforce 'only creator/admin can request' — they accept any requestedBy string without permission checks. (3) applyRevision does not update transaction_type even though proposed_transaction_type exists as a nullable column and is exposed in the revision schema. (4) The test file revisionWorkflow.test.ts contains only trivial assertions on mock data literals (no real database interaction, no function calls), making it effectively a placeholder rather than meaningful coverage. (5) No applyRevision standalone export exists; revision application is inlined inside approveRevision as a private function, diverging from the feature description which lists applyRevision as a function.",
+    "issues": [
+      {
+        "file": "src/main/main.ts",
+        "severity": "blocking",
+        "description": "Missing IPC handlers for revision:create, revision:get, revision:hasPending, and revision:getPendingCount. These channels are exposed in preload.ts (lines ~559-578) and called by the renderer App.tsx, but no corresponding ipcMain.handle() exists in main.ts. This breaks the revision creation flow from the UI."
+      },
+      {
+        "file": "src/main/kasDatabase.ts",
+        "line": 1479,
+        "severity": "blocking",
+        "description": "createRevisionRequest does not enforce 'only creator or admin can request revision'. The function accepts requestedBy without validating the user's role or comparing against transaction.created_by. VAL-REV-010 requires permission control at the backend."
+      },
+      {
+        "file": "src/main/bankDatabase.ts",
+        "line": 1459,
+        "severity": "blocking",
+        "description": "Same permission gap: createRevisionRequest does not verify creator/admin role for Bank revisions."
+      },
+      {
+        "file": "src/main/gudangDatabase.ts",
+        "line": 1498,
+        "severity": "blocking",
+        "description": "Same permission gap: createRevisionRequest does not verify creator/admin role for Gudang revisions."
+      },
+      {
+        "file": "src/main/kasDatabase.ts",
+        "line": 1689,
+        "severity": "blocking",
+        "description": "applyRevisionToTransaction (private) does not apply proposed_transaction_type. The column exists in the schema (proposed_transaction_type TEXT) and interfaces, but is never written to the transactions table during approval. This means a revision that changes only transaction_type will apply zero changes."
+      },
+      {
+        "file": "src/main/bankDatabase.ts",
+        "line": 1483,
+        "severity": "blocking",
+        "description": "Same issue: Bank applyRevisionToTransaction omits proposed_transaction_type."
+      },
+      {
+        "file": "src/main/gudangDatabase.ts",
+        "line": 1520,
+        "severity": "blocking",
+        "description": "Same issue: Gudang applyRevisionToTransaction omits proposed_transaction_type."
+      },
+      {
+        "file": "src/main/revisionWorkflow.test.ts",
+        "severity": "blocking",
+        "description": "Tests are not real unit tests. They assert on hard-coded literals (e.g., expect('Pending Revision Approval 2').toBe('Pending Revision Approval 2')) and mock objects that are never passed into the actual database functions. No database function is imported or called. This provides zero meaningful coverage of createRevisionRequest, approveRevision, rejectRevision, or applyRevision logic."
+      },
+      {
+        "file": "src/main/kasDatabase.ts",
+        "severity": "non_blocking",
+        "description": "applyRevision is not exported as a standalone function. The feature description explicitly lists applyRevision as a function, but it is implemented as a private applyRevisionToTransaction helper inside kasDatabase.ts."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The preload.ts exposes IPC channels (revision:create, revision:get, revision:hasPending, revision:getPendingCount) that were never implemented in main.ts. AGENTS.md should clarify that any channel added to preload.ts MUST have a corresponding ipcMain.handle() in main.ts, and that cross-checking these two files is part of the backend review checklist.",
+      "evidence": "preload.ts lines ~559-578 expose createRevisionRequest, getRevisionRequest, hasPendingRevision, getPendingRevisionCount invoking revision:create, revision:get, revision:hasPending, revision:getPendingCount. main.ts contains no handlers for these channels."
+    },
+    {
+      "area": "skills",
+      "observation": "backend-worker SKILL.md step 3 says 'Write Tests First (TDD)' and expects real tests that exercise database operations. The worker added revisionWorkflow.test.ts with trivial literal assertions that do not import or call any database function. Either the skill's TDD guidance is not specific enough about what constitutes a valid test, or the worker should have been flagged for submitting placeholder tests.",
+      "evidence": "revisionWorkflow.test.ts contains 21 test cases but none call createRevisionRequest, approveRevision, etc. Example: it('should advance status...', () => { expect(statusAfterFirstApproval).toBe('Pending Revision Approval 2'); })."
+    },
+    {
+      "area": "conventions",
+      "observation": "Feature descriptions list functions like applyRevision as exported backend functions, but the implementation makes it private. AGENTS.md or SKILL.md could clarify whether all listed functions must be exported vs. allowed to be factored into helpers.",
+      "evidence": "F006-BE expectedBehavior lists 'applyRevision updates original transaction fields', but kasDatabase.ts implements private applyRevisionToTransaction instead."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "F006-BE fails scrutiny due to missing IPC handlers for revision:create/get/hasPending/getPendingCount, incomplete permission checking in createRevisionRequest (creator/admin not enforced), omitted proposed_transaction_type application during approval, and placeholder-level unit tests that provide no real coverage of the database functions."
+}

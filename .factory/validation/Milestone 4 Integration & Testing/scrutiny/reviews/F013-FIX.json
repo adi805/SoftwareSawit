@@ -1,0 +1,51 @@
+{
+  "featureId": "F013-FIX",
+  "reviewedAt": "2026-04-08T03:45:00.000Z",
+  "commitId": null,
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "F013-FIX has not been implemented. There is no commit, no worker handoff, and no code changes addressing the original F013 blocking bug. The codebase still contains the field naming mismatch: localFirstOperations.ts queues Kas payloads with 'transaction_date', but batchSyncService.ts derives the target D1 periode from 'tanggal'. Consequently, all Kas transactions will continue to default to the current year/month (e.g., kas_2026_01) regardless of their actual transaction date.",
+    "issues": [
+      {
+        "file": "src/main/localFirstOperations.ts",
+        "line": 46,
+        "severity": "blocking",
+        "description": "CreateKasTransactionInput still defines the date field as 'transaction_date' instead of 'tanggal'."
+      },
+      {
+        "file": "src/main/localFirstOperations.ts",
+        "line": 77,
+        "severity": "blocking",
+        "description": "createKasTransactionLocalFirst queues sync payload with 'transaction_date', but batchSyncService.ts:622 expects 'tanggal' for periode routing."
+      },
+      {
+        "file": "src/main/localFirstOperations.ts",
+        "line": 185,
+        "severity": "blocking",
+        "description": "updateKasTransactionLocalFirst queues changes inside a nested 'changes' object using 'transaction_date'; the sync engine will not find 'tanggal' at the top level for update periode derivation either."
+      },
+      {
+        "file": "src/main/batchSyncService.ts",
+        "line": 622,
+        "severity": "blocking",
+        "description": "Periode derivation continues to rely on parsedData.tanggal. Since Kas payloads never provide this key, year/month always falls back to defaults."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md documents the per-periode database pattern but does not specify the expected date field name for sync queue payloads. Both 'transaction_date' and 'tanggal' appear in the codebase, leading to the original F013 failure and the missing F013-FIX resolution.",
+      "evidence": "batchSyncService.ts:622-623 checks parsedData.tanggal; localFirstOperations.ts:77 stores transaction_date for Kas create payloads."
+    },
+    {
+      "area": "skills",
+      "observation": "The backend-worker skill file does not cover sync-engine integration or periode-routing conventions. The F013 worker reported followedProcedure: true, but the skill provided no guidance that would have prevented the field-name mismatch.",
+      "evidence": "F013 handoff shows skillFeedback.followedProcedure: true, yet the blocking bug was not caught by the worker."
+    }
+  ],
+  "addressesFailureFrom": ".factory/validation/Milestone 4 Integration \u0026 Testing/scrutiny/reviews/F013.json",
+  "summary": "F013-FIX is a missing fix. No worker session produced code for it, and the repository remains in the same failing state as the original F013 review. The blocking periode-routing bug (`transaction_date` vs `tanggal`) persists in localFirstOperations.ts and batchSyncService.ts. Until the Kas sync queue payload uses 'tanggal' (or batchSyncService.ts is made tolerant of both keys), Kas transactions will sync to the wrong periode database. Recommendation: re-assign F013-FIX to a worker and ensure the field name is aligned before re-review."
+}

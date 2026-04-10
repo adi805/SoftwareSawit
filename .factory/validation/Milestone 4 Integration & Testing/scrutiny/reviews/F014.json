@@ -1,0 +1,39 @@
+{
+  "featureId": "F014",
+  "reviewedAt": "2026-04-08T04:15:00.000Z",
+  "commitId": "9342117",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "F014 (Integrate sync with Bank module) correctly wires the Bank module into the local-first sync system. BankFormPage and BankListPage were updated to use local-first CRUD operations (localFirstCreateBankTransaction, localFirstUpdateBankTransaction, localFirstDeleteBankTransaction), the preload bridge and type declarations were added, and the worker verified typecheck, lint, and build all pass. The implementation matches the F013 Kas integration pattern and fulfills the expected assertions for BANK_INTEGRATED, BANK_OFFLINE, and BANK_SYNC_STATUS.",
+    "issues": [
+      {
+        "file": "src/renderer/App.tsx",
+        "line": 461,
+        "severity": "non_blocking",
+        "description": "BankFormPage is rendered without passing the currentUser prop, yet BankFormPage accepts an optional currentUser. In practice this means validation (!currentUser) can trigger and block submission with 'User tidak ditemukan'. Compare KasFormPage which is also missing currentUser—this appears to be an existing pattern inconsistency across the app rather than a regression introduced by F014."
+      },
+      {
+        "file": "src/renderer/pages/BankListPage.tsx",
+        "line": 368,
+        "severity": "non_blocking",
+        "description": "Excel import (handleImportBank) still calls importBankBatch directly on the legacy database layer instead of a local-first import variant. Imported records will exist locally but will not be queued for cloud sync unless the import path is later extended. This is consistent with the current Kas/Gudang import implementations, but represents a known integration gap for batch imports across all modules."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "Transaction form pages expect a currentUser prop but App.tsx never passes it; forms fall back to window.electronAPI context indirectly. AGENTS.md does not document the intended prop-contract between App.tsx and module form pages.",
+      "evidence": "src/renderer/App.tsx:461 — BankFormPage rendered without currentUser; src/renderer/pages/BankFormPage.tsx:54 — destructures currentUser from props."
+    },
+    {
+      "area": "conventions",
+      "observation": "Batch import paths (importBankBatch, importKasBatch, importGudangBatch) bypass the local-first sync queue. If end-to-end sync coverage is expected for imported data, a convention should be documented (or an importSyncQueue helper created).",
+      "evidence": "src/renderer/pages/BankListPage.tsx:385 calls window.electronAPI.importBankBatch directly; src/main/main.ts:1143 routes to bankDb.importBankBatch with no syncQueue.queueSync call."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "F014 is a clean, minimal integration that follows the established Kas module pattern. The Bank module now uses local-first CRUD with automatic sync queueing, offline capability, and sync status exposure through the existing SyncStatusBar/SyncContext. No blocking issues were found. Two non-blocking observations were noted: a missing currentUser prop passthrough (pre-existing pattern) and Excel import bypassing the sync queue (consistent with other modules)."
+}

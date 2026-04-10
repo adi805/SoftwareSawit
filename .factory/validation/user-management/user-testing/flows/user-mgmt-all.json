@@ -1,0 +1,54 @@
+{
+  "groupId": "user-mgmt-all",
+  "testedAt": "2026-04-09T03:19:42.709Z",
+  "assertions": [
+    {
+      "id": "VAL-USER-001",
+      "status": "pass",
+      "steps": [
+        "Open login page",
+        "Enter valid credentials",
+        "Submit"
+      ],
+      "evidence": {
+        "screenshots": [
+          "D:\\Estate\\Droid\\SoftwareSawit\\evidence\\user-management\\VAL-USER-001-login-page.png",
+          "D:\\Estate\\Droid\\SoftwareSawit\\evidence\\user-management\\VAL-USER-001-user-list.png"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-USER-002",
+      "status": "pass",
+      "steps": [
+        "Enter invalid credentials",
+        "Submit",
+        "Verify error"
+      ],
+      "evidence": {
+        "screenshots": [
+          "D:\\Estate\\Droid\\SoftwareSawit\\evidence\\user-management\\VAL-USER-002-login-error.png"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-USER-003",
+      "status": "fail",
+      "steps": [
+        "Enter wrong password 5 times for test user",
+        "Verify lockout message"
+      ],
+      "evidence": {
+        "screenshots": [
+          "D:\\Estate\\Droid\\SoftwareSawit\\evidence\\user-management\\VAL-USER-003-account-locked.png"
+        ]
+      },
+      "issues": "Lockout not shown. Error text: Username atau password salah"
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "User Management comprehensive test completed. 2 passed, 1 failed, 0 blocked."
+}

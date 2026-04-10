@@ -1,0 +1,78 @@
+{
+  "featureId": "F013",
+  "reviewedAt": "2026-04-08T03:37:00.000Z",
+  "commitId": "32a7b6d",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "overallStatus": "fail",
+  "codeReview": {
+    "summary": "F013 wires the Kas UI to local-first sync operations via the preload script and updates form/list pages to use them. TypeScript compiles cleanly. However, there is a blocking bug: the batch sync service derives the target D1 periode from a field named `tanggal`, but the Kas local-first operation queues the payload with the field name `transaction_date`. This causes all Kas sync items to default to the current year and month `01`, violating the requirement that Kas transactions sync to the correct periode database. Additionally, the underlying `kasDb.deleteTransaction` performs a hard delete rather than the claimed soft delete, meaning deleted records are lost locally before sync completes.",
+    "issues": [
+      {
+        "file": "src/main/batchSyncService.ts",
+        "line": 622,
+        "severity": "blocking",
+        "description": "Periode derivation for API routing uses `parsedData.tanggal`, but Kas sync queue payloads store the date as `transaction_date`. This causes periode to always fall back to `new Date().getFullYear()` and `'01'`, so Kas transactions are synced to the wrong D1 table (e.g., `kas_2026_01` regardless of actual transaction date)."
+      },
+      {
+        "file": "src/main/kasDatabase.ts",
+        "line": 537,
+        "severity": "non_blocking",
+        "description": "`deleteTransaction` executes `DELETE FROM transactions WHERE id = ?`, a hard delete. The local-first delete wrapper claims soft delete, but the local record is permanently removed immediately, preventing local sync-status tracking for deletes and breaking the soft-delete pattern expected by the validation contract."
+      },
+      {
+        "file": "src/main/kasDatabase.ts",
+        "line": 118,
+        "severity": "non_blocking",
+        "description": "The `transactions` table schema lacks `sync_status`, `modified_at`, and `device_id` columns. While the sync queue tracks operations separately, the local record itself cannot reflect its sync state, limiting per-record sync status display in the Kas module."
+      },
+      {
+        "file": "src/renderer/pages/KasFormPage.tsx",
+        "line": 147,
+        "severity": "non_blocking",
+        "description": "UI-level sync status for the Kas module is limited to updated success messages (`(akan disinkronkan)`). The Kas form and list pages do not consume `useSync()` to show per-module pending counts, network status, or last-sync time within the module view."
+      }
+    ]
+  },
+  "blockingIssues": [
+    {
+      "severity": "blocking",
+      "description": "Kas sync queue payloads use `transaction_date` but `batchSyncService.ts` expects `tanggal` for periode routing, causing all Kas transactions to sync to the wrong periode database (defaults to current year / month 01)."
+    }
+  ],
+  "nonBlockingIssues": [
+    {
+      "severity": "non_blocking",
+      "description": "Kas delete performs a hard delete in `kasDatabase.ts`, contrary to the claimed soft-delete behavior and validation contract expectations."
+    },
+    {
+      "severity": "non_blocking",
+      "description": "Kas `transactions` table lacks `sync_status`, `modified_at`, and `device_id` columns, preventing local record-level sync state tracking."
+    },
+    {
+      "severity": "non_blocking",
+      "description": "Kas module UI does not display dedicated sync status indicators (pending count, last sync, network state); it only appends `(akan disinkronkan)` to success toasts."
+    }
+  ],
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md documents the per-periode database pattern but does not specify the field-naming convention that the batch sync engine expects for periode derivation (`tanggal` vs `transaction_date`). This mismatch existed across the codebase and caused Kas integration to route syncs to the wrong periode.",
+      "evidence": "`batchSyncService.ts:622-623` checks `parsedData.tanggal`; `localFirstOperations.ts:63` stores `transaction_date` for Kas create payloads."
+    },
+    {
+      "area": "skills",
+      "observation": "The `backend-worker` skill file (`SKILL.md`) focuses entirely on Blok/COA schema changes and does not cover sync-engine integration, local-first operations, or IPC handler patterns. The worker reported `followedProcedure: true`, but the skill's procedure is irrelevant for F013's actual work.",
+      "evidence": "`SKILL.md` work procedure lists only Blok/COA schema steps; no sync integration guidance is present."
+    },
+    {
+      "area": "services",
+      "observation": "`.factory/services.yaml` does not define a service entry for the Cloudflare Workers API (`softwaresawit-api`), even though it is a required dependency for syncing and local development/testing. It is referenced throughout the mission but absent from shared service definitions.",
+      "evidence": "`services.yaml` contains only `electron`, `mcp-server`, and `user-mgmt` services with no `softwaresawit-api` entry."
+    }
+  ],
+  "codeQualityScore": 6,
+  "addressesFailureFrom": null,
+  "summary": "F013 partially integrates Kas with the local-first sync system: CRUD operations now route through local-first IPC handlers and the UI reflects pending-sync status in success messages. However, a blocking bug in periode routing (`tanggal` vs `transaction_date`) means Kas transactions will always sync to the wrong D1 table, violating the core per-periode sync requirement. Additional non-blocking gaps include hard deletes in the Kas database (instead of soft deletes), missing sync metadata columns on local records, and minimal in-module sync status UI."
+}

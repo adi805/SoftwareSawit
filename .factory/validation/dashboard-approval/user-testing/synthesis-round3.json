@@ -1,0 +1,30 @@
+{
+  "milestone": "dashboard-approval",
+  "round": 3,
+  "status": "fail",
+  "assertionsSummary": {
+    "total": 6,
+    "passed": 2,
+    "failed": 3,
+    "blocked": 1
+  },
+  "passedAssertions": [
+    "VAL-DASH-011",
+    "VAL-DASH-012"
+  ],
+  "failedAssertions": [
+    { "id": "VAL-DASH-014", "reason": "No polling or WebSocket mechanism in DashboardApprovalPage; dashboard does not auto-refresh when transactions change in other modules" },
+    { "id": "VAL-DASH-018", "reason": "Mobile viewport: summary cards use grid-cols-2 without grid-cols-1 for smallest screens, failing to stack vertically" },
+    { "id": "VAL-DASH-020", "reason": "loadPendingApprovals and loadCounts catch errors and only console.error(); no user-facing retry button, friendly message, or per-module failure indicator" }
+  ],
+  "blockedAssertions": [
+    { "id": "VAL-DASH-019", "blockedBy": "Basic keyboard navigation verified, but comprehensive WCAG AA audit requires Lighthouse or axe-core not available in current toolset" }
+  ],
+  "appliedUpdates": [
+    { "target": "user-testing.md", "description": "Confirmed that sql.js databases are loaded into memory at Electron startup; any seeded data requires app restart to be visible in dashboard", "source": "flow-report" },
+    { "target": "C:/Users/acer/AppData/Roaming/software-sawit/data/kas/2026/04.db", "description": "Seeded 40 Kas transactions for performance/overdue testing", "source": "setup" },
+    { "target": "C:/Users/acer/AppData/Roaming/software-sawit/data/bank/2026/04.db", "description": "Seeded 40 Bank transactions for performance/overdue testing", "source": "setup" },
+    { "target": "C:/Users/acer/AppData/Roaming/software-sawit/data/gudang/2026/04.db", "description": "Seeded 40 Gudang transactions (15 with 48h-old timestamps) for performance/overdue testing", "source": "setup" }
+  ],
+  "previousRound": ".factory/validation/dashboard-approval/user-testing/synthesis.json"
+}

@@ -1,0 +1,34 @@
+{
+  "featureId": "F017-UI",
+  "reviewedAt": "2026-04-08T10:45:00.000Z",
+  "commitId": "e9612a0",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "F017-UI implements per-module sync status breakdown (VAL-UI-008) by adding a new IPC handler `sync:getModuleSyncStatus`, exposing it through preload, updating SyncContext to track per-module statuses, and enhancing SyncStatusBar with an expandable per-module breakdown panel. The implementation covers all modules (kas, bank, gudang, coa, aspek_kerja, blok), shows pending counts, last sync times, and sync states with appropriate visual indicators. TypeScript compilation and lint pass cleanly.",
+    "issues": [
+      {
+        "file": "src/main/main.ts",
+        "line": 1381,
+        "severity": "non_blocking",
+        "description": "The `sync:getModuleSyncStatus` handler always sets `failedCount` to 0 with a comment 'Could be tracked separately if needed'. The existing `getSyncQueueStats()` returns both pending and error/failed counts per module, so `failedCount` should ideally be populated from `stats.byModule` error counts or synced config health state for accuracy."
+      },
+      {
+        "file": "src/renderer/components/SyncStatusBar.tsx",
+        "line": 245,
+        "severity": "non_blocking",
+        "description": "The per-module breakdown toggle button is only rendered when `queueInfo.total > 0`. If there are zero total pending items but some modules have errors or are not configured, users cannot open the breakdown from this affordance. Consider also allowing expansion via a dedicated action or icon independent of pending count."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "Project uses a consistent IPC naming convention (`sync:getModuleSyncStatus`, `syncDetection:getStatus`, `autoSyncTimer:getStatus`) and consistently updates preload, main IPC, SyncContext, and component layers for UI features. The worker followed this documented pattern successfully.",
+      "evidence": "Compare F017-UI diff to F016-UI and F018-UI patterns: all add IPC handler, preload exposure, SyncContext update, and component/ui change."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Feature F017-UI passes review. The implementation satisfies VAL-UI-008 by adding an expandable per-module sync status breakdown showing pending counts, last sync times, and sync states for each module. Two minor non-blocking issues noted: failedCount is hardcoded to 0, and the breakdown toggle is only visible when there are pending queue items. No blocking concerns."
+}

@@ -1,0 +1,51 @@
+{
+  "milestone": "sync-monitoring",
+  "round": 2,
+  "status": "fail",
+  "validatorsRun": {
+    "test": { "passed": true, "command": "npm test", "exitCode": 0, "details": "218 tests passed across 8 suites" },
+    "typecheck": { "passed": true, "command": "npm run typecheck", "exitCode": 0 },
+    "lint": { "passed": true, "command": "npm run lint", "exitCode": 0, "details": "0 errors, 19 warnings (pre-existing)" }
+  },
+  "reviewsSummary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "failedFeatures": ["F011-FIX"]
+  },
+  "blockingIssues": [
+    {
+      "featureId": "F011-FIX",
+      "severity": "blocking",
+      "description": "The F011-FIX feature has not been implemented. No worker session was assigned, no handoff exists, and no code changes were committed. The sync status filter dropdown in KasListPage, BankListPage, and GudangListPage remains unwired to the backend data fetch."
+    },
+    {
+      "featureId": "F011-FIX",
+      "severity": "blocking",
+      "description": "The SyncStatusBadge test file (src/renderer/components/SyncStatusBadge.test.tsx) is still missing. The fix feature explicitly required creating this test file with rendering, prop variations, and tooltip tests, but it was never implemented."
+    }
+  ],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "AGENTS.md / frontend-worker SKILL.md",
+      "suggestion": "Clarify when component-level tests and agent-browser manual verification are required vs. optional. Workers repeatedly skip both for simple presentational UI changes (toasts, banners, badges), causing claimed tests to be missing and no interactive verification evidence.",
+      "evidence": "F011-UI (zero tests, zero agent-browser checks), F013-UI (zero tests, zero agent-browser checks), F015-UI (zero agent-browser checks), F016-UI (zero tests). Handoffs justify skipping with 'relies on existing infrastructure' or 'no new tests needed'.",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md / backend-worker SKILL.md",
+      "suggestion": "Add a 'Verify Existing Implementation' procedure step for tasks where the required code already exists from prior milestones. Current skill assumes all tasks require net-new implementation and TDD, which does not fit verification-only features like F017-BE.",
+      "evidence": "F017-BE commit contained no new source code because ConflictResolutionDialog integration was already implemented. The worker treated it as verification, which was correct, but the skill provides no guidance for this scenario.",
+      "isSystemic": false
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Document the pattern for adding Tailwind keyframe animations when UI motion is needed, so workers don't extend tailwind.config.js inconsistently.",
+      "evidence": "F013-UI added slide-in-right/slide-out-right keyframes to tailwind.config.js. AGENTS.md UI section only says 'Use TailwindCSS for styling' with no animation guidance.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [],
+  "previousRound": ".factory/validation/sync-monitoring/scrutiny/synthesis-round1.json"
+}

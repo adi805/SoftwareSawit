@@ -1,0 +1,70 @@
+{
+  "featureId": "F008",
+  "reviewedAt": "2026-04-08T00:00:00.000Z",
+  "commitId": "476f352",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The F008 implementation delivers the core batch sync infrastructure: multiple operations are batched into single API calls via POST /api/batch, batch size is configurable (default 100, validated 1-1000), progress callbacks fire during batch processing, and an atomic batch mode is implemented at the API layer. However, there are notable gaps: partial batch failure does NOT automatically retry failed items during normal batch processing (retry is entirely manual via separate IPC-exposed functions), the atomic mode cannot truly roll back D1 changes because D1 lacks explicit transactions, and a few implementation bugs exist (double sleep on retry, unused allErrors array, totalRetried always 0). Tests are shallow and only cover configuration/types, not actual batching or failure handling logic. Overall the feature meets the baseline requirements but the retry behavior is not integrated into the main batch flow as the requirements imply.",
+    "issues": [
+      {
+        "file": "src/main/batchSyncService.ts",
+        "line": 305,
+        "severity": "non_blocking",
+        "description": "Double retry delay: processSingleItem sleeps twice on network errors (once inside catch block at line ~305, once after the catch block at line ~312). This causes 2x the intended exponential backoff delay."
+      },
+      {
+        "file": "src/main/batchSyncService.ts",
+        "line": 138,
+        "severity": "non_blocking",
+        "description": "totalRetried in BatchSyncResult is always 0 because processBatchSync never calls processSingleItem (which performs retries). Retries only happen in explicitly called functions retryFailedItems/retryBatch."
+      },
+      {
+        "file": "src/main/batchSyncService.ts",
+        "line": 142,
+        "severity": "non_blocking",
+        "description": "allErrors array is declared but never populated in processBatchSync, so the returned errors field is always empty even when batches fail."
+      },
+      {
+        "file": "src/main/batchSyncService.ts",
+        "line": 410,
+        "severity": "non_blocking",
+        "description": "buildSyncPayload result is checked for null but never used; sendToApi re-parses item.data with JSON.parse instead of using the payload, making deviceId injection via buildSyncPayload ineffective."
+      },
+      {
+        "file": "softwaresawit-api/src/routes/batch.ts",
+        "line": 88,
+        "severity": "non_blocking",
+        "description": "Atomic mode cannot truly roll back on D1 because D1 does not support explicit transactions. Any DB writes before the failing item are already committed. The comment acknowledges this, but the naming ('atomic') and error message ('all operations rolled back') are misleading to consumers."
+      },
+      {
+        "file": "src/main/main.ts",
+        "line": 1518,
+        "severity": "non_blocking",
+        "description": "localDbMgr.localDatabaseManager.closeAll() appears incorrect; localDbMgr likely exports functions directly, not a localDatabaseManager property. This will throw a TypeError on app quit."
+      },
+      {
+        "file": "src/main/batchSyncService.test.ts",
+        "line": 1,
+        "severity": "non_blocking",
+        "description": "Tests are shallow: they cover config/cancellation/client-creation/types but do not exercise batch creation, batch API calls, partial failure handling, progress callback invocation, or atomic processing."
+      },
+      {
+        "file": "src/main/main.ts",
+        "line": 1432,
+        "severity": "non_blocking",
+        "description": "batchSync:setProgressCallback IPC handler is a no-op. It returns success but does not actually wire a callback to the renderer. The real callback is passed directly to processBatchSync, which is acceptable but the handler is misleading."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The worker introduced localDbMgr.localDatabaseManager.closeAll() in main.ts app before-quit handler, but localDatabaseManager.ts exports functions directly rather than as a nested localDatabaseManager object. This pattern mismatch suggests either the module export style changed or the worker assumed a different API than what exists.",
+      "evidence": "src/main/main.ts:1518 calls localDbMgr.localDatabaseManager.closeAll(); comparing with src/main/localDatabaseManager.ts suggests exports are top-level functions."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "F008 implements batch sync operations with configurable batch size, batch API endpoint, progress callbacks, and atomic-mode handling. The implementation is structurally sound and compiles cleanly. However, partial failure retry is not automatic within the main batch flow (manual via retryFailedItems/retryBatch), atomic mode relies on simulated rollback due to D1 transaction limitations, and there are minor logic bugs (double sleep, unpopulated errors array, totalRetried always 0). Tests are limited to configuration and type-level coverage. Recommend pass with follow-up fixes for the noted bugs."
+}

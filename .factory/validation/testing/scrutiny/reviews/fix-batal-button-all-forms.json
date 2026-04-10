@@ -1,0 +1,15 @@
+{
+  "featureId": "fix-batal-button-all-forms",
+  "reviewedAt": "2026-04-06T04:45:00.000Z",
+  "commitId": "91f95514c1edb62a69938ca00ba1220de4c1bc8f",
+  "transcriptSkeletonReviewed": false,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Implementation fully covers the expected behavior. All 6 form pages (COA, Aspek Kerja, Blok, Kas, Bank, Gudang) now have resetForm() functions that clear all form state, and all Batal buttons correctly call resetForm() before onCancel(). The pattern matches exactly what AGENTS.md specifies.",
+    "issues": []
+  },
+  "sharedStateObservations": [],
+  "addressesFailureFrom": null,
+  "summary": "The fix-batal-button-all-forms feature is correctly implemented. All 6 form pages have resetForm() functions that clear form fields, errors, and submission states. Both header and footer Batal buttons in each form now call resetForm() before onCancel(), ensuring forms are cleared when navigating away. Typecheck and lint both pass. No issues found."
+}

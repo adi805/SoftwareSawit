@@ -1,0 +1,80 @@
+{
+  "featureId": "F012",
+  "reviewedAt": "2026-04-08T01:10:00.000Z",
+  "commitId": "a87da7b",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "F012 implements a comprehensive retry mechanism with exponential backoff. The implementation adds retryService.ts with configurable max retries (default 5), exponential backoff delays (1s, 2s, 4s, 8s... capped at 5 minutes), error classification (non-retryable: 401/403/400; retryable: network/timeout/5xx/conflict), retry state tracking in memory, and UI visibility functions. syncDatabase.ts was updated with an 'error' status, next_retry_at column, and an index for efficient retry queries. syncQueueService.ts integrates retry timing into markFailed. batchSyncService.ts integrates retryService for automatic retry scheduling and callbacks. A thorough unit test suite (retryService.test.ts) covers error classification, delay calculation, configuration, state management, and UI helpers. The feature satisfies all expected behavior items.",
+    "issues": [
+      {
+        "file": "src/main/retryService.ts",
+        "line": 124,
+        "severity": "non_blocking",
+        "description": "classifyError has a subtle precedence issue: when both statusCode and error message could apply, the statusCode branch takes precedence only if statusCode is truthy. For statusCode 0 or missing statusCode, only message patterns are checked. This is generally fine but 409 conflict detection relies on statusCode rather than message patterns (conflict in message falls through to 'unknown'). Consider adding message-based conflict detection to the else branch for completeness."
+      },
+      {
+        "file": "src/main/retryService.ts",
+        "line": 220,
+        "severity": "non_blocking",
+        "description": "calculateNextRetryDelay caps the exponential delay correctly but the jitter is always additive (cappedDelay + jitter). This means the delay can slightly exceed maxDelayMs. With jitterFactor = 0.1 and maxDelayMs = 300000, the max possible delay is 330000ms (5.5 min). Acceptable but worth documenting or bounding."
+      },
+      {
+        "file": "src/main/retryService.ts",
+        "line": 348,
+        "severity": "non_blocking",
+        "description": "scheduleRetry stores active timeouts in memory via activeSchedules Map but these are lost on app restart. Retry persistence is handled via next_retry_at in the database, but there is no mechanism on startup to rehydrate in-memory schedules from the database. This means scheduled callbacks won't fire until the sync loop explicitly polls getItemsNeedingRetry or getPendingSyncItems picks them up. This is okay given the current architecture but the retry callbacks are effectively best-effort across restarts."
+      },
+      {
+        "file": "src/main/batchSyncService.ts",
+        "line": 339,
+        "severity": "non_blocking",
+        "description": "processSingleBatch resets retryService config on every batch invocation. If multiple batch operations run concurrently with different configs, they could race on the global config object. In practice batch syncs are serialized, but the global mutable config is not thread-safe."
+      },
+      {
+        "file": "src/main/batchSyncService.ts",
+        "line": 445,
+        "severity": "non_blocking",
+        "description": "processSingleItem calls processFailedSync with 'Initial attempt' as the error before any actual sync attempt. This is a confusing API usage: processFailedSync is meant for failures, yet here it is used as a gate to check whether retry is allowed before the first attempt. It works because classifyError falls through to retryable for unknown messages, but semantically this is awkward."
+      },
+      {
+        "file": "src/main/syncQueueService.ts",
+        "line": 228,
+        "severity": "non_blocking",
+        "description": "markFailed calls retryService.canRetry using currentAttempts from the database, but retryService tracks its own attempt counter in memory (retryStates). These can diverge if retry states are cleared or the app restarts. In practice the database attempts value is the source of truth, which is correct, but retryService.calculateNextRetryDelay uses the database attempt count rather than the in-memory state, so the two systems are slightly decoupled."
+      },
+      {
+        "file": "src/main/syncDatabase.ts",
+        "line": 583,
+        "severity": "non_blocking",
+        "description": "getPendingSyncItems and getPendingSyncItemsByModule filter by next_retry_at <= now, which is correct. However, items in 'error' status are excluded because the WHERE clause only includes status = 'pending' OR status = 'failed'. This is the intended behavior, but there is no built-in function to re-queue 'error' items for retry (e.g., a manual retry-all-errors feature). This may be out of scope for F012 but is a UX gap."
+      },
+      {
+        "file": "src/main/retryService.test.ts",
+        "line": 1,
+        "severity": "non_blocking",
+        "description": "Tests cover retryService in isolation but do not cover the integration points in batchSyncService.ts or syncQueueService.ts. Specifically, there are no tests verifying that batch failures trigger retry scheduling, that next_retry_at is written to the database, or that non-retryable errors immediately bypass retries."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "AGENTS.md mentions 'Implement retry with exponential backoff' as a convention, but does not specify concrete values (base delay, multiplier, max delay, max retries). The worker chose sensible defaults (1s base, multiplier 2, 5 min cap, 5 max retries) that match the feature description. Documenting these defaults in AGENTS.md would reduce variance between worker implementations.",
+      "evidence": "AGENTS.md: 'Implement retry with exponential backoff' under Sync Logic. Compare with retryService.ts DEFAULT_CONFIG."
+    },
+    {
+      "area": "services",
+      "observation": "The Cloudflare Workers API service (softwaresawit-api) is not listed in .factory/services.yaml. While it may not need to be started for every validation run, having it documented would help subsequent workers and validators.",
+      "evidence": "services.yaml lists electron, mcp-server, and app services but no softwaresawit-api or wrangler dev service."
+    },
+    {
+      "area": "skills",
+      "observation": "The backend-worker SKILL.md work procedure does not mention retry service patterns or sync queue integration. The worker followed the standard procedure and implemented the retry mechanism independently. The skill could be enriched with a section on sync retry design patterns.",
+      "evidence": "SKILL.md focuses on schema changes and CRUD; no mention of retryService, exponential backoff, or sync state management."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "F012 delivers a solid retry mechanism with exponential backoff. retryService.ts provides clean error classification, configurable backoff, retry state tracking, and UI helpers. Database schema changes (error status, next_retry_at) and batch sync integration are well-executed. Unit tests are comprehensive for the core service, though integration test coverage is absent. Minor issues include a potentially racing global config in batchSyncService, restart-sensitive in-memory timeout schedules, and semantic awkwardness in processSingleItem's use of processFailedSync. Overall the implementation meets requirements and is fit for purpose. Recommend pass."
+}

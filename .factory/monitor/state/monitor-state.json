@@ -1,0 +1,97 @@
+{
+  "lastCheck": "2026-04-10T05:20:03.384Z",
+  "knownRuns": {
+    "24220890246": {
+      "id": 24220890246,
+      "status": "completed",
+      "conclusion": "failure",
+      "runNumber": 5,
+      "branch": "main",
+      "commit": "feat: Add complete SoftwareSawit with GitHub Actio",
+      "url": "https://github.com/adi805/SoftwareSawit/actions/runs/24220890246",
+      "createdAt": "2026-04-10T00:55:06Z",
+      "updatedAt": "2026-04-10T00:55:44Z"
+    },
+    "24221463671": {
+      "id": 24221463671,
+      "status": "completed",
+      "conclusion": "failure",
+      "runNumber": 6,
+      "branch": "main",
+      "commit": "fix(ci): Fix GitHub Actions workflow\n\n- Change Nod",
+      "url": "https://github.com/adi805/SoftwareSawit/actions/runs/24221463671",
+      "createdAt": "2026-04-10T01:16:26Z",
+      "updatedAt": "2026-04-10T01:17:29Z"
+    },
+    "24221683922": {
+      "id": 24221683922,
+      "status": "completed",
+      "conclusion": "failure",
+      "runNumber": 7,
+      "branch": "main",
+      "commit": "fix(ci): Handle missing test script gracefully",
+      "url": "https://github.com/adi805/SoftwareSawit/actions/runs/24221683922",
+      "createdAt": "2026-04-10T01:25:02Z",
+      "updatedAt": "2026-04-10T01:26:02Z"
+    },
+    "24222425673": {
+      "id": 24222425673,
+      "status": "in_progress",
+      "conclusion": null,
+      "runNumber": 8,
+      "branch": "main",
+      "commit": "fix(ci): Handle missing test script gracefully",
+      "url": "https://github.com/adi805/SoftwareSawit/actions/runs/24222425673",
+      "createdAt": "2026-04-10T01:53:19Z",
+      "updatedAt": "2026-04-10T01:53:31Z"
+    },
+    "24222528969": {
+      "id": 24222528969,
+      "status": "completed",
+      "conclusion": "failure",
+      "runNumber": 9,
+      "branch": "main",
+      "commit": "fix(ci): Add --legacy-peer-deps to npm install\n\nTh",
+      "url": "https://github.com/adi805/SoftwareSawit/actions/runs/24222528969",
+      "createdAt": "2026-04-10T01:57:33Z",
+      "updatedAt": "2026-04-10T02:04:04Z"
+    },
+    "24225211312": {
+      "id": 24225211312,
+      "status": "completed",
+      "conclusion": "failure",
+      "runNumber": 10,
+      "branch": "main",
+      "commit": "fix(tests): Add data-testid attributes and update ",
+      "url": "https://github.com/adi805/SoftwareSawit/actions/runs/24225211312",
+      "createdAt": "2026-04-10T03:43:10Z",
+      "updatedAt": "2026-04-10T03:50:11Z"
+    },
+    "24226050691": {
+      "id": 24226050691,
+      "status": "completed",
+      "conclusion": "failure",
+      "runNumber": 11,
+      "branch": "main",
+      "commit": "fix(ci): Remove verbose Electron debug env vars",
+      "url": "https://github.com/adi805/SoftwareSawit/actions/runs/24226050691",
+      "createdAt": "2026-04-10T04:14:56Z",
+      "updatedAt": "2026-04-10T04:20:42Z"
+    },
+    "24226938613": {
+      "id": 24226938613,
+      "status": "completed",
+      "conclusion": "failure",
+      "runNumber": 12,
+      "branch": "master",
+      "commit": "fix: Add data-testid attributes to all Import/Expo",
+      "url": "https://github.com/adi805/SoftwareSawit/actions/runs/24226938613",
+      "createdAt": "2026-04-10T04:48:49Z",
+      "updatedAt": "2026-04-10T04:54:49Z"
+    }
+  },
+  "lastRunId": 24226938613,
+  "totalChecks": 53,
+  "notificationsSent": 11,
+  "startTime": "2026-04-10T01:03:46.845Z"
+}

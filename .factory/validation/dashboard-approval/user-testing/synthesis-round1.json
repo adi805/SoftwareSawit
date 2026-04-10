@@ -1,0 +1,47 @@
+{
+  "milestone": "dashboard-approval",
+  "round": 1,
+  "status": "fail",
+  "assertionsSummary": {
+    "total": 23,
+    "passed": 14,
+    "failed": 3,
+    "blocked": 6
+  },
+  "passedAssertions": [
+    "VAL-DASH-001",
+    "VAL-DASH-002",
+    "VAL-DASH-004",
+    "VAL-DASH-006",
+    "VAL-DASH-007",
+    "VAL-DASH-008",
+    "VAL-DASH-010",
+    "VAL-DASH-013",
+    "VAL-DASH-015",
+    "VAL-DASH-016",
+    "VAL-DASH-017",
+    "VAL-CROSS-001",
+    "VAL-CROSS-002",
+    "VAL-CROSS-005"
+  ],
+  "failedAssertions": [
+    { "id": "VAL-DASH-003", "reason": "PA2 items are missing from the unified table when status filter is set to 'All'. The loadPendingApprovals() function in DashboardApprovalPage.tsx has a logic error where PA2 transactions are not fetched when the status filter is 'all'." },
+    { "id": "VAL-DASH-005", "reason": "Same root cause as VAL-DASH-003: the 'All' status filter fails to include Pending Approval 2 transactions in the table view." },
+    { "id": "VAL-DASH-009", "reason": "Module badges in the approval table are rendered as static <span> elements without any onClick handler or navigation logic. Clicking a module badge does not navigate to the module page." }
+  ],
+  "blockedAssertions": [
+    { "id": "VAL-DASH-011", "blockedBy": "Insufficient test data (only ~7 transactions instead of 100+ required)" },
+    { "id": "VAL-DASH-012", "blockedBy": "No transactions >24h old available; would need database timestamp manipulation" },
+    { "id": "VAL-DASH-014", "blockedBy": "Requires multi-instance Electron or network interception setup beyond current single-instance constraint" },
+    { "id": "VAL-DASH-018", "blockedBy": "Mobile viewport verification not performed within session time constraints" },
+    { "id": "VAL-DASH-019", "blockedBy": "Requires Lighthouse or dedicated accessibility scanning tool not available in current environment" },
+    { "id": "VAL-DASH-020", "blockedBy": "Requires controlled error injection into IPC/database layer" }
+  ],
+  "appliedUpdates": [
+    { "target": "src/main/kasDatabase.ts", "description": "Added CREATE TABLE IF NOT EXISTS for coa, aspek_kerja, blok, users reference tables to fix 'no such table: coa' errors on fresh installs", "source": "setup" },
+    { "target": "src/main/bankDatabase.ts", "description": "Added CREATE TABLE IF NOT EXISTS for coa, aspek_kerja, blok, users reference tables to fix 'no such table: coa' errors on fresh installs", "source": "setup" },
+    { "target": "src/main/gudangDatabase.ts", "description": "Added CREATE TABLE IF NOT EXISTS for coa, aspek_kerja, blok, users reference tables to fix 'no such table: coa' errors on fresh installs", "source": "setup" },
+    { "target": "user-testing.md", "description": "Confirmed Electron single-instance constraint prevents parallel validators; CDP port must differ from app's internal socket server port (9223 vs 9222)", "source": "setup" }
+  ],
+  "previousRound": null
+}

@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build output
+# Note: dist/ is committed to allow quick checkout without rebuild
+# Uncomment below to ignore:
+# dist/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage/
+.nyc_output/
+Key Github.txt
+.factory/monitor/.token
+release/

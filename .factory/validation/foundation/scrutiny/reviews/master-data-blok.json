@@ -1,0 +1,45 @@
+{
+  "featureId": "master-data-blok",
+  "reviewedAt": "2026-04-05T12:15:00.000Z",
+  "commitId": "36bda75",
+  "transcriptSkeletonReviewed": false,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "Implementation covers core CRUD, validation (Tahun Tanam 1900-current+1, Luas positive), search/filter by kode/nama/tahun/status, pagination, Excel import/export, and copyable tables. However, there is a MISSING FEATURE: delete validation to prevent deleting a Blok that is referenced in transactions (VAL-CROSS-008). The deleteBlok function contains a TODO comment but no actual check. This is a validation contract requirement and must be addressed.",
+    "issues": [
+      {
+        "file": "src/main/blokDatabase.ts",
+        "line": 282,
+        "severity": "blocking",
+        "description": "deleteBlok does not check if blok is used in any transactions before deletion. VAL-CROSS-008 requires that deletion be blocked if Blok is referenced in Kas/Bank/Gudang transactions. The function has a TODO comment but no implementation. This creates a data integrity risk where deleting a blok could break foreign key constraints in transaction tables."
+      },
+      {
+        "file": "src/main/blokDatabase.ts",
+        "line": 240,
+        "severity": "non_blocking",
+        "description": "Inconsistent string trimming: createBlok trims nama.trim() but updateBlok (line 258) does not trim nama before updating. This could lead to trailing whitespace inconsistencies in the database."
+      },
+      {
+        "file": "src/renderer/pages/BlokListPage.tsx",
+        "line": 145,
+        "severity": "non_blocking",
+        "description": "The onKeyDown handler for Ctrl+C copy is attached to a div with tabIndex=0. This may conflict with native browser copy behavior when user selects text with mouse and presses Ctrl+C. The Ctrl+A hint suggests full-table copy on Ctrl+A+Ctrl+C, which is standard browser behavior, but the Ctrl+C handler doesn't check if user has selected text via window.getSelection() - it only checks if selectedText is truthy and then copies that, otherwise copies full table."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The project uses sql.js (not better-sqlite3 as specified in AGENTS.md) for database operations. All three master database files (userDatabase.ts, coaDatabase.ts, blokDatabase.ts) use sql.js. This is a known deviation documented in the architecture but should be explicitly noted for future workers.",
+      "evidence": "All database files import initSqlJs from 'sql.js' instead of better-sqlite3 as specified in AGENTS.md architecture document."
+    },
+    {
+      "area": "conventions",
+      "observation": "No shared state gaps found. Worker followed established patterns for CRUD, IPC handlers, preload exposure, and component structure consistent with existing COA/Aspek Kerja modules.",
+      "evidence": "blokDatabase.ts structure mirrors coaDatabase.ts; IPC handlers in main.ts follow same pattern; BlokListPage.tsx and BlokFormPage.tsx follow same structure as equivalent COA pages."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Implementation is functionally complete for core CRUD, validation, search/filter, pagination, Excel import/export, and copyable tables. However, deleteBlok lacks transaction dependency checking required by VAL-CROSS-008. This is a blocking issue because deleting a referenced blok could break transaction records and violate the dual-approval data integrity rules. Additionally, a minor string trimming inconsistency exists between createBlok and updateBlok."
+}
