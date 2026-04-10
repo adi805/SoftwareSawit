@@ -57,29 +57,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Debug environment
-        run: |
-          Write-Host "Node version:"
-          node --version
-          Write-Host "npm version:"
-          npm --version
-        shell: pwsh
-
       - name: Install dependencies
         run: |
           if (Test-Path "package-lock.json") {
             npm ci --legacy-peer-deps
           } else {
             npm install --legacy-peer-deps
-          }
-        shell: pwsh
-
-      - name: Verify dependencies installed
-        run: |
-          if (Test-Path "node_modules") {
-            Write-Host "node_modules installed"
-          } else {
-            exit 1
           }
         shell: pwsh
 
@@ -101,91 +84,6 @@ jobs:
           New-Item -ItemType Directory -Force -Path "test-results/screenshots"
           New-Item -ItemType Directory -Force -Path "test-results/reports"
           New-Item -ItemType Directory -Force -Path "test-results/logs"
-        shell: pwsh
-
-      - name: Setup test database directories
-        run: |
-          $dbBase = "$env:APPDATA\SoftwareSawit"
-          $dbData = "$dbBase\data"
-          $dbMaster = "$dbData\master"
-          $dbYear = Get-Date -Format "yyyy"
-          
-          New-Item -ItemType Directory -Force -Path $dbMaster
-          New-Item -ItemType Directory -Force -Path "$dbData\kas\$dbYear"
-          New-Item -ItemType Directory -Force -Path "$dbData\bank\$dbYear"
-          New-Item -ItemType Directory -Force -Path "$dbData\gudang\$dbYear"
-          
-          Write-Host "Database directories created at $dbData"
-        shell: pwsh
-
-      - name: Seed test data
-        run: |
-          npm install --save-dev better-sqlite3 --legacy-peer-deps
-          
-          node << 'ENDOFNODE'
-          const Database = require('better-sqlite3');
-          const fs = require('fs');
-          const path = require('path');
-          
-          const base = process.env.APPDATA + '\\SoftwareSawit\\data';
-          const year = new Date().getFullYear().toString();
-          const month = String(new Date().getMonth() + 1).padStart(2, '0');
-          
-          function ensureDir(dir) {
-            if (!fs.existsSync(dir)) fs.mkdirSync(dir, {recursive:true});
-          }
-          
-          // COA database
-          ensureDir(base + '\\master');
-          const coaDb = new Database(base + '\\master\\coa.db');
-          coaDb.exec("CREATE TABLE IF NOT EXISTS coa (id TEXT, kode TEXT, nama TEXT, tipe TEXT, parent_id TEXT, status_aktif INTEGER DEFAULT 1, created_at TEXT, updated_at TEXT)");
-          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('1','1-1000','Kas','Aktiva Lancar',NULL,1,datetime('now'),datetime('now'))");
-          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('2','1-1100','Bank','Aktiva Lancar','1',1,datetime('now'),datetime('now'))");
-          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('3','1-1200','Piutang','Aktiva Lancar','1',1,datetime('now'),datetime('now'))");
-          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('4','2-1000','Utang Usaha','Utang Lancar',NULL,1,datetime('now'),datetime('now'))");
-          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('5','3-1000','Modal','Ekuitas',NULL,1,datetime('now'),datetime('now'))");
-          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('6','4-1000','Pendapatan','Pendapatan',NULL,1,datetime('now'),datetime('now'))");
-          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('7','5-1000','Beban Gaji','Beban',NULL,1,datetime('now'),datetime('now'))");
-          coaDb.exec("CREATE TABLE IF NOT EXISTS aspek_kerja (id TEXT, kode TEXT, nama TEXT, coa_id TEXT, jenis TEXT, status_aktif INTEGER DEFAULT 1)");
-          coaDb.exec("INSERT OR IGNORE INTO aspek_kerja VALUES ('1','AK01','Panen','1','Operasional',1)");
-          coaDb.exec("INSERT OR IGNORE INTO aspek_kerja VALUES ('2','AK02','Pemeliharaan','1','Operasional',1)");
-          coaDb.exec("INSERT OR IGNORE INTO aspek_kerja VALUES ('3','AK03','Transport','1','Operasional',1)");
-          coaDb.exec("CREATE TABLE IF NOT EXISTS blok (id TEXT, kode TEXT, nama TEXT, tahun_tanam INTEGER, luas REAL, pokok INTEGER, sph REAL, bulan_tanam TEXT)");
-          coaDb.exec("INSERT OR IGNORE INTO blok VALUES ('1','B01','Blok A',2025,10.5,1050,100,'Januari')");
-          coaDb.exec("INSERT OR IGNORE INTO blok VALUES ('2','B02','Blok B',2025,8.2,820,100,'Februari')");
-          coaDb.exec("INSERT OR IGNORE INTO blok VALUES ('3','B03','Blok C',2024,12.0,1200,100,'Maret')");
-          coaDb.close();
-          console.log("Seeded COA");
-          
-          // Kas
-          ensureDir(base + '\\kas\\' + year);
-          const kasDb = new Database(base + '\\kas\\' + year + '\\' + month + '.db');
-          kasDb.exec("CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, aspek_kerja_id TEXT, blok_id TEXT, status TEXT, created_by TEXT)");
-          kasDb.exec("INSERT OR IGNORE INTO transactions VALUES ('1','KAS-001','2026-01-15','Kas Masuk',500000,'Test Kas 1','1',NULL,NULL,'Pending Approval 1','admin')");
-          kasDb.exec("INSERT OR IGNORE INTO transactions VALUES ('2','KAS-002','2026-01-20','Kas Keluar',300000,'Test Kas 2','2',NULL,NULL,'Fully Approved','admin')");
-          kasDb.close();
-          console.log("Seeded Kas");
-          
-          // Bank
-          ensureDir(base + '\\bank\\' + year);
-          const bankDb = new Database(base + '\\bank\\' + year + '\\' + month + '.db');
-          bankDb.exec("CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, aspek_kerja_id TEXT, blok_id TEXT, status TEXT, created_by TEXT)");
-          bankDb.exec("INSERT OR IGNORE INTO transactions VALUES ('1','BANK-001','2026-01-15','Bank Masuk',500000,'Test Bank 1','1',NULL,NULL,'Pending Approval 1','admin')");
-          bankDb.exec("INSERT OR IGNORE INTO transactions VALUES ('2','BANK-002','2026-01-20','Bank Keluar',300000,'Test Bank 2','2',NULL,NULL,'Fully Approved','admin')");
-          bankDb.close();
-          console.log("Seeded Bank");
-          
-          // Gudang
-          ensureDir(base + '\\gudang\\' + year);
-          const gudangDb = new Database(base + '\\gudang\\' + year + '\\' + month + '.db');
-          gudangDb.exec("CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, aspek_kerja_id TEXT, blok_id TEXT, status TEXT, created_by TEXT)");
-          gudangDb.exec("INSERT OR IGNORE INTO transactions VALUES ('1','GUDANG-001','2026-01-15','Gudang Masuk',500000,'Test Gudang 1','1',NULL,NULL,'Pending Approval 1','admin')");
-          gudangDb.exec("INSERT OR IGNORE INTO transactions VALUES ('2','GUDANG-002','2026-01-20','Gudang Keluar',300000,'Test Gudang 2','2',NULL,NULL,'Fully Approved','admin')");
-          gudangDb.close();
-          console.log("Seeded Gudang");
-          
-          console.log("All test data seeded successfully!");
-          ENDOFNODE
         shell: pwsh
 
       - name: Run user tests
@@ -223,8 +121,6 @@ jobs:
             test-results/logs/
             test-results/*.json
             test-results/*.html
-            *.log
-            electron-*.log
           retention-days: 30
           if-no-files-found: warn
 
