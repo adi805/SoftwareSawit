@@ -75,11 +75,11 @@ jobs:
       - name: Install dependencies
         run: |
           if (Test-Path "package-lock.json") {
-            Write-Host "Found package-lock.json, using npm ci..."
-            npm ci
+            Write-Host "Found package-lock.json, using npm ci with --legacy-peer-deps..."
+            npm ci --legacy-peer-deps
           } else {
-            Write-Host "No package-lock.json found, using npm install..."
-            npm install
+            Write-Host "No package-lock.json found, using npm install with --legacy-peer-deps..."
+            npm install --legacy-peer-deps
           }
         shell: pwsh
 
