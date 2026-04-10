@@ -63,19 +63,13 @@ jobs:
           node --version
           Write-Host "npm version:"
           npm --version
-          Write-Host "Working directory:"
-          Get-Location
-          Write-Host "Directory contents:"
-          Get-ChildItem -Path "."
         shell: pwsh
 
       - name: Install dependencies
         run: |
           if (Test-Path "package-lock.json") {
-            Write-Host "Found package-lock.json, using npm ci with --legacy-peer-deps..."
             npm ci --legacy-peer-deps
           } else {
-            Write-Host "No package-lock.json found, using npm install with --legacy-peer-deps..."
             npm install --legacy-peer-deps
           }
         shell: pwsh
@@ -83,11 +77,8 @@ jobs:
       - name: Verify dependencies installed
         run: |
           if (Test-Path "node_modules") {
-            Write-Host "node_modules directory exists"
-            Write-Host "Installed packages count:"
-            (Get-ChildItem -Path "node_modules" -Directory).Count
+            Write-Host "node_modules installed"
           } else {
-            Write-Host "ERROR: node_modules directory not found!"
             exit 1
           }
         shell: pwsh
@@ -108,105 +99,93 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path "test-results"
           New-Item -ItemType Directory -Force -Path "test-results/screenshots"
-          New-Item -ItemType Directory -Force -Path "test-results/videos"
           New-Item -ItemType Directory -Force -Path "test-results/reports"
           New-Item -ItemType Directory -Force -Path "test-results/logs"
         shell: pwsh
 
-      - name: Setup test database
+      - name: Setup test database directories
         run: |
-          New-Item -ItemType Directory -Force -Path "data"
-          if (Test-Path "test/seed-data") {
-            Copy-Item -Path "test/seed-data/*" -Destination "data/" -Recurse -Force
-          }
-        shell: pwsh
-
-      - name: Seed test data
-        run: |
-          Write-Host "Seeding test data..."
           $dbBase = "$env:APPDATA\SoftwareSawit"
           $dbData = "$dbBase\data"
           $dbMaster = "$dbData\master"
           $dbYear = Get-Date -Format "yyyy"
-          $dbMonth = (Get-Date).Month.ToString("00")
-          $dbKas = "$dbData\kas\$dbYear"
-          $dbBank = "$dbData\bank\$dbYear"
-          $dbGudang = "$dbData\gudang\$dbYear"
           
           New-Item -ItemType Directory -Force -Path $dbMaster
-          New-Item -ItemType Directory -Force -Path $dbKas
-          New-Item -ItemType Directory -Force -Path $dbBank
-          New-Item -ItemType Directory -Force -Path $dbGudang
+          New-Item -ItemType Directory -Force -Path "$dbData\kas\$dbYear"
+          New-Item -ItemType Directory -Force -Path "$dbData\bank\$dbYear"
+          New-Item -ItemType Directory -Force -Path "$dbData\gudang\$dbYear"
           
-          # Install better-sqlite3 for seeding
+          Write-Host "Database directories created at $dbData"
+        shell: pwsh
+
+      - name: Seed test data
+        run: |
           npm install --save-dev better-sqlite3 --legacy-peer-deps
           
-          # Seed all databases using inline script
-          node -e "
-            const Database = require('better-sqlite3');
-            const fs = require('fs');
-            const path = require('path');
-            const base = process.env.APPDATA + '\\\\SoftwareSawit\\\\data';
-            
-            function ensureDir(dir) {
-              if (!fs.existsSync(dir)) fs.mkdirSync(dir, {recursive:true});
-            }
-            
-            // Seed COA (includes Aspek Kerja and Blok)
-            ensureDir(base + '\\\\master');
-            const coaDb = new Database(base + '\\\\master\\\\coa.db');
-            coaDb.exec('CREATE TABLE IF NOT EXISTS coa (id TEXT, kode TEXT, nama TEXT, tipe TEXT, parent_id TEXT, status_aktif INTEGER DEFAULT 1, created_at TEXT, updated_at TEXT)');
-            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('1','1-1000','Kas','Aktiva Lancar',NULL,1,datetime('now'),datetime('now'))\");
-            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('2','1-1100','Bank','Aktiva Lancar','1',1,datetime('now'),datetime('now'))\");
-            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('3','1-1200','Piutang','Aktiva Lancar','1',1,datetime('now'),datetime('now'))\");
-            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('4','2-1000','Utang Usaha','Utang Lancar',NULL,1,datetime('now'),datetime('now'))\");
-            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('5','3-1000','Modal','Ekuitas',NULL,1,datetime('now'),datetime('now'))\");
-            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('6','4-1000','Pendapatan','Pendapatan',NULL,1,datetime('now'),datetime('now'))\");
-            coaDb.exec(\"INSERT OR IGNORE INTO coa VALUES ('7','5-1000','Beban Gaji','Beban',NULL,1,datetime('now'),datetime('now'))\");
-            
-            coaDb.exec('CREATE TABLE IF NOT EXISTS aspek_kerja (id TEXT, kode TEXT, nama TEXT, coa_id TEXT, jenis TEXT, status_aktif INTEGER DEFAULT 1)');
-            coaDb.exec(\"INSERT OR IGNORE INTO aspek_kerja VALUES ('1','AK01','Panen','1','Operasional',1)\");
-            coaDb.exec(\"INSERT OR IGNORE INTO aspek_kerja VALUES ('2','AK02','Pemeliharaan','1','Operasional',1)\");
-            coaDb.exec(\"INSERT OR IGNORE INTO aspek_kerja VALUES ('3','AK03','Transport','1','Operasional',1)\");
-            
-            coaDb.exec('CREATE TABLE IF NOT EXISTS blok (id TEXT, kode TEXT, nama TEXT, tahun_tanam INTEGER, luas REAL, pokok INTEGER, sph REAL, bulan_tanam TEXT)');
-            coaDb.exec(\"INSERT OR IGNORE INTO blok VALUES ('1','B01','Blok A',2025,10.5,1050,100,'Januari')\");
-            coaDb.exec(\"INSERT OR IGNORE INTO blok VALUES ('2','B02','Blok B',2025,8.2,820,100,'Februari')\");
-            coaDb.exec(\"INSERT OR IGNORE INTO blok VALUES ('3','B03','Blok C',2024,12.0,1200,100,'Maret')\");
-            coaDb.close();
-            console.log('Seeded COA, Aspek Kerja, Blok');
-            
-            // Seed Kas
-            const year = new Date().getFullYear().toString();
-            const month = String(new Date().getMonth() + 1).padStart(2, '0');
-            ensureDir(base + '\\\\kas\\\\' + year);
-            const kasDb = new Database(base + '\\\\kas\\\\' + year + '\\\\' + month + '.db');
-            kasDb.exec('CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, aspek_kerja_id TEXT, blok_id TEXT, status TEXT, created_by TEXT)');
-            kasDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('1','KAS-001','2026-01-15','Kas Masuk',500000,'Test Kas 1','1',NULL,NULL,'Pending Approval 1','admin')\");
-            kasDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('2','KAS-002','2026-01-20','Kas Keluar',300000,'Test Kas 2','2',NULL,NULL,'Fully Approved','admin')\");
-            kasDb.close();
-            console.log('Seeded Kas');
-            
-            // Seed Bank
-            ensureDir(base + '\\\\bank\\\\' + year);
-            const bankDb = new Database(base + '\\\\bank\\\\' + year + '\\\\' + month + '.db');
-            bankDb.exec('CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, aspek_kerja_id TEXT, blok_id TEXT, status TEXT, created_by TEXT)');
-            bankDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('1','BANK-001','2026-01-15','Bank Masuk',500000,'Test Bank 1','1',NULL,NULL,'Pending Approval 1','admin')\");
-            bankDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('2','BANK-002','2026-01-20','Bank Keluar',300000,'Test Bank 2','2',NULL,NULL,'Fully Approved','admin')\");
-            bankDb.close();
-            console.log('Seeded Bank');
-            
-            // Seed Gudang
-            ensureDir(base + '\\\\gudang\\\\' + year);
-            const gudangDb = new Database(base + '\\\\gudang\\\\' + year + '\\\\' + month + '.db');
-            gudangDb.exec('CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, aspek_kerja_id TEXT, blok_id TEXT, status TEXT, created_by TEXT)');
-            gudangDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('1','GUDANG-001','2026-01-15','Gudang Masuk',500000,'Test Gudang 1','1',NULL,NULL,'Pending Approval 1','admin')\");
-            gudangDb.exec(\"INSERT OR IGNORE INTO transactions VALUES ('2','GUDANG-002','2026-01-20','Gudang Keluar',300000,'Test Gudang 2','2',NULL,NULL,'Fully Approved','admin')\");
-            gudangDb.close();
-            console.log('Seeded Gudang');
-            
-            console.log('Test data seeded successfully!');
-          "
+          node << 'ENDOFNODE'
+          const Database = require('better-sqlite3');
+          const fs = require('fs');
+          const path = require('path');
+          
+          const base = process.env.APPDATA + '\\SoftwareSawit\\data';
+          const year = new Date().getFullYear().toString();
+          const month = String(new Date().getMonth() + 1).padStart(2, '0');
+          
+          function ensureDir(dir) {
+            if (!fs.existsSync(dir)) fs.mkdirSync(dir, {recursive:true});
+          }
+          
+          // COA database
+          ensureDir(base + '\\master');
+          const coaDb = new Database(base + '\\master\\coa.db');
+          coaDb.exec("CREATE TABLE IF NOT EXISTS coa (id TEXT, kode TEXT, nama TEXT, tipe TEXT, parent_id TEXT, status_aktif INTEGER DEFAULT 1, created_at TEXT, updated_at TEXT)");
+          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('1','1-1000','Kas','Aktiva Lancar',NULL,1,datetime('now'),datetime('now'))");
+          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('2','1-1100','Bank','Aktiva Lancar','1',1,datetime('now'),datetime('now'))");
+          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('3','1-1200','Piutang','Aktiva Lancar','1',1,datetime('now'),datetime('now'))");
+          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('4','2-1000','Utang Usaha','Utang Lancar',NULL,1,datetime('now'),datetime('now'))");
+          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('5','3-1000','Modal','Ekuitas',NULL,1,datetime('now'),datetime('now'))");
+          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('6','4-1000','Pendapatan','Pendapatan',NULL,1,datetime('now'),datetime('now'))");
+          coaDb.exec("INSERT OR IGNORE INTO coa VALUES ('7','5-1000','Beban Gaji','Beban',NULL,1,datetime('now'),datetime('now'))");
+          coaDb.exec("CREATE TABLE IF NOT EXISTS aspek_kerja (id TEXT, kode TEXT, nama TEXT, coa_id TEXT, jenis TEXT, status_aktif INTEGER DEFAULT 1)");
+          coaDb.exec("INSERT OR IGNORE INTO aspek_kerja VALUES ('1','AK01','Panen','1','Operasional',1)");
+          coaDb.exec("INSERT OR IGNORE INTO aspek_kerja VALUES ('2','AK02','Pemeliharaan','1','Operasional',1)");
+          coaDb.exec("INSERT OR IGNORE INTO aspek_kerja VALUES ('3','AK03','Transport','1','Operasional',1)");
+          coaDb.exec("CREATE TABLE IF NOT EXISTS blok (id TEXT, kode TEXT, nama TEXT, tahun_tanam INTEGER, luas REAL, pokok INTEGER, sph REAL, bulan_tanam TEXT)");
+          coaDb.exec("INSERT OR IGNORE INTO blok VALUES ('1','B01','Blok A',2025,10.5,1050,100,'Januari')");
+          coaDb.exec("INSERT OR IGNORE INTO blok VALUES ('2','B02','Blok B',2025,8.2,820,100,'Februari')");
+          coaDb.exec("INSERT OR IGNORE INTO blok VALUES ('3','B03','Blok C',2024,12.0,1200,100,'Maret')");
+          coaDb.close();
+          console.log("Seeded COA");
+          
+          // Kas
+          ensureDir(base + '\\kas\\' + year);
+          const kasDb = new Database(base + '\\kas\\' + year + '\\' + month + '.db');
+          kasDb.exec("CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, aspek_kerja_id TEXT, blok_id TEXT, status TEXT, created_by TEXT)");
+          kasDb.exec("INSERT OR IGNORE INTO transactions VALUES ('1','KAS-001','2026-01-15','Kas Masuk',500000,'Test Kas 1','1',NULL,NULL,'Pending Approval 1','admin')");
+          kasDb.exec("INSERT OR IGNORE INTO transactions VALUES ('2','KAS-002','2026-01-20','Kas Keluar',300000,'Test Kas 2','2',NULL,NULL,'Fully Approved','admin')");
+          kasDb.close();
+          console.log("Seeded Kas");
+          
+          // Bank
+          ensureDir(base + '\\bank\\' + year);
+          const bankDb = new Database(base + '\\bank\\' + year + '\\' + month + '.db');
+          bankDb.exec("CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, aspek_kerja_id TEXT, blok_id TEXT, status TEXT, created_by TEXT)");
+          bankDb.exec("INSERT OR IGNORE INTO transactions VALUES ('1','BANK-001','2026-01-15','Bank Masuk',500000,'Test Bank 1','1',NULL,NULL,'Pending Approval 1','admin')");
+          bankDb.exec("INSERT OR IGNORE INTO transactions VALUES ('2','BANK-002','2026-01-20','Bank Keluar',300000,'Test Bank 2','2',NULL,NULL,'Fully Approved','admin')");
+          bankDb.close();
+          console.log("Seeded Bank");
+          
+          // Gudang
+          ensureDir(base + '\\gudang\\' + year);
+          const gudangDb = new Database(base + '\\gudang\\' + year + '\\' + month + '.db');
+          gudangDb.exec("CREATE TABLE IF NOT EXISTS transactions (id TEXT, transaction_number TEXT, transaction_date TEXT, transaction_type TEXT, amount REAL, description TEXT, coa_id TEXT, aspek_kerja_id TEXT, blok_id TEXT, status TEXT, created_by TEXT)");
+          gudangDb.exec("INSERT OR IGNORE INTO transactions VALUES ('1','GUDANG-001','2026-01-15','Gudang Masuk',500000,'Test Gudang 1','1',NULL,NULL,'Pending Approval 1','admin')");
+          gudangDb.exec("INSERT OR IGNORE INTO transactions VALUES ('2','GUDANG-002','2026-01-20','Gudang Keluar',300000,'Test Gudang 2','2',NULL,NULL,'Fully Approved','admin')");
+          gudangDb.close();
+          console.log("Seeded Gudang");
+          
+          console.log("All test data seeded successfully!");
+          ENDOFNODE
         shell: pwsh
 
       - name: Run user tests
@@ -217,12 +196,9 @@ jobs:
           $env:TEST_GROUP = "${{ matrix.test-group }}"
           $env:TEST_PATTERN = "${{ matrix.test-pattern }}"
           
-          # Check if test script exists
           if (Test-Path ".github/scripts/run-user-tests.js") {
-            Write-Host "Running test script..."
             node .github/scripts/run-user-tests.js
           } else {
-            Write-Host "Test script not found, creating dummy report..."
             New-Item -ItemType Directory -Force -Path "test-results/reports"
             @{ summary = @{ total = 0; passed = 0; failed = 0; skipped = 0; duration = 0 }; results = @() } | ConvertTo-Json | Out-File -FilePath "test-results/reports/test-report.json"
           }
@@ -233,9 +209,7 @@ jobs:
       - name: Capture final screenshots
         if: always()
         run: |
-          Get-ChildItem -Path "test-results" -Recurse | Where-Object { $_.Extension -eq ".png" } | ForEach-Object {
-            Write-Host "Screenshot saved: $($_.FullName)"
-          }
+          Get-ChildItem -Path "test-results" -Recurse -File | Where-Object { $_.Extension -eq ".png" }
         shell: pwsh
 
       - name: Upload test artifacts
@@ -261,13 +235,12 @@ jobs:
           $reportPath = "test-results/reports/test-report.json"
           if (Test-Path $reportPath) {
             $report = Get-Content $reportPath | ConvertFrom-Json
-            "total=$( $report.summary.total )" >> $env:GITHUB_OUTPUT
-            "passed=$( $report.summary.passed )" >> $env:GITHUB_OUTPUT
-            "failed=$( $report.summary.failed )" >> $env:GITHUB_OUTPUT
-            "skipped=$( $report.summary.skipped )" >> $env:GITHUB_OUTPUT
-            "duration=$( $report.summary.duration )" >> $env:GITHUB_OUTPUT
+            "total=$($report.summary.total)" >> $env:GITHUB_OUTPUT
+            "passed=$($report.summary.passed)" >> $env:GITHUB_OUTPUT
+            "failed=$($report.summary.failed)" >> $env:GITHUB_OUTPUT
+            "skipped=$($report.summary.skipped)" >> $env:GITHUB_OUTPUT
+            "duration=$($report.summary.duration)" >> $env:GITHUB_OUTPUT
           } else {
-            Write-Host "Test report not found!"
             "total=0" >> $env:GITHUB_OUTPUT
             "passed=0" >> $env:GITHUB_OUTPUT
             "failed=1" >> $env:GITHUB_OUTPUT
@@ -282,13 +255,11 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const path = require('path');
-            const reportPath = path.join(process.cwd(), 'test-results', 'reports', 'test-report.json');
+            const reportPath = 'test-results/reports/test-report.json';
             let summary = '## Test Results Unavailable';
             if (fs.existsSync(reportPath)) {
               const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
-              const { summary: reportSummary, results } = report;
-              summary = `## ${{ matrix.description }} Test Results\n\n| Metric | Count |\n|--------|-------|\n| Passed | ${reportSummary.passed} |\n| Failed | ${reportSummary.failed} |\n| Skipped | ${reportSummary.skipped} |\n| Total | ${reportSummary.total} |\n| Duration | ${(reportSummary.duration / 1000).toFixed(2)}s |`;
+              summary = `## Test Results\n\n| Passed | Failed | Skipped | Total |\n|--------|--------|---------|-------|\n| ${report.summary.passed} | ${report.summary.failed} | ${report.summary.skipped} | ${report.summary.total} |`;
             }
             await core.summary.addRaw(summary).write();
 
@@ -296,10 +267,7 @@ jobs:
         if: always()
         run: |
           $failed = "${{ steps.process_results.outputs.failed }}"
-          if ($failed -gt 0) {
-            Write-Host "Tests failed: $failed"
-            exit 1
-          }
+          if ($failed -gt 0) { exit 1 }
         shell: pwsh
 
   aggregate-results:
@@ -317,18 +285,7 @@ jobs:
       - name: Aggregate test reports
         run: |
           $aggregateReport = @{
-            timestamp = Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ"
-            run_id = "${{ github.run_id }}"
-            sha = "${{ github.sha }}"
-            ref = "${{ github.ref }}"
-            summary = @{
-              total = 0
-              passed = 0
-              failed = 0
-              skipped = 0
-              duration = 0
-            }
-            groups = @()
+            summary = @{ total = 0; passed = 0; failed = 0; skipped = 0 }
           }
           Get-ChildItem -Path "all-test-results" -Directory | ForEach-Object {
             $reportPath = Join-Path $_.FullName "reports/test-report.json"
@@ -338,19 +295,10 @@ jobs:
               $aggregateReport.summary.passed += $report.summary.passed
               $aggregateReport.summary.failed += $report.summary.failed
               $aggregateReport.summary.skipped += $report.summary.skipped
-              $aggregateReport.summary.duration += $report.summary.duration
-              $aggregateReport.groups += @{
-                name = $_.Name
-                summary = $report.summary
-                results = $report.results
-              }
             }
           }
-          $aggregateReport | ConvertTo-Json -Depth 10 | Out-File -FilePath "all-test-results/aggregate-report.json" -Encoding UTF8
-          Write-Host "Total tests: $($aggregateReport.summary.total)"
-          Write-Host "Passed: $($aggregateReport.summary.passed)"
-          Write-Host "Failed: $($aggregateReport.summary.failed)"
-          Write-Host "Skipped: $($aggregateReport.summary.skipped)"
+          $aggregateReport | ConvertTo-Json | Out-File -FilePath "all-test-results/aggregate-report.json"
+          Write-Host "Total: $($aggregateReport.summary.total) Passed: $($aggregateReport.summary.passed) Failed: $($aggregateReport.summary.failed)"
         shell: pwsh
 
       - name: Upload aggregate report
@@ -365,14 +313,12 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const path = require('path');
-            const reportPath = path.join(process.cwd(), 'all-test-results', 'aggregate-report.json');
+            const reportPath = 'all-test-results/aggregate-report.json';
             if (fs.existsSync(reportPath)) {
               const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
               const { summary } = report;
               const passRate = summary.total > 0 ? ((summary.passed / summary.total) * 100).toFixed(1) : 0;
-              const summary_text = `## Complete Test Suite Results\n\n| Metric | Count | Percentage |\n|--------|-------|------------|\n| Passed | ${summary.passed} | ${passRate}% |\n| Failed | ${summary.failed} | ${summary.total > 0 ? ((summary.failed / summary.total) * 100).toFixed(1) : 0}% |\n| Skipped | ${summary.skipped} | ${summary.total > 0 ? ((summary.skipped / summary.total) * 100).toFixed(1) : 0}% |\n| Total | ${summary.total} | 100% |\n| Duration | ${(summary.duration / 1000).toFixed(2)}s | - |`;
-              await core.summary.addRaw(summary_text).write();
+              await core.summary.addRaw(`## Summary\n\n| Passed | Failed | Skipped | Total | Pass Rate |\n|--------|--------|---------|-------|------------|\n| ${summary.passed} | ${summary.failed} | ${summary.skipped} | ${summary.total} | ${passRate}% |`).write();
             }
 
       - name: Check overall results
@@ -380,9 +326,6 @@ jobs:
           $reportPath = "all-test-results/aggregate-report.json"
           if (Test-Path $reportPath) {
             $report = Get-Content $reportPath | ConvertFrom-Json
-            if ($report.summary.failed -gt 0) {
-              Write-Host "Some tests failed!"
-              exit 1
-            }
+            if ($report.summary.failed -gt 0) { exit 1 }
           }
         shell: pwsh
