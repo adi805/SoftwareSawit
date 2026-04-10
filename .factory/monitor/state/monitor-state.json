@@ -1,5 +1,5 @@
 {
-  "lastCheck": "2026-04-10T03:39:32.133Z",
+  "lastCheck": "2026-04-10T04:44:52.807Z",
   "knownRuns": {
     "24220890246": {
       "id": 24220890246,
@@ -55,10 +55,32 @@
       "url": "https://github.com/adi805/SoftwareSawit/actions/runs/24222528969",
       "createdAt": "2026-04-10T01:57:33Z",
       "updatedAt": "2026-04-10T02:04:04Z"
+    },
+    "24225211312": {
+      "id": 24225211312,
+      "status": "completed",
+      "conclusion": "failure",
+      "runNumber": 10,
+      "branch": "main",
+      "commit": "fix(tests): Add data-testid attributes and update ",
+      "url": "https://github.com/adi805/SoftwareSawit/actions/runs/24225211312",
+      "createdAt": "2026-04-10T03:43:10Z",
+      "updatedAt": "2026-04-10T03:50:11Z"
+    },
+    "24226050691": {
+      "id": 24226050691,
+      "status": "completed",
+      "conclusion": "failure",
+      "runNumber": 11,
+      "branch": "main",
+      "commit": "fix(ci): Remove verbose Electron debug env vars",
+      "url": "https://github.com/adi805/SoftwareSawit/actions/runs/24226050691",
+      "createdAt": "2026-04-10T04:14:56Z",
+      "updatedAt": "2026-04-10T04:20:42Z"
     }
   },
-  "lastRunId": 24222528969,
-  "totalChecks": 33,
-  "notificationsSent": 5,
+  "lastRunId": 24226050691,
+  "totalChecks": 46,
+  "notificationsSent": 9,
   "startTime": "2026-04-10T01:03:46.845Z"
 }

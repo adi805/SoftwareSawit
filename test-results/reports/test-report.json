@@ -1,0 +1,1322 @@
+{
+  "summary": {
+    "total": 106,
+    "passed": 93,
+    "failed": 10,
+    "skipped": 3,
+    "duration": 188638,
+    "startTime": "2026-04-10T04:32:09.218Z",
+    "endTime": "2026-04-10T04:35:17.856Z"
+  },
+  "results": [
+    {
+      "id": "test-1",
+      "name": "VAL-USER-050: Login page renders correctly",
+      "status": "passed",
+      "error": null,
+      "duration": 303,
+      "timestamp": "2026-04-10T04:32:14.323Z",
+      "area": "Authentication",
+      "group": "all"
+    },
+    {
+      "id": "test-2",
+      "name": "VAL-USER-003: Login form has required fields",
+      "status": "passed",
+      "error": null,
+      "duration": 19,
+      "timestamp": "2026-04-10T04:32:14.342Z",
+      "area": "Authentication",
+      "group": "all"
+    },
+    {
+      "id": "test-3",
+      "name": "VAL-USER-051: Invalid credentials show error",
+      "status": "failed",
+      "error": "Expected error message or to stay on login page",
+      "duration": 1801,
+      "timestamp": "2026-04-10T04:32:16.295Z",
+      "area": "Authentication",
+      "group": "all"
+    },
+    {
+      "id": "test-4",
+      "name": "VAL-USER-050: Valid login redirects to dashboard",
+      "status": "passed",
+      "error": null,
+      "duration": 32298,
+      "timestamp": "2026-04-10T04:32:48.594Z",
+      "area": "Authentication",
+      "group": "all"
+    },
+    {
+      "id": "test-5",
+      "name": "VAL-USER-090: Navigate to User Management",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:32:48.599Z",
+      "area": "Authentication",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-6",
+      "name": "VAL-USER-001: Create user form accessible",
+      "status": "passed",
+      "error": null,
+      "duration": 5,
+      "timestamp": "2026-04-10T04:32:48.604Z",
+      "area": "Authentication",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-7",
+      "name": "VAL-USER-007: All 5 roles available in dropdown",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:32:48.608Z",
+      "area": "Authentication",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-8",
+      "name": "VAL-USER-002: Duplicate username validation",
+      "status": "passed",
+      "error": null,
+      "duration": 0,
+      "timestamp": "2026-04-10T04:32:48.609Z",
+      "area": "Authentication",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-9",
+      "name": "VAL-USER-030: Preview permissions on role selection",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:32:48.613Z",
+      "area": "Authentication",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-10",
+      "name": "VAL-USER-090: User list displays with columns",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:32:48.618Z",
+      "area": "Authentication",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-11",
+      "name": "VAL-USER-040: Change password form accessible",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:32:48.623Z",
+      "area": "Authentication",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-12",
+      "name": "VAL-USER-005: Password strength indicator",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:32:48.628Z",
+      "area": "Authentication",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-13",
+      "name": "VAL-USER-060: Logout functionality works",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:32:48.633Z",
+      "area": "Authentication",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-14",
+      "name": "VAL-USER-071: Session validation",
+      "status": "passed",
+      "error": null,
+      "duration": 3309,
+      "timestamp": "2026-04-10T04:32:51.943Z",
+      "area": "Authentication",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-15",
+      "name": "VAL-USER-074: Active sessions viewable",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:32:51.948Z",
+      "area": "Authentication",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-16",
+      "name": "VAL-USER-080: Activity log accessible",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:32:51.953Z",
+      "area": "Authentication",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-17",
+      "name": "VAL-USER-100: Export user list button",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:32:51.956Z",
+      "area": "Authentication",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-18",
+      "name": "VAL-MASTER-COAS-001: Display COA table with all columns",
+      "status": "failed",
+      "error": "locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"coa-table\"]').first() to be visible\n",
+      "duration": 35036,
+      "timestamp": "2026-04-10T04:33:56.999Z",
+      "area": "MasterData",
+      "group": "all"
+    },
+    {
+      "id": "test-19",
+      "name": "VAL-MASTER-COAS-002: COA table pagination",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:33:57.003Z",
+      "area": "MasterData",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-20",
+      "name": "VAL-MASTER-COAS-010: Add COA with valid data",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:33:57.007Z",
+      "area": "MasterData",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-21",
+      "name": "VAL-MASTER-COAS-011: Kode field validation - required",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:33:57.012Z",
+      "area": "MasterData",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-22",
+      "name": "VAL-MASTER-COAS-050: Search by Kode",
+      "status": "passed",
+      "error": null,
+      "duration": 5,
+      "timestamp": "2026-04-10T04:33:57.017Z",
+      "area": "MasterData",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-23",
+      "name": "VAL-MASTER-COAS-060: Filter by Tipe",
+      "status": "skipped",
+      "error": "locator.count: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'select:has-option(\"Aktiva\")' is not a valid selector.\n    at query (<anonymous>:5261:41)\n    at <anonymous>:5271:7\n    at SelectorEvaluatorImpl._cached (<anonymous>:5048:20)\n    at SelectorEvaluatorImpl._queryCSS (<anonymous>:5258:17)\n    at SelectorEvaluatorImpl._querySimple (<anonymous>:5138:19)\n    at <anonymous>:5086:29\n    at SelectorEvaluatorImpl._cached (<anonymous>:5048:20)\n    at SelectorEvaluatorImpl.query (<anonymous>:5079:19)\n    at Object.query (<anonymous>:5293:44)\n    at <anonymous>:5251:21",
+      "duration": 7,
+      "timestamp": "2026-04-10T04:33:58.280Z",
+      "area": "MasterData",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-24",
+      "name": "VAL-MASTER-EXP-001: Export Excel button visible",
+      "status": "failed",
+      "error": "Export Excel button not found",
+      "duration": 3,
+      "timestamp": "2026-04-10T04:34:28.295Z",
+      "area": "MasterData",
+      "group": "all"
+    },
+    {
+      "id": "test-25",
+      "name": "VAL-MASTER-IMP-001: Import Excel button visible",
+      "status": "failed",
+      "error": "Import Excel button not found",
+      "duration": 3,
+      "timestamp": "2026-04-10T04:34:29.537Z",
+      "area": "MasterData",
+      "group": "all"
+    },
+    {
+      "id": "test-26",
+      "name": "VAL-MASTER-AK-001: Display Aspek Kerja table",
+      "status": "failed",
+      "error": "locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"aspek-kerja-table\"]').first() to be visible\n",
+      "duration": 19130,
+      "timestamp": "2026-04-10T04:34:48.834Z",
+      "area": "MasterData",
+      "group": "all"
+    },
+    {
+      "id": "test-27",
+      "name": "VAL-MASTER-AK-010: Add Aspek Kerja with COA linkage",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:34:48.838Z",
+      "area": "MasterData",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-28",
+      "name": "VAL-MASTER-BLOK-001: Display Blok table",
+      "status": "failed",
+      "error": "locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"blok-table\"]').first() to be visible\n",
+      "duration": 5175,
+      "timestamp": "2026-04-10T04:34:54.176Z",
+      "area": "MasterData",
+      "group": "all"
+    },
+    {
+      "id": "test-29",
+      "name": "VAL-MASTER-BLOK-010: Add Blok with validation",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:34:54.180Z",
+      "area": "MasterData",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-30",
+      "name": "VAL-MASTER-IMP-010: Select valid Excel file",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:34:54.184Z",
+      "area": "MasterData",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-31",
+      "name": "VAL-MASTER-IMP-020: Preview shows first 10 rows",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:34:54.188Z",
+      "area": "MasterData",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-32",
+      "name": "VAL-MASTER-COPY-001: Copy single row",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:34:54.191Z",
+      "area": "MasterData",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-33",
+      "name": "VAL-MASTER-EDGE-001: Empty COA table state",
+      "status": "passed",
+      "error": null,
+      "duration": 2,
+      "timestamp": "2026-04-10T04:34:54.195Z",
+      "area": "MasterData",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-34",
+      "name": "VAL-MASTER-PERF-001: Table load time",
+      "status": "failed",
+      "error": "locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('table, .data-table').first() to be visible\n",
+      "duration": 5010,
+      "timestamp": "2026-04-10T04:34:59.391Z",
+      "area": "MasterData",
+      "group": "all"
+    },
+    {
+      "id": "test-35",
+      "name": "VAL-KAS-022: Kas transaction list displays",
+      "status": "failed",
+      "error": "locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"kas-table\"]').first() to be visible\n",
+      "duration": 5181,
+      "timestamp": "2026-04-10T04:35:04.737Z",
+      "area": "Kas",
+      "group": "all"
+    },
+    {
+      "id": "test-36",
+      "name": "VAL-KAS-028: Filter by transaction type",
+      "status": "skipped",
+      "error": "locator.count: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'select:has-option(\"Masuk\")' is not a valid selector.\n    at query (<anonymous>:5261:41)\n    at <anonymous>:5271:7\n    at SelectorEvaluatorImpl._cached (<anonymous>:5048:20)\n    at SelectorEvaluatorImpl._queryCSS (<anonymous>:5258:17)\n    at SelectorEvaluatorImpl._querySimple (<anonymous>:5138:19)\n    at <anonymous>:5086:29\n    at SelectorEvaluatorImpl._cached (<anonymous>:5048:20)\n    at SelectorEvaluatorImpl.query (<anonymous>:5079:19)\n    at Object.query (<anonymous>:5293:44)\n    at <anonymous>:5251:21",
+      "duration": 5,
+      "timestamp": "2026-04-10T04:35:04.898Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-37",
+      "name": "VAL-KAS-029: Filter by approval status",
+      "status": "skipped",
+      "error": "locator.count: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'select:has-option(\"Pending\")' is not a valid selector.\n    at query (<anonymous>:5261:41)\n    at <anonymous>:5271:7\n    at SelectorEvaluatorImpl._cached (<anonymous>:5048:20)\n    at SelectorEvaluatorImpl._queryCSS (<anonymous>:5258:17)\n    at SelectorEvaluatorImpl._querySimple (<anonymous>:5138:19)\n    at <anonymous>:5086:29\n    at SelectorEvaluatorImpl._cached (<anonymous>:5048:20)\n    at SelectorEvaluatorImpl.query (<anonymous>:5079:19)\n    at Object.query (<anonymous>:5293:44)\n    at <anonymous>:5251:21",
+      "duration": 5,
+      "timestamp": "2026-04-10T04:35:05.086Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-38",
+      "name": "VAL-KAS-054: COA name displayed in transactions",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:35:05.090Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-39",
+      "name": "VAL-KAS-001: Create Kas Masuk form",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:35:05.094Z",
+      "area": "Kas",
+      "group": "all"
+    },
+    {
+      "id": "test-40",
+      "name": "VAL-KAS-002: Create Kas Keluar form",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:05.097Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-41",
+      "name": "VAL-KAS-003: Form validation for required fields",
+      "status": "passed",
+      "error": null,
+      "duration": 858,
+      "timestamp": "2026-04-10T04:35:05.956Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-42",
+      "name": "VAL-KAS-001: Submit Kas transaction",
+      "status": "passed",
+      "error": null,
+      "duration": 185,
+      "timestamp": "2026-04-10T04:35:06.141Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-43",
+      "name": "VAL-KAS-011: Edit pending transaction",
+      "status": "passed",
+      "error": null,
+      "duration": 6,
+      "timestamp": "2026-04-10T04:35:06.148Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-44",
+      "name": "VAL-KAS-013: Fully approved edit restriction",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:06.151Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-45",
+      "name": "VAL-KAS-017: Delete pending transaction",
+      "status": "passed",
+      "error": null,
+      "duration": 6,
+      "timestamp": "2026-04-10T04:35:06.158Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-46",
+      "name": "VAL-KAS-060: Copy transaction",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:06.161Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-47",
+      "name": "VAL-KAS-037: Approver 1 approve button",
+      "status": "passed",
+      "error": null,
+      "duration": 5,
+      "timestamp": "2026-04-10T04:35:06.167Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-48",
+      "name": "VAL-KAS-042: Cannot approve own transaction check",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:06.171Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-49",
+      "name": "VAL-KAS-044: Reject requires reason",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:35:06.175Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-50",
+      "name": "VAL-KAS-045: Approval history visible",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:06.179Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-51",
+      "name": "VAL-KAS-047: Export to Excel button",
+      "status": "passed",
+      "error": null,
+      "duration": 2,
+      "timestamp": "2026-04-10T04:35:06.182Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-52",
+      "name": "VAL-KAS-048: Import from Excel button",
+      "status": "passed",
+      "error": null,
+      "duration": 2,
+      "timestamp": "2026-04-10T04:35:06.185Z",
+      "area": "Kas",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-53",
+      "name": "VAL-BANK-021: Bank transaction list displays",
+      "status": "failed",
+      "error": "locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"bank-table\"]').first() to be visible\n",
+      "duration": 5184,
+      "timestamp": "2026-04-10T04:35:11.531Z",
+      "area": "Bank",
+      "group": "all"
+    },
+    {
+      "id": "test-54",
+      "name": "VAL-BANK: Bank account selector",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:11.535Z",
+      "area": "Bank",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-55",
+      "name": "VAL-BANK-001: Create Bank Masuk form",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:11.539Z",
+      "area": "Bank",
+      "group": "all"
+    },
+    {
+      "id": "test-56",
+      "name": "VAL-BANK-002: Create Bank Keluar form",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:11.542Z",
+      "area": "Bank",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-57",
+      "name": "VAL-BANK-001: Fill Bank transaction form",
+      "status": "passed",
+      "error": null,
+      "duration": 168,
+      "timestamp": "2026-04-10T04:35:11.710Z",
+      "area": "Bank",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-58",
+      "name": "VAL-BANK-012: Edit pending transaction",
+      "status": "passed",
+      "error": null,
+      "duration": 5,
+      "timestamp": "2026-04-10T04:35:11.716Z",
+      "area": "Bank",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-59",
+      "name": "VAL-BANK-014: Cannot edit fully approved",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:11.719Z",
+      "area": "Bank",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-60",
+      "name": "VAL-BANK-063: Copy transaction",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:11.722Z",
+      "area": "Bank",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-61",
+      "name": "VAL-BANK-037: Approver 1 approve button",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:35:11.727Z",
+      "area": "Bank",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-62",
+      "name": "VAL-BANK-042: Cannot approve own transaction",
+      "status": "passed",
+      "error": null,
+      "duration": 2,
+      "timestamp": "2026-04-10T04:35:11.730Z",
+      "area": "Bank",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-63",
+      "name": "VAL-BANK-041: Approver configuration validation",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:11.734Z",
+      "area": "Bank",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-64",
+      "name": "VAL-BANK-047: Export to Excel",
+      "status": "passed",
+      "error": null,
+      "duration": 6,
+      "timestamp": "2026-04-10T04:35:11.740Z",
+      "area": "Bank",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-65",
+      "name": "VAL-BANK-048: Import from Excel",
+      "status": "passed",
+      "error": null,
+      "duration": 2,
+      "timestamp": "2026-04-10T04:35:11.742Z",
+      "area": "Bank",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-66",
+      "name": "VAL-BANK-054: Export includes all fields",
+      "status": "passed",
+      "error": null,
+      "duration": 0,
+      "timestamp": "2026-04-10T04:35:11.743Z",
+      "area": "Bank",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-67",
+      "name": "VAL-GUDANG-022: Gudang transaction list displays",
+      "status": "failed",
+      "error": "locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('[data-testid=\"gudang-table\"]').first() to be visible\n",
+      "duration": 5180,
+      "timestamp": "2026-04-10T04:35:17.098Z",
+      "area": "Gudang",
+      "group": "all"
+    },
+    {
+      "id": "test-68",
+      "name": "VAL-GUDANG-026: Stock display",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.102Z",
+      "area": "Gudang",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-69",
+      "name": "VAL-GUDANG-001: Create Gudang Masuk form",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.106Z",
+      "area": "Gudang",
+      "group": "all"
+    },
+    {
+      "id": "test-70",
+      "name": "VAL-GUDANG-002: Create Gudang Keluar form",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:35:17.110Z",
+      "area": "Gudang",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-71",
+      "name": "VAL-GUDANG-001: Fill Gudang transaction form",
+      "status": "passed",
+      "error": null,
+      "duration": 193,
+      "timestamp": "2026-04-10T04:35:17.303Z",
+      "area": "Gudang",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-72",
+      "name": "VAL-GUDANG-012: Edit pending transaction",
+      "status": "passed",
+      "error": null,
+      "duration": 6,
+      "timestamp": "2026-04-10T04:35:17.310Z",
+      "area": "Gudang",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-73",
+      "name": "VAL-GUDANG-014: Cannot edit fully approved",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.313Z",
+      "area": "Gudang",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-74",
+      "name": "VAL-GUDANG-064: Copy transaction",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.316Z",
+      "area": "Gudang",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-75",
+      "name": "VAL-GUDANG-038: Approver 1 approve button",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:35:17.320Z",
+      "area": "Gudang",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-76",
+      "name": "VAL-GUDANG-039: Approver 2 approve button",
+      "status": "passed",
+      "error": null,
+      "duration": 2,
+      "timestamp": "2026-04-10T04:35:17.323Z",
+      "area": "Gudang",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-77",
+      "name": "VAL-GUDANG-043: Cannot approve own transaction",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.327Z",
+      "area": "Gudang",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-78",
+      "name": "VAL-GUDANG-042: Approver configuration validation",
+      "status": "passed",
+      "error": null,
+      "duration": 0,
+      "timestamp": "2026-04-10T04:35:17.327Z",
+      "area": "Gudang",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-79",
+      "name": "VAL-GUDANG-048: Export to Excel",
+      "status": "passed",
+      "error": null,
+      "duration": 5,
+      "timestamp": "2026-04-10T04:35:17.333Z",
+      "area": "Gudang",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-80",
+      "name": "VAL-GUDANG-049: Import from Excel",
+      "status": "passed",
+      "error": null,
+      "duration": 2,
+      "timestamp": "2026-04-10T04:35:17.336Z",
+      "area": "Gudang",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-81",
+      "name": "VAL-SYNC-001: Sync settings page accessible",
+      "status": "passed",
+      "error": null,
+      "duration": 170,
+      "timestamp": "2026-04-10T04:35:17.508Z",
+      "area": "Sync",
+      "group": "all"
+    },
+    {
+      "id": "test-82",
+      "name": "VAL-ADMIN-001: Module-specific sync paths",
+      "status": "passed",
+      "error": null,
+      "duration": 14,
+      "timestamp": "2026-04-10T04:35:17.523Z",
+      "area": "Sync",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-83",
+      "name": "VAL-SYNC-002: Path validation",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.526Z",
+      "area": "Sync",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-84",
+      "name": "VAL-SYNC-010: Connection status indicator",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.530Z",
+      "area": "Sync",
+      "group": "all"
+    },
+    {
+      "id": "test-85",
+      "name": "VAL-SYNC-050: Connection notification area",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.533Z",
+      "area": "Sync",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-86",
+      "name": "VAL-SYNC-061: Offline indicator",
+      "status": "passed",
+      "error": null,
+      "duration": 2,
+      "timestamp": "2026-04-10T04:35:17.535Z",
+      "area": "Sync",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-87",
+      "name": "VAL-SYNC-021: Sync queue status",
+      "status": "passed",
+      "error": null,
+      "duration": 2,
+      "timestamp": "2026-04-10T04:35:17.538Z",
+      "area": "Sync",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-88",
+      "name": "VAL-SYNC-030: Manual sync button",
+      "status": "passed",
+      "error": null,
+      "duration": 2,
+      "timestamp": "2026-04-10T04:35:17.541Z",
+      "area": "Sync",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-89",
+      "name": "VAL-SYNC-040: Conflict detection area",
+      "status": "passed",
+      "error": null,
+      "duration": 2,
+      "timestamp": "2026-04-10T04:35:17.544Z",
+      "area": "Sync",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-90",
+      "name": "VAL-SYNC-051: Sync progress indicator",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.548Z",
+      "area": "Sync",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-91",
+      "name": "VAL-SYNC-060: Offline functionality check",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.551Z",
+      "area": "Sync",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-92",
+      "name": "VAL-ADMIN-010: All location statuses",
+      "status": "passed",
+      "error": null,
+      "duration": 8,
+      "timestamp": "2026-04-10T04:35:17.559Z",
+      "area": "Sync",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-93",
+      "name": "VAL-ADMIN-020: Admin settings visible",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.562Z",
+      "area": "Sync",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-94",
+      "name": "VAL-ADMIN-022: View/Edit mode toggle",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.566Z",
+      "area": "Sync",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-95",
+      "name": "VAL-CROSS-001: Module independence",
+      "status": "passed",
+      "error": null,
+      "duration": 8,
+      "timestamp": "2026-04-10T04:35:17.575Z",
+      "area": "CrossArea",
+      "group": "all"
+    },
+    {
+      "id": "test-96",
+      "name": "VAL-CROSS-002: Database separation",
+      "status": "passed",
+      "error": null,
+      "duration": 0,
+      "timestamp": "2026-04-10T04:35:17.575Z",
+      "area": "CrossArea",
+      "group": "all"
+    },
+    {
+      "id": "test-97",
+      "name": "VAL-CROSS-006: COA deletion protection",
+      "status": "passed",
+      "error": null,
+      "duration": 5,
+      "timestamp": "2026-04-10T04:35:17.581Z",
+      "area": "CrossArea",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-98",
+      "name": "VAL-CROSS-007: Aspek Kerja deletion protection",
+      "status": "passed",
+      "error": null,
+      "duration": 2,
+      "timestamp": "2026-04-10T04:35:17.584Z",
+      "area": "CrossArea",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-99",
+      "name": "VAL-CROSS-011: Master data consistency",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.587Z",
+      "area": "CrossArea",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-100",
+      "name": "VAL-CROSS-013: Kas report generation",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.590Z",
+      "area": "CrossArea",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-101",
+      "name": "VAL-CROSS-017: Report includes only approved",
+      "status": "passed",
+      "error": null,
+      "duration": 0,
+      "timestamp": "2026-04-10T04:35:17.591Z",
+      "area": "CrossArea",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-102",
+      "name": "VAL-CROSS-020: Report text copyable",
+      "status": "passed",
+      "error": null,
+      "duration": 4,
+      "timestamp": "2026-04-10T04:35:17.595Z",
+      "area": "CrossArea",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-103",
+      "name": "VAL-CROSS-023: Period switching",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.598Z",
+      "area": "CrossArea",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-104",
+      "name": "VAL-CROSS-026: Module-specific approval permissions",
+      "status": "passed",
+      "error": null,
+      "duration": 8,
+      "timestamp": "2026-04-10T04:35:17.607Z",
+      "area": "CrossArea",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-105",
+      "name": "VAL-CROSS-027: Module visibility by permission",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.610Z",
+      "area": "CrossArea",
+      "group": "all",
+      "optional": true
+    },
+    {
+      "id": "test-106",
+      "name": "VAL-CROSS-028: Admin full access",
+      "status": "passed",
+      "error": null,
+      "duration": 3,
+      "timestamp": "2026-04-10T04:35:17.613Z",
+      "area": "CrossArea",
+      "group": "all",
+      "optional": true
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "login_page_loaded",
+      "filename": "_login_page_loaded_1775795534031.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_login_page_loaded_1775795534031.png",
+      "timestamp": "2026-04-10T04:32:14.322Z",
+      "area": ""
+    },
+    {
+      "name": "invalid_login_error",
+      "filename": "_invalid_login_error_1775795535966.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_invalid_login_error_1775795535966.png",
+      "timestamp": "2026-04-10T04:32:16.138Z",
+      "area": ""
+    },
+    {
+      "name": "failure_VAL-USER-051: Invalid credentials show error",
+      "filename": "_failure_VAL-USER-051: Invalid credentials show error_1775795536144.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_failure_VAL-USER-051: Invalid credentials show error_1775795536144.png",
+      "timestamp": "2026-04-10T04:32:16.295Z",
+      "area": ""
+    },
+    {
+      "name": "failure_VAL-MASTER-COAS-060: Filter by Tipe",
+      "filename": "_failure_VAL-MASTER-COAS-060: Filter by Tipe_1775795637025.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_failure_VAL-MASTER-COAS-060: Filter by Tipe_1775795637025.png",
+      "timestamp": "2026-04-10T04:33:58.279Z",
+      "area": ""
+    },
+    {
+      "name": "failure_VAL-MASTER-IMP-001: Import Excel button visible",
+      "filename": "_failure_VAL-MASTER-IMP-001: Import Excel button visible_1775795668299.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_failure_VAL-MASTER-IMP-001: Import Excel button visible_1775795668299.png",
+      "timestamp": "2026-04-10T04:34:29.536Z",
+      "area": ""
+    },
+    {
+      "name": "aspek_kerja_table_view",
+      "filename": "_aspek_kerja_table_view_1775795669541.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_aspek_kerja_table_view_1775795669541.png",
+      "timestamp": "2026-04-10T04:34:43.658Z",
+      "area": ""
+    },
+    {
+      "name": "failure_VAL-MASTER-AK-001: Display Aspek Kerja table",
+      "filename": "_failure_VAL-MASTER-AK-001: Display Aspek Kerja table_1775795688667.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_failure_VAL-MASTER-AK-001: Display Aspek Kerja table_1775795688667.png",
+      "timestamp": "2026-04-10T04:34:48.833Z",
+      "area": ""
+    },
+    {
+      "name": "blok_table_view",
+      "filename": "_blok_table_view_1775795688843.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_blok_table_view_1775795688843.png",
+      "timestamp": "2026-04-10T04:34:49.003Z",
+      "area": ""
+    },
+    {
+      "name": "failure_VAL-MASTER-BLOK-001: Display Blok table",
+      "filename": "_failure_VAL-MASTER-BLOK-001: Display Blok table_1775795694014.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_failure_VAL-MASTER-BLOK-001: Display Blok table_1775795694014.png",
+      "timestamp": "2026-04-10T04:34:54.176Z",
+      "area": ""
+    },
+    {
+      "name": "failure_VAL-MASTER-PERF-001: Table load time",
+      "filename": "_failure_VAL-MASTER-PERF-001: Table load time_1775795699205.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_failure_VAL-MASTER-PERF-001: Table load time_1775795699205.png",
+      "timestamp": "2026-04-10T04:34:59.390Z",
+      "area": ""
+    },
+    {
+      "name": "kas_page_loaded",
+      "filename": "_kas_page_loaded_1775795699395.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_kas_page_loaded_1775795699395.png",
+      "timestamp": "2026-04-10T04:34:59.562Z",
+      "area": ""
+    },
+    {
+      "name": "failure_VAL-KAS-022: Kas transaction list displays",
+      "filename": "_failure_VAL-KAS-022: Kas transaction list displays_1775795704573.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_failure_VAL-KAS-022: Kas transaction list displays_1775795704573.png",
+      "timestamp": "2026-04-10T04:35:04.736Z",
+      "area": ""
+    },
+    {
+      "name": "failure_VAL-KAS-028: Filter by transaction type",
+      "filename": "_failure_VAL-KAS-028: Filter by transaction type_1775795704742.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_failure_VAL-KAS-028: Filter by transaction type_1775795704742.png",
+      "timestamp": "2026-04-10T04:35:04.898Z",
+      "area": ""
+    },
+    {
+      "name": "failure_VAL-KAS-029: Filter by approval status",
+      "filename": "_failure_VAL-KAS-029: Filter by approval status_1775795704904.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_failure_VAL-KAS-029: Filter by approval status_1775795704904.png",
+      "timestamp": "2026-04-10T04:35:05.085Z",
+      "area": ""
+    },
+    {
+      "name": "kas_validation_error",
+      "filename": "_kas_validation_error_1775795705791.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_kas_validation_error_1775795705791.png",
+      "timestamp": "2026-04-10T04:35:05.951Z",
+      "area": ""
+    },
+    {
+      "name": "kas_form_filled",
+      "filename": "_kas_form_filled_1775795705968.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_kas_form_filled_1775795705968.png",
+      "timestamp": "2026-04-10T04:35:06.136Z",
+      "area": ""
+    },
+    {
+      "name": "bank_page_loaded",
+      "filename": "_bank_page_loaded_1775795706189.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_bank_page_loaded_1775795706189.png",
+      "timestamp": "2026-04-10T04:35:06.360Z",
+      "area": ""
+    },
+    {
+      "name": "failure_VAL-BANK-021: Bank transaction list displays",
+      "filename": "_failure_VAL-BANK-021: Bank transaction list displays_1775795711370.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_failure_VAL-BANK-021: Bank transaction list displays_1775795711370.png",
+      "timestamp": "2026-04-10T04:35:11.531Z",
+      "area": ""
+    },
+    {
+      "name": "bank_form_filled",
+      "filename": "_bank_form_filled_1775795711553.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_bank_form_filled_1775795711553.png",
+      "timestamp": "2026-04-10T04:35:11.705Z",
+      "area": ""
+    },
+    {
+      "name": "gudang_page_loaded",
+      "filename": "_gudang_page_loaded_1775795711747.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_gudang_page_loaded_1775795711747.png",
+      "timestamp": "2026-04-10T04:35:11.912Z",
+      "area": ""
+    },
+    {
+      "name": "failure_VAL-GUDANG-022: Gudang transaction list displays",
+      "filename": "_failure_VAL-GUDANG-022: Gudang transaction list displays_1775795716924.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_failure_VAL-GUDANG-022: Gudang transaction list displays_1775795716924.png",
+      "timestamp": "2026-04-10T04:35:17.098Z",
+      "area": ""
+    },
+    {
+      "name": "gudang_form_filled",
+      "filename": "_gudang_form_filled_1775795717122.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_gudang_form_filled_1775795717122.png",
+      "timestamp": "2026-04-10T04:35:17.299Z",
+      "area": ""
+    },
+    {
+      "name": "sync_settings_page",
+      "filename": "_sync_settings_page_1775795717343.png",
+      "path": "D:\\Estate\\Droid\\SoftwareSawit\\test-results\\screenshots\\_sync_settings_page_1775795717343.png",
+      "timestamp": "2026-04-10T04:35:17.503Z",
+      "area": ""
+    }
+  ]
+}
