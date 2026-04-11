@@ -20,9 +20,9 @@ on:
           - 'false'
 
 env:
-  NODE_VERSION: '22.10.7'
-  VALIDATION_STATE_PATH: 'C:/Users/acer/.factory/missions/a5b8148c-b18d-4f59-bf4e-c7dc099afefc/validation-state.json'
-  VALIDATION_CONTRACT_PATH: 'C:/Users/acer/.factory/missions/a5b8148c-b18d-4f59-bf4e-c7dc099afefc/validation-contract.md'
+  NODE_VERSION: '22'
+  VALIDATION_STATE_PATH: '.factory/monitor/state/validation-state.json'
+  VALIDATION_CONTRACT_PATH: '.factory/validation-contract.md'
 
 jobs:
   # ==========================================
