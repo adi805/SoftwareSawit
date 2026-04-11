@@ -21,8 +21,6 @@ on:
 
 env:
   NODE_VERSION: '22'
-  VALIDATION_STATE_PATH: '.factory/monitor/state/validation-state.json'
-  VALIDATION_CONTRACT_PATH: '.factory/validation-contract.md'
 
 jobs:
   # ==========================================
@@ -31,13 +29,13 @@ jobs:
   monitor-and-update:
     runs-on: windows-latest
     name: Monitor GitHub Actions Runs
-    
+
     outputs:
       state_changed: ${{ steps.update_state.outputs.changed }}
       passed_count: ${{ steps.update_state.outputs.passed }}
       failed_count: ${{ steps.update_state.outputs.failed }}
       total_count: ${{ steps.update_state.outputs.total }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -56,32 +54,70 @@ jobs:
       # ==========================================
       - name: Create monitor directories
         run: |
-          New-Item -ItemType Directory -Force -Path ".factory/monitor/artifacts"
-          New-Item -ItemType Directory -Force -Path ".factory/monitor/logs"
-          New-Item -ItemType Directory -Force -Path ".factory/monitor/reports"
+          New-Item -ItemType Directory -Force -Path ".monitor/artifacts"
+          New-Item -ItemType Directory -Force -Path ".monitor/logs"
+          New-Item -ItemType Directory -Force -Path ".monitor/reports"
         shell: pwsh
 
       # ==========================================
-      # Run Monitor Script
+      # Query GitHub Actions API
       # ==========================================
-      - name: Run GitHub Actions Monitor
-        id: monitor
+      - name: Query GitHub Actions
+        id: query_actions
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          POLL_INTERVAL: 60000
+          GITHUB_REPO: ${{ github.repository }}
         run: |
-          $dryRun = "${{ github.event.inputs.dry_run }}" -eq "true"
-          $runId = "${{ github.event.inputs.run_id }}"
-          
-          $args = @("--once", "--verbose")
-          if ($dryRun) {
-            $args += "--dry-run"
+          $headers = @{
+            Authorization = "Bearer $env:GITHUB_TOKEN"
+            Accept = "application/vnd.github.v3+json"
           }
-          if ($runId) {
-            $args += "--run-id=$runId"
+
+          # Get recent workflow runs for user-testing.yml
+          $runsUrl = "https://api.github.com/repos/$env:GITHUB_REPO/actions/workflows/user-testing.yml/runs?per_page=5"
+          $runs = Invoke-RestMethod -Uri $runsUrl -Headers $headers
+
+          Write-Host "Recent workflow runs:"
+          foreach ($run in $runs.workflow_runs) {
+            Write-Host "  - Run #$($run.run_number) - $($run.conclusion) - $($run.head_sha.Substring(0,7))"
           }
-          
-          node .factory/monitor/github-actions-monitor.js @args
+
+          # Store latest run info
+          if ($runs.workflow_runs.Count -gt 0) {
+            $latestRun = $runs.workflow_runs[0]
+            Write-Host "::set-output name=latest_run_id::$($latestRun.id)"
+            Write-Host "::set-output name=latest_conclusion::$($latestRun.conclusion)"
+            Write-Host "## Latest Run: #$($latestRun.run_number) - $($latestRun.conclusion)"
+          }
+        shell: pwsh
+
+      # ==========================================
+      # Download Artifacts from Latest Run
+      # ==========================================
+      - name: Download artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+        run: |
+          $headers = @{
+            Authorization = "Bearer $env:GITHUB_TOKEN"
+            Accept = "application/vnd.github.v3+json"
+          }
+
+          # Get artifacts from latest completed run
+          $artifactsUrl = "https://api.github.com/repos/$env:GITHUB_REPO/actions/runs/${{ steps.query_actions.outputs.latest_run_id }}/artifacts"
+          $artifacts = Invoke-RestMethod -Uri $artifactsUrl -Headers $headers
+
+          Write-Host "Found $($artifacts.total_count) artifacts"
+
+          # Download each artifact
+          foreach ($artifact in $artifacts.artifacts) {
+            Write-Host "Downloading artifact: $($artifact.name)"
+            $downloadUrl = $artifact.archive_download_url
+            $headers.Download = "application/vnd.github.v3+json"
+            Invoke-WebRequest -Uri $downloadUrl -Headers $headers -OutFile "$($artifact.name).zip"
+            Expand-Archive -Path "$($artifact.name).zip" -DestinationPath ".monitor/artifacts/" -Force
+          }
         shell: pwsh
         continue-on-error: true
 
@@ -91,26 +127,35 @@ jobs:
       - name: Update validation state
         id: update_state
         run: |
-          $validationPath = "${{ env.VALIDATION_STATE_PATH }}"
-          $reportPath = ".factory/monitor/artifacts/run-${{ github.event.inputs.run_id }}/aggregate-report.json"
-          
-          # Check if validation state exists
-          if (-not (Test-Path $validationPath)) {
-            Write-Host "::warning::Validation state file not found at $validationPath"
+          # Look for aggregate report in artifacts
+          $reportPath = $null
+          Get-ChildItem -Path ".monitor/artifacts" -Recurse -Filter "aggregate-report.json" | ForEach-Object {
+            $reportPath = $_.FullName
+          }
+
+          # Check if report exists
+          if (-not $reportPath) {
+            Write-Host "No aggregate report found"
             "changed=false" >> $env:GITHUB_OUTPUT
+            "total=0" >> $env:GITHUB_OUTPUT
+            "passed=0" >> $env:GITHUB_OUTPUT
+            "failed=0" >> $env:GITHUB_OUTPUT
+            "pending=0" >> $env:GITHUB_OUTPUT
             exit 0
           }
-          
-          # Read current state
-          $state = Get-Content $validationPath | ConvertFrom-Json
-          
+
+          Write-Host "Found report at: $reportPath"
+
+          # Read report
+          $report = Get-Content $reportPath | ConvertFrom-Json
+
           # Calculate statistics
-          $total = $state.summary.total
-          $passed = $state.summary.passed
-          $failed = $state.summary.failed
-          $pending = $state.summary.pending
+          $total = $report.summary.total
+          $passed = $report.summary.passed
+          $failed = $report.summary.failed
+          $pending = $report.summary.pending
           $passRate = if ($total -gt 0) { [math]::Round(($passed / $total) * 100, 1) } else { 0 }
-          
+
           # Output statistics
           "changed=true" >> $env:GITHUB_OUTPUT
           "total=$total" >> $env:GITHUB_OUTPUT
@@ -118,7 +163,7 @@ jobs:
           "failed=$failed" >> $env:GITHUB_OUTPUT
           "pending=$pending" >> $env:GITHUB_OUTPUT
           "pass_rate=$passRate" >> $env:GITHUB_OUTPUT
-          
+
           Write-Host "Validation State Summary:"
           Write-Host "  Total: $total"
           Write-Host "  Passed: $passed ($passRate%)"
@@ -135,117 +180,20 @@ jobs:
         with:
           name: monitor-logs-${{ github.run_id }}
           path: |
-            .factory/monitor/logs/
-            .factory/monitor/reports/
+            .monitor/logs/
+            .monitor/reports/
           retention-days: 30
           if-no-files-found: warn
 
   # ==========================================
-  # Job 2: Generate Dashboard Report
-  # ==========================================
-  generate-dashboard:
-    needs: monitor-and-update
-    runs-on: windows-latest
-    name: Generate Dashboard Report
-    if: always()
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Generate dashboard
-        run: |
-          node .factory/monitor/dashboard.js --format=html --output=.factory/monitor/reports/dashboard.html
-        shell: pwsh
-        continue-on-error: true
-
-      - name: Upload dashboard
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: validation-dashboard-${{ github.run_id }}
-          path: .factory/monitor/reports/dashboard.html
-          retention-days: 30
-          if-no-files-found: ignore
-
-  # ==========================================
-  # Job 3: Create PR if State Changed
-  # ==========================================
-  create-update-pr:
-    needs: [monitor-and-update, generate-dashboard]
-    runs-on: windows-latest
-    name: Create Update PR
-    if: needs.monitor-and-update.outputs.state_changed == 'true'
-    
-    permissions:
-      contents: write
-      pull-requests: write
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Copy updated validation state
-        run: |
-          $sourcePath = "${{ env.VALIDATION_STATE_PATH }}"
-          $destPath = "validation-state.json"
-          
-          if (Test-Path $sourcePath) {
-            Copy-Item -Path $sourcePath -Destination $destPath -Force
-            Write-Host "Validation state copied to $destPath"
-          } else {
-            Write-Host "::warning::Source validation state not found"
-          }
-        shell: pwsh
-
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'chore(validation): Update validation state from GitHub Actions run ${{ github.run_id }}'
-          title: 'chore(validation): Update validation state from test run ${{ github.run_id }}'
-          body: |
-            ## Validation State Update
-            
-            This PR updates the validation state based on the latest GitHub Actions test run.
-            
-            ### Summary
-            - **Total Assertions:** ${{ needs.monitor-and-update.outputs.total_count }}
-            - **Passed:** ${{ needs.monitor-and-update.outputs.passed_count }}
-            - **Failed:** ${{ needs.monitor-and-update.outputs.failed_count }}
-            
-            ### Changes
-            - Updated assertion statuses based on test results
-            - Synchronized with workflow run: ${{ github.run_id }}
-            
-            ### Verification
-            - [ ] Review updated assertions
-            - [ ] Verify test results match expectations
-            - [ ] Approve if changes are correct
-            
-            ---
-            *Automated by Monitor Validation workflow*
-          branch: update/validation-state-${{ github.run_id }}
-          delete-branch: true
-          add-paths: |
-            validation-state.json
-
-  # ==========================================
-  # Job 4: Post Summary
+  # Job 2: Post Summary
   # ==========================================
   post-summary:
     needs: monitor-and-update
     runs-on: windows-latest
     name: Post Summary
     if: always()
-    
+
     steps:
       - name: Post workflow summary
         uses: actions/github-script@v7
@@ -255,24 +203,23 @@ jobs:
             const passed = '${{ needs.monitor-and-update.outputs.passed_count }}' || '0';
             const failed = '${{ needs.monitor-and-update.outputs.failed_count }}' || '0';
             const passRate = total > 0 ? ((passed / total) * 100).toFixed(1) : 0;
-            
-            const summary = `## 📊 Validation State Monitor
-            
+
+            const summary = `## Validation State Monitor
+
             ### Current Status
             | Metric | Count | Percentage |
             |--------|-------|------------|
-            | ✅ Passed | ${passed} | ${passRate}% |
-            | ❌ Failed | ${failed} | ${total > 0 ? ((failed / total) * 100).toFixed(1) : 0}% |
-            | 📊 Total | ${total} | 100% |
-            
+            | Passed | ${passed} | ${passRate}% |
+            | Failed | ${failed} | ${total > 0 ? ((failed / total) * 100).toFixed(1) : 0}% |
+            | Total | ${total} | 100% |
+
             ### Actions Taken
             - Monitored GitHub Actions workflow runs
             - Processed test artifacts and results
-            - ${'${{ needs.monitor-and-update.outputs.state_changed }}' === 'true' ? '📝 Created PR to update validation state' : '✓ No changes to validation state'}
-            
+            - ${'${{ needs.monitor-and-update.outputs.state_changed }}' === 'true' ? 'Created PR to update validation state' : 'No changes to validation state'}
+
             ### Links
             - [View Workflow Runs](https://github.com/${{ github.repository }}/actions/workflows/user-testing.yml)
-            - [Validation Contract](https://github.com/${{ github.repository }}/blob/main/validation-contract.md)
             `;
-            
+
             await core.summary.addRaw(summary).write();
